@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title }}</title>
+    <title>Bintang Beton Mandala</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
@@ -15,9 +15,10 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tailwind.output.css') }}" />
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <script src="{{asset('js/init-alpine.js')}}" defer></script>
-
+    <!-- Alpine Plugins -->
+    <script defer src="https://unpkg.com/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
     <script src="{{asset('js/charts-lines.js')}}" defer></script>
@@ -25,6 +26,8 @@
     <script src="{{asset('js/charts-bars.js')}}" defer></script>
 
     @livewireStyles
+    @livewire('livewire-ui-modal')
+    @powerGridStyles
     <script>
         import Turbolinks from 'turbolinks';
         Turbolinks.start()
@@ -36,7 +39,7 @@
 
 <body>
     <div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="{ 'overflow-hidden': isSideMenuOpen }">
-        @include('layouts.menu')
+
         @include('layouts.mobile-menu')
 
         <div class="flex flex-col flex-1 w-full">
@@ -50,7 +53,12 @@
         @stack('modals')
 
         @livewireScripts
+       
+
     </div>
+    @powerGridScripts
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <x-livewire-alert::scripts />
 </body>
 
 </html>
