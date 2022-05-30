@@ -21,6 +21,8 @@ final class RekapConcretepumpTable extends PowerGridComponent
     //Messages informing success/error data is updated.
     public bool $showUpdateMessages = true;
 
+    public $m_salesorder_id;
+
     /*
     |--------------------------------------------------------------------------
     |  Features Setup
@@ -55,6 +57,7 @@ final class RekapConcretepumpTable extends PowerGridComponent
         ->join('drivers','concretepumps.driver_id','drivers.id')
         ->join('jarak_tempuhs','concretepumps.jarak_tempuh_id','jarak_tempuhs.id')
         ->join('rates','concretepumps.rate_id','rates.id')
+        ->where('concretepumps.m_salesorder_id', $this->m_salesorder_id)
         ->select('concretepumps.*','kendaraans.nopol','drivers.nama_driver','jarak_tempuhs.awal',
         'jarak_tempuhs.akhir','rates.tujuan','rates.estimasi_jarak')
         ->orderBy('concretepumps.id', 'desc');
@@ -89,6 +92,7 @@ final class RekapConcretepumpTable extends PowerGridComponent
     public function addColumns(): ?PowerGridEloquent
     {
         return PowerGrid::eloquent()
+            ->addColumn('id')    
             ->addColumn('kendaraan_id')
             ->addColumn('nopol')
             ->addColumn('driver_id')
@@ -164,23 +168,20 @@ final class RekapConcretepumpTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    /*
+
     public function actions(): array
     {
-       return [
-           Button::add('edit')
-               ->caption('Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('concretepump.edit', ['concretepump' => 'id']),
-
-           Button::add('destroy')
-               ->caption('Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('concretepump.destroy', ['concretepump' => 'id'])
-               ->method('delete')
+        return [
+            Button::add('timesheet')
+                ->caption(__('Timesheet'))
+                ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->openModal('sewa.timesheet-modal',[
+                    'tipe' => 'include mixer',
+                    'd_so_id' => 'id'
+            ]),
         ];
     }
-    */
+
 
     /*
     |--------------------------------------------------------------------------

@@ -16,6 +16,7 @@ class CreateItemsewasTable extends Migration
         Schema::create('itemsewas', function (Blueprint $table) {
             $table->id();
             $table->string('nama_item');
+            $table->string('tipe');
             $table->decimal('harga_intax',20,2);
             $table->foreignId('satuan_id')->constrained()->onDelete('restrict');
             $table->timestamps();

@@ -20,7 +20,7 @@
                 @enderror
             </x-form-group>
 
-            <x-form-group caption="Driver">
+            <x-form-group caption="Operator">
                 <livewire:driver.driver-select :deskripsi="$driver"/>
                 @error('ticket.driver_id')
                 <x-error-form>{{ $message }}</x-error-form>

@@ -17,14 +17,14 @@ class CreateTimesheetsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('d_so_id');
             $table->date('tanggal');
-            $table->string('operator');
+            $table->foreignId('driver_id')->constrained();
             $table->string('tipe');
             $table->time('jam_awal')->nullable();
             $table->time('jam_akhir')->nullable();
             $table->time('hm_awal')->nullable();
             $table->time('hm_akhir')->nullable();
             $table->integer('istirahat')->nullable();
-            $table->string('keterangan');
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

@@ -12,6 +12,19 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Tipe">
+        <x-combobox
+            wire:model="itemsewa.tipe"
+        >
+            <option value="">-- Isi Tipe --</option>
+            <option value="Jam">Jam</option>
+            <option value="HM">HM</option>
+        </x-combobox>
+        @error('itemsewa.nama_item')
+            <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="Harga Intax">
         <x-number-text
             wire:model="itemsewa.harga_intax"

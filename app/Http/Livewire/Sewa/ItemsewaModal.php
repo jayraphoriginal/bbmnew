@@ -20,6 +20,7 @@ class ItemsewaModal extends ModalComponent
     protected $rules=[
         'itemsewa.nama_item' => 'required',
         'itemsewa.harga_intax' => 'required',
+        'itemsewa.tipe' => 'required',
         'itemsewa.satuan_id' => 'required',
     ];
 

@@ -30,6 +30,7 @@ class DriverSelect extends Component
         $this->emitTo('kendaraan.kendaraan-modal','selectdriver', $id);
         $this->emitTo('penjualan.ticket-modal','selectdriver', $id);
         $this->emitTo('penjualan.concretepump-modal','selectdriver', $id);
+        $this->emitTo('sewa.timesheet-modal','selectdriver', $id);
     }
 
     public function selectDeskripsi($id){

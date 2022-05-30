@@ -86,6 +86,7 @@ final class ItemsewaTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('nama_item')
+            ->addColumn('tipe')
             ->addColumn('harga_intax', function(Itemsewa $model) {
                 return number_format($model->harga_intax,2,",",".");
             })
@@ -124,6 +125,13 @@ final class ItemsewaTable extends PowerGridComponent
             Column::add()
                 ->title('NAMA ITEM')
                 ->field('nama_item')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('TIPE')
+                ->field('tipe')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),
