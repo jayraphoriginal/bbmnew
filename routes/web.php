@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/dashboard');
 });
 
 // Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
@@ -23,6 +23,7 @@ Route::get('/', function () {
 
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+    Route::view('/dashboard','dashboard');
     Route::get('alat', \App\Http\Livewire\Alat\AlatComponent::class)->name('alat');
     Route::get('satuan', \App\Http\Livewire\Satuan\SatuanComponent::class)->name('satuan');
     Route::get('barang', \App\Http\Livewire\Barang\BarangComponent::class)->name('barang');
@@ -36,9 +37,11 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('rate', \App\Http\Livewire\Rate\RateComponent::class)->name('rate');
     Route::get('bahanbakar', \App\Http\Livewire\Barang\BahanbakarComponent::class)->name('bahanbakar');
     Route::get('bank', \App\Http\Livewire\Bank\BankComponent::class)->name('bank');
+    Route::get('rekening', \App\Http\Livewire\Bank\RekeningComponent::class)->name('rekening');
     Route::get('itemsewa', \App\Http\Livewire\Sewa\ItemsewaComponent::class)->name('itemsewa');
     Route::get('salesorder', \App\Http\Livewire\Penjualan\SalesorderComponent::class)->name('salesorder');
     Route::get('salesordersewa', \App\Http\Livewire\Sewa\SalesorderSewaComponent::class)->name('salesordersewa');
     Route::get('purchaseorder', \App\Http\Livewire\Pembelian\PurchaseorderComponent::class)->name('purchaseorder');
     Route::get('ticketmaterial', \App\Http\Livewire\Penjualan\TicketComponent::class)->name('ticketmaterial');
+    Route::get('invoice', \App\Http\Livewire\Invoice\InvoiceComponent::class)->name('invoice');
 });
