@@ -10,4 +10,10 @@
 
     <livewire:penjualan.ticket-table d_salesorder_id="{{ $d_salesorder_id }}"/>
 
+    <x-footer-modal>
+        <x-secondary-button
+            wire:click="$emit('closeModal')"
+        >cancel</x-secondary-button>
+    </x-footer-modal>
+
 </div>

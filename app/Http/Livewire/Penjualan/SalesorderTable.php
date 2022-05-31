@@ -198,10 +198,27 @@ final class SalesorderTable extends PowerGridComponent
         return [
             Button::add('concretepump')
                 ->caption(__('Concrete Pump'))
-                ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-40')
+                ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-36')
                 ->openModal('penjualan.rekap-concretepump-modal',[
                     'm_salesorder_id' => 'id'
             ]),
+
+            Button::add('invoice')
+                ->caption(__('Invoice'))
+                ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-auto')
+                ->openModal('invoice.invoice-modal',[
+                    'tipe' => 'Ready Mix',
+                    'm_salesorder_id' => 'id'
+            ]),
+
+            Button::add('cetak')
+                ->caption(__('Cetak'))
+                ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->target('_blank')
+                ->method('get')
+                ->route("printso",[
+                    'id' => 'id'
+                ]),
             
             Button::add('edit')
                 ->caption(__('Edit'))
@@ -210,7 +227,6 @@ final class SalesorderTable extends PowerGridComponent
                     'editmode' => 'edit',
                     'salesorder_id' => 'id'
                 ]),
-
 
             Button::add('destroy')
                 ->caption(__('Delete'))

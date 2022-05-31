@@ -14,10 +14,10 @@
         </x-combobox>
     </x-form-group>
 
-    @if($tipe=='Ready Mix')
-        <livewire:penjualan.salesorder-full-table/>
-    @else
+    @if($tipe=='Sewa')
         <livewire:sewa.salesorder-sewa-table/>
+    @else
+        <livewire:penjualan.salesorder-table/> 
     @endif
 
     <x-footer-modal>

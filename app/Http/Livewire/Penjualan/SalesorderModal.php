@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Penjualan;
 use App\Models\Customer;
 use App\Models\Driver;
 use App\Models\Kendaraan;
+use App\Models\Mpajak;
 use App\Models\MSalesorder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -49,7 +50,7 @@ class SalesorderModal extends ModalComponent
     public function save(){
 
         $this->validate();
-        if ($this->editmode=='edit') {
+        if ($this->editmode!='edit') {
             $nomorterakhir = DB::table('m_salesorders')
                 ->orderBy('id', 'DESC')->get();
 
@@ -67,8 +68,12 @@ class SalesorderModal extends ModalComponent
                     $noso = '0001/SO/' . date('m') . '/' . date('Y');
                 }
             }
+
+            $pajak = Mpajak::where('jenis_pajak','PPN')->first();
+
             $this->MSalesorder->noso = $noso;
             $this->MSalesorder->status_so = 'Open';
+            $this->MSalesorder->pajak = $pajak->persen;
         }
         try{
             $this->MSalesorder->save();

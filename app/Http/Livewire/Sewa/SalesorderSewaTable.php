@@ -188,6 +188,16 @@ final class SalesorderSewaTable extends PowerGridComponent
     public function actions(): array
     {
         return [
+
+            Button::add('cetak')
+                ->caption(__('Cetak'))
+                ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->target('_blank')
+                ->method('get')
+                ->route("printsosewa",[
+                    'id' => 'id'
+                ]),
+
             Button::add('edit')
                 ->caption(__('Edit'))
                 ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')

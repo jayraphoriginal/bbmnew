@@ -122,9 +122,9 @@
                     @endphp
                     <tr>
                         <td class="captioncenter">{{ $i++ }}</td>
-                        <td class="captioncenter">{{ $sewa->nama_alat }}</td>
+                        <td class="captioncenter">{{ $sewa->nama_item }}</td>
                         <td class="captionright">{{ number_format($sewa->lama,2,",",".") }}</td>
-                        <td class="captioncenter">{{ $sewa->periode }}</td>
+                        <td class="captioncenter">{{ $sewa->satuan }}</td>
                         <td class="captionright">{{ number_format($sewa->harga_intax/((100+$sewa->pajak)/100),2,",",".") }}</td>
                         <td class="captionright">{{ number_format($sewa->lama * $sewa->harga_intax/((100+$sewa->pajak)/100),2,",",".") }}</td>
                     </tr>

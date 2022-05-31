@@ -44,4 +44,11 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('purchaseorder', \App\Http\Livewire\Pembelian\PurchaseorderComponent::class)->name('purchaseorder');
     Route::get('ticketmaterial', \App\Http\Livewire\Penjualan\TicketComponent::class)->name('ticketmaterial');
     Route::get('invoice', \App\Http\Livewire\Invoice\InvoiceComponent::class)->name('invoice');
+
+
+    //Print
+    Route::get('printso/{id}', [\App\Http\Controllers\PrintController::class,'so'])->name('printso');
+    Route::get('printsosewa/{id}', [\App\Http\Controllers\PrintController::class,'sosewa'])->name('printsosewa');
+    Route::get('printticket/{id}', [\App\Http\Controllers\PrintController::class,'ticket'])->name('printticket');
+    Route::get('printpo/{id}', [\App\Http\Controllers\PrintController::class,'po'])->name('printpo');
 });

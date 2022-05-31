@@ -63,14 +63,8 @@
             <tbody>
                 @php 
                     $i = 1;
-                    $total = 0;
-                    $totaldpp = 0;
                 @endphp
                 @foreach ($data as $po)
-                        @php
-                        $totaldpp += $po->jumlah * $po->harga/(1+($pajak->pajak/100));
-                        $total += $po->jumlah * $po->harga;
-                        @endphp
                         <tr>
                             <td class="captioncenter" style="width:5%">{{ $i++ }}</td>
                             <td class="captionleft">{{ isset($po->nama_material) ? $po->nama_material : $po->nama_barang }}</td>
@@ -84,17 +78,17 @@
             <tfoot>
                 <tr>
                     <td colspan=4 class="captionleft">DPP</td>
-                    <td class="captionright">{{ number_format($totaldpp,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($data[0]->dpp,2,",",".") }}</td>
                     <td></td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">PPN {{ $pajak->persen.'%' }}</td>
-                    <td class="captionright">{{ number_format($totaldpp*($pajak->pajak/100),2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($data[0]->ppn,2,",",".") }}</td>
                     <td></td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">Total</td>
-                    <td class="captionright">{{ number_format($total,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($data[0]->total,2,",",".") }}</td>
                     <td></td>
                 </tr>
             </tfoot>

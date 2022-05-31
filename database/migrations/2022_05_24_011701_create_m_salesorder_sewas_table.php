@@ -23,6 +23,7 @@ class CreateMSalesorderSewasTable extends Migration
             $table->date('jatuh_tempo');
             $table->foreignId('customer_id')->constrained()->ondelete('restrict');
             $table->string('status_so');
+            $table->float('pajak');
             $table->timestamps();
         });
     }
