@@ -32,13 +32,15 @@ class PrintController extends Controller
                         ->where('d_salesorders.m_salesorder_id',$id)
         ->sum('tambahan_biaya');
 
-        if (count($data > 0)){
+        if (count($data) > 0){
             $pdf = PDF::loadView('print.SO', array(
                 'data' => $data, 
                 'concretepump' => $concretepump,
                 'biayatambahan' => $biayatambahan,
             ));
             return $pdf->stream();
+        }else{
+            return 404;
         }
        
     }
