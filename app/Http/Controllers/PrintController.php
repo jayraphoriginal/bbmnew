@@ -40,7 +40,7 @@ class PrintController extends Controller
             ));
             return $pdf->stream();
         }else{
-            return 404;
+            return abort(404);
         }
        
     }
