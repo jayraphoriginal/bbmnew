@@ -14,28 +14,48 @@
         <x-datepicker
             wire:model="tgl_awal"
         />
+        @error('tgl_awal')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
     </x-form-group>
 
     <x-form-group caption="Sampai Tanggal">
         <x-datepicker
             wire:model="tgl_akhir"
         />
+        @error('tgl_akhir')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
     </x-form-group>
 
     <x-form-group caption="Nilai Tagihan">
-        <x-textbox
+        <x-number-text
             readonly
             wire:model="jumlah_total"
         />
     </x-form-group>
 
     @if($dp == "DP")
-    <x-form-group caption="Jumlah Invoice DP">
-        <x-number-text
-            wire:model="invoice.jumlah"
-        />
-    </x-form-group>
+        <x-form-group caption="Jumlah Invoice DP">
+            <x-number-text
+                wire:model="jumlah_dp"
+            />
+        </x-form-group>
+    @else
+        <x-form-group caption="DP Sebelumnya">
+            <x-number-text
+                readonly
+                wire:model="dp_sebelum"
+            />
+        </x-form-group>
     @endif
+
+    <x-form-group caption="Rekening">
+        <livewire:bank.rekening-select :deskripsi="$rekening"/>
+        @error('invoice.rekening_id')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
 
     <x-footer-modal>
         <x-secondary-button

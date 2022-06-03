@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Penjualan;
+namespace App\Http\Livewire\Invoice;
 
 use App\Models\MSalesorder;
 use Illuminate\Support\Carbon;
@@ -14,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class SalesorderTable extends PowerGridComponent
+final class SoTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -30,10 +30,7 @@ final class SalesorderTable extends PowerGridComponent
     */
     public function setUp(): void
     {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showSearchInput()
-            ->showExportOption('download', ['excel', 'csv']);
+        $this->showPerPage();
     }
 
     /*
@@ -98,7 +95,6 @@ final class SalesorderTable extends PowerGridComponent
             })
             ->addColumn('customer_id')
             ->addColumn('nama_customer');
-
     }
 
     /*
@@ -195,41 +191,16 @@ final class SalesorderTable extends PowerGridComponent
     
     public function actions(): array
     {
-        return [
-            Button::add('concretepump')
-                ->caption(__('Concrete Pump'))
-                ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-36')
-                ->openModal('penjualan.rekap-concretepump-modal',[
-                    'm_salesorder_id' => 'id'
-            ]),
-
-            Button::add('cetak')
-                ->caption(__('Cetak'))
-                ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->target('_blank')
-                ->method('get')
-                ->route("printso",[
-                    'id' => 'id'
-                ]),
-            
-            Button::add('edit')
-                ->caption(__('Edit'))
-                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('penjualan.salesorder-modal',[
-                    'editmode' => 'edit',
-                    'salesorder_id' => 'id'
-                ]),
-
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('delete-modal', [
-                    'data_id'                 => 'id',
-                    'TableName'               => 'm_salesorders',
-                    'confirmationTitle'       => 'Delete SO',
-                    'confirmationDescription' => 'apakah yakin ingin hapus SO?',
-                ]),
-        ];
+       return [
+        Button::add('invoice')
+            ->caption(__('Invoice'))
+            ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-36')
+            ->openModal('invoice.invoice-modal',[
+                'tipe_so' => 'Ready Mix',
+                'so_id' => 'id'
+        ]),
+        
+    ];
     }
     
 
@@ -251,7 +222,7 @@ final class SalesorderTable extends PowerGridComponent
     public function actionRules(): array
     {
        return [
-
+           
            //Hide button edit for ID 1
             Rule::button('edit')
                 ->when(fn($m-salesorder) => $m-salesorder->id === 1)

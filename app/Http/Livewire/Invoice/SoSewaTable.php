@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Penjualan;
+namespace App\Http\Livewire\Invoice;
 
-use App\Models\MSalesorder;
+use App\Models\MSalesorderSewa;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class SalesorderTable extends PowerGridComponent
+final class SoSewaTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -30,10 +30,7 @@ final class SalesorderTable extends PowerGridComponent
     */
     public function setUp(): void
     {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showSearchInput()
-            ->showExportOption('download', ['excel', 'csv']);
+        $this->showPerPage();
     }
 
     /*
@@ -47,13 +44,13 @@ final class SalesorderTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\MSalesorder>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\MSalesorderSewa>|null
     */
     public function datasource(): ?Builder
     {
-        return MSalesorder::join('customers','m_salesorders.customer_id','customers.id')
-        ->orderBy('m_salesorders.id','desc')
-        ->select('m_salesorders.*','customers.nama_customer');
+        return MSalesorderSewa::join('customers','m_salesorder_sewas.customer_id','customers.id')
+        ->orderBy('m_salesorder_sewas.id','desc')
+        ->select('m_salesorder_sewas.*','customers.nama_customer');
     }
 
     /*
@@ -87,18 +84,16 @@ final class SalesorderTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('noso')
-            ->addColumn('nopo')
-            ->addColumn('tgl_so_formatted', function(MSalesorder $model) {
+            ->addColumn('tgl_so_formatted', function(MSalesorderSewa $model) {
                 return Carbon::parse($model->tgl_so)->format('d/m/Y');
             })
             ->addColumn('marketing')
             ->addColumn('pembayaran')
-            ->addColumn('jatuh_tempo_formatted', function(MSalesorder $model) {
+            ->addColumn('jatuh_tempo_formatted', function(MSalesorderSewa $model) {
                 return Carbon::parse($model->jatuh_tempo)->format('d/m/Y');
             })
             ->addColumn('customer_id')
             ->addColumn('nama_customer');
-
     }
 
     /*
@@ -137,13 +132,6 @@ final class SalesorderTable extends PowerGridComponent
                 ->field('nama_customer')
                 ->searchable()
                 ->sortable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('NOPO')
-                ->field('nopo')
-                ->sortable()
-                ->searchable()
                 ->makeInputText(),
 
             Column::add()
@@ -187,7 +175,7 @@ final class SalesorderTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid MSalesorder Action Buttons.
+     * PowerGrid MSalesorderSewa Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
@@ -195,43 +183,17 @@ final class SalesorderTable extends PowerGridComponent
     
     public function actions(): array
     {
-        return [
-            Button::add('concretepump')
-                ->caption(__('Concrete Pump'))
-                ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-36')
-                ->openModal('penjualan.rekap-concretepump-modal',[
-                    'm_salesorder_id' => 'id'
+       return [
+            Button::add('invoice')
+            ->caption(__('Invoice'))
+            ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-36')
+            ->openModal('invoice.invoice-modal',[
+                'tipe_so' => 'Sewa',
+                'so_id' => 'id'
             ]),
-
-            Button::add('cetak')
-                ->caption(__('Cetak'))
-                ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->target('_blank')
-                ->method('get')
-                ->route("printso",[
-                    'id' => 'id'
-                ]),
-            
-            Button::add('edit')
-                ->caption(__('Edit'))
-                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('penjualan.salesorder-modal',[
-                    'editmode' => 'edit',
-                    'salesorder_id' => 'id'
-                ]),
-
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('delete-modal', [
-                    'data_id'                 => 'id',
-                    'TableName'               => 'm_salesorders',
-                    'confirmationTitle'       => 'Delete SO',
-                    'confirmationDescription' => 'apakah yakin ingin hapus SO?',
-                ]),
         ];
     }
-    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -242,7 +204,7 @@ final class SalesorderTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid MSalesorder Action Rules.
+     * PowerGrid MSalesorderSewa Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -251,10 +213,10 @@ final class SalesorderTable extends PowerGridComponent
     public function actionRules(): array
     {
        return [
-
+           
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($m-salesorder) => $m-salesorder->id === 1)
+                ->when(fn($m-salesorder-sewa) => $m-salesorder-sewa->id === 1)
                 ->hide(),
         ];
     }
@@ -270,7 +232,7 @@ final class SalesorderTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid MSalesorder Update.
+     * PowerGrid MSalesorderSewa Update.
      *
      * @param array<string,string> $data
      */
@@ -279,7 +241,7 @@ final class SalesorderTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = MSalesorder::query()->findOrFail($data['id'])
+           $updated = MSalesorderSewa::query()->findOrFail($data['id'])
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

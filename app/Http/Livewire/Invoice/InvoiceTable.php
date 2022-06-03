@@ -32,6 +32,7 @@ final class InvoiceTable extends PowerGridComponent
     {
         $this->showCheckBox()
             ->showPerPage()
+            ->showSearchInput()
             ->showExportOption('download', ['excel', 'csv']);
     }
 
@@ -42,7 +43,7 @@ final class InvoiceTable extends PowerGridComponent
     | Provides data to your Table using a Model or Collection
     |
     */
-    
+
     /**
     * PowerGrid datasource.
     *
@@ -50,7 +51,9 @@ final class InvoiceTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return Invoice::query();
+        return Invoice::join('customers','invoices.customer_id','customers.id')
+        ->join('rekenings','invoices.rekening_id','rekenings.id')
+        ->select('invoices.*','customers.nama_customer','rekenings.norek');
     }
 
     /*
@@ -83,10 +86,26 @@ final class InvoiceTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('created_at')
-            ->addColumn('created_at_formatted', function(Invoice $model) {
+            ->addColumn('noinvoice')
+            ->addColumn('tipe_so')
+            ->addColumn('nama_customer')
+            ->addColumn('norek')
+            ->addColumn('tipe')
+            ->addColumn('total', function(Invoice $model) {
+                return number_format($model->total,2,",",".");
+            })
+            ->addColumn('ppn', function(Invoice $model) {
+                return number_format($model->ppn,2,",",".");
+            })
+            ->addColumn('dpp', function(Invoice $model) {
+                return number_format($model->dpp,2,",",".");
+            })
+            ->addColumn('status')
+            ->addColumn('created_at_formatted', function(Invoice $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            })
+            ->addColumn('updated_at_formatted', function(Invoice $model) { 
+                return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }
 
@@ -107,30 +126,73 @@ final class InvoiceTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::add()
-                ->title('ID')
-                ->field('id')
-                ->searchable()
-                ->sortable(),
 
             Column::add()
-                ->title('Name')
-                ->field('name')
-                ->searchable()
-                ->makeInputText('name')
-                ->sortable(),
+            ->title('NO INVOICE')
+            ->field('noinvoice')
+            ->searchable()
+            ->sortable()
+            ->makeInputText(),
 
             Column::add()
-                ->title('Created at')
-                ->field('created_at')
-                ->hidden(),
+            ->title('TIPE SO')
+            ->field('tipe_so')
+            ->searchable()
+            ->sortable()
+            ->makeInputText(),
 
             Column::add()
-                ->title('Created at')
-                ->field('created_at_formatted')
-                ->makeInputDatePicker('created_at')
+            ->title('CUSTOMER')
+            ->field('nama_customer')
+            ->searchable()
+            ->sortable()
+            ->makeInputText(),
+
+            Column::add()
+            ->title('NO REKENING')
+            ->field('norek')
+            ->searchable()
+            ->sortable()
+            ->makeInputText(),
+
+            Column::add()
+            ->title('DP')
+            ->field('tipe')
+            ->searchable()
+            ->sortable()
+            ->makeInputText(),
+
+            Column::add()
+            ->title('TOTAL')
+            ->field('total')
+            ->sortable(),
+
+            Column::add()
+            ->title('PPN')
+            ->field('ppn')
+            ->sortable(),
+
+            Column::add()
+            ->title('DPP')
+            ->field('dpp')
+            ->sortable(),
+
+            Column::add()
+                ->title('CREATED AT')
+                ->field('created_at_formatted', 'created_at')
                 ->searchable()
-        ];
+                ->sortable()
+                ->makeInputDatePicker('created_at'),
+
+            Column::add()
+                ->title('UPDATED AT')
+                ->field('updated_at_formatted', 'updated_at')
+                ->searchable()
+                ->sortable()
+                ->makeInputDatePicker('updated_at'),
+
+        ]
+;
     }
 
     /*
@@ -211,7 +273,7 @@ final class InvoiceTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = Invoice::query()
+           $updated = Invoice::query()->findOrFail($data['id'])
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

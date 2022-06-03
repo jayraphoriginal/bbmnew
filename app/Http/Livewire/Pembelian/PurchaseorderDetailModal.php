@@ -73,6 +73,7 @@ class PurchaseorderDetailModal extends ModalComponent
         $this->validate();
 
         try{
+            
             $this->DPurchaseorder->save();
 
             $MPurchaseorder = MPurchaseorder::find($this->DPurchaseorder->m_purchaseorder_id);

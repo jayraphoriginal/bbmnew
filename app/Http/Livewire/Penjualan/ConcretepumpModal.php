@@ -84,7 +84,7 @@ class ConcretepumpModal extends ModalComponent
         DB::beginTransaction();
 
         try{
-
+            $this->concretepump->status='Open';
             $this->concretepump->save();
             DB::commit();
         }

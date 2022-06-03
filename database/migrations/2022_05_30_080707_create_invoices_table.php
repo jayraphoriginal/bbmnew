@@ -16,10 +16,11 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('noinvoice');
-            $table->foreignId('m_salesorder_id')->constrained()->ondelete('restrict');
+            $table->string('tipe_so');
+            $table->unsignedBigInteger('so_id');
             $table->foreignId('customer_id')->constrained()->ondelete('restrict');
             $table->foreignId('rekening_id')->constrained()->ondelete('restrict');
-            $table->date('tgl_pembayaran');
+            $table->date('tgl_pembayaran')->nullable();
             $table->string('tipe');
             $table->double('total');
             $table->double('sisa_invoice');

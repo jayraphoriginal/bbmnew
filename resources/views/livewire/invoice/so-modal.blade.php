@@ -1,30 +1,29 @@
 <div>
     <x-header-modal>
-        Daftar Sales Order
+        Daftar SO
     </x-header-modal>
 
-   
-    <x-form-group caption="Sales Order">
-        <x-combobox
-            wire:model="tipe"
-        >
-            <option value="">-- Isi Tipe --</option>
+    <x-form-group caption="Tipe">
+        <x-combobox wire:model="tipe">
+            <option value=""></option>
             <option value="Ready Mix">Ready Mix</option>
             <option value="Sewa">Sewa</option>
         </x-combobox>
     </x-form-group>
 
     @if($tipe=='Sewa')
-        <livewire:sewa.salesorder-sewa-table/>
+        <livewire:invoice.so-sewa-table/>
     @else
-        <livewire:penjualan.salesorder-table/> 
+        <livewire:invoice.so-table/>
     @endif
+
 
     <x-footer-modal>
         <x-secondary-button
             wire:click="$emit('closeModal')"
         >Cancel</x-secondary-button>
+        <x-button
+            wire:click="save">Save</x-button>
     </x-footer-modal>
 
 </div>
-

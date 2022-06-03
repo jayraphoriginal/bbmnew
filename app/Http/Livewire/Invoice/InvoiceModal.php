@@ -2,36 +2,66 @@
 
 namespace App\Http\Livewire\Invoice;
 
+use App\Models\Concretepump;
 use App\Models\Customer;
+use App\Models\DInvoice;
+use App\Models\DSalesorderSewa;
 use App\Models\Invoice;
 use App\Models\MSalesorder;
+use App\Models\MSalesorderSewa;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
+use Throwable;
 
 class InvoiceModal extends ModalComponent
 {
-    public $noso, $m_salesorder_id, $tipe, $customer;
-    public Invoice $invoice;
-    public $tgl_awal, $tgl_akhir, $jumlah_total,$dp;
+
+    use LivewireAlert;
+
+    public $noso, $so_id, $tipe_so, $customer;
+    public Invoice $invoice;    
+    public $tgl_awal, $tgl_akhir, $jumlah_total, $dp, $jumlah_dp;
+    public $rekening, $dp_sebelum, $pajak, $customer_id;
+
+    protected $listeners = ['selectrekening' => 'selectrekening'];
 
     protected $rules =[
-        'invoice.customer_id' => 'required',
-        'invoice.m_salesorder_id' => 'required',
-        'invoice.jumlah' => 'required'
+        'invoice.rekening_id' => 'required',
+        'tgl_awal' => 'required',
+        'tgl_akhir' => 'required'
     ];
+
+    public function selectrekening($id){
+        $this->invoice->rekening_id=$id;
+    }
 
     public function mount(){
         $this->invoice = new Invoice();
-        $this->invoice->tipe = $this->tipe;
-        $msalesorder = MSalesorder::find($this->m_salesorder_id);
-        $this->invoice->customer_id = $msalesorder->customer_id;
-        $this->noso = $msalesorder->noso;
-        $customers = Customer::find($msalesorder->customer_id);
-        $this->customer = $customers->nama_customer;
+        if ($this->tipe_so=='Ready Mix'){
+            $msalesorder = MSalesorder::find($this->so_id);
+            $this->customer_id = $msalesorder->customer_id;
+            $this->noso = $msalesorder->noso;
+            $this->pajak = $msalesorder->pajak;
+            $customers = Customer::find($msalesorder->customer_id);
+            $this->customer = $customers->nama_customer;
+        }else{
+            $msalesorder = MSalesorderSewa::find($this->so_id);
+            $this->customer_id = $msalesorder->customer_id;
+            $this->noso = $msalesorder->noso;
+            $this->pajak = $msalesorder->pajak;
+            $customers = Customer::find($msalesorder->customer_id);
+            $this->customer = $customers->nama_customer;
+        }
         $this->jumlah_total = 0;
         $this->dp = "DP";
+
+        $this->dp_sebelum = Invoice::where('so_id', $this->so_id)
+        ->where('tipe_so',$this->tipe_so)
+        ->where('tipe','DP')
+        ->where('status','open')->sum('total');
+
     }
 
     public function render()
@@ -40,41 +70,75 @@ class InvoiceModal extends ModalComponent
     }
 
     public function updatedTglAwal(){
-        $this->jumlah_total = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
-        ->where('d_salesorders.m_salesorder_id', $this->m_salesorder_id)
-        ->where('tickets.status','Open')
-        ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
-        ->sum(DB::raw('tickets.jumlah * d_salesorders.harga_intax'));
 
+        if ($this->tipe_so=='Sewa'){
+            $jumlah_total = DSalesorderSewa::where('d_salesorder_sewas.m_salesorder_sewa_id',$this->so_id)
+            ->where('d_salesorder_sewas.status_detail','Open')
+            ->sum(DB::raw('d_salesorder_sewas.lama * d_salesorder_sewas.harga_intax'));
+
+            $this->jumlah_total = $jumlah_total;
+        }
+        else{
+            $jumlah_ticket = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
+            ->where('d_salesorders.m_salesorder_id', $this->so_id)
+            ->where('tickets.status','Open')
+            ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->sum(DB::raw('tickets.jumlah * d_salesorders.harga_intax'));
+
+            $jumlah_concrete = Concretepump::where('m_salesorder_id', $this->so_id)
+            ->where('concretepumps.status','Open')
+            ->whereBetween(DB::raw('date(concretepumps.created_at)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->sum('concretepumps.harga_sewa');
+
+            $this->jumlah_total = $jumlah_ticket + $jumlah_concrete;
+        }
         if ($this->jumlah_total > 0) {
             $this->dp = "";
-            $this->invoice->jumlah = $this->jumlah_total;
         }else{
             $this->dp = "DP";
-            $this->invoice->jumlah = 0;
         }
-
-        $this->jumlah_total = number_format($this->jumlah_total,2,',','.');
     }
     public function updatedTglAkhir(){
-        $this->jumlah_total = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
-        ->where('d_salesorders.m_salesorder_id', $this->m_salesorder_id)
-        ->where('tickets.status','Open')
-        ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
-        ->sum(DB::raw('tickets.jumlah * d_salesorders.harga_intax'));
 
+        if ($this->tipe_so=='Sewa'){
+            $jumlah_total = DSalesorderSewa::where('d_salesorder_sewas.m_salesorder_sewa_id',$this->so_id)
+            ->where('d_salesorder_sewas.status_detail','Open')
+            ->sum(DB::raw('d_salesorder_sewas.lama * d_salesorder_sewas.harga_intax'));
+
+            $this->jumlah_total = $jumlah_total;
+        }
+        else{
+            $jumlah_ticket = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
+            ->where('d_salesorders.m_salesorder_id', $this->so_id)
+            ->where('tickets.status','Open')
+            ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->sum(DB::raw('tickets.jumlah * d_salesorders.harga_intax'));
+
+            $jumlah_concrete = Concretepump::where('m_salesorder_id', $this->so_id)
+            ->where('concretepumps.status','Open')
+            ->whereBetween(DB::raw('date(concretepumps.created_at)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->sum('concretepumps.harga_sewa');
+
+            $this->jumlah_total = $jumlah_ticket + $jumlah_concrete;
+        }
         if ($this->jumlah_total > 0) {
             $this->dp = "";
-            $this->invoice->jumlah = $this->jumlah_total;
         }else{
             $this->dp = "DP";
-            $this->invoice->jumlah = 0;
         }
-
-        $this->jumlah_total = number_format($this->jumlah_total,2,',','.');
     }
 
     public function save(){
+
+        $this->jumlah_total = str_replace('.', '', $this->jumlah_total);
+        $this->jumlah_total = str_replace(',', '.', $this->jumlah_total);
+
+        $this->jumlah_dp = str_replace('.', '', $this->jumlah_dp);
+        $this->jumlah_dp = str_replace(',', '.', $this->jumlah_dp);
+
+        $this->dp_sebelum = str_replace('.', '', $this->dp_sebelum);
+        $this->dp_sebelum = str_replace(',', '.', $this->dp_sebelum);
+
 
         $this->validate();
 
@@ -82,30 +146,137 @@ class InvoiceModal extends ModalComponent
 
         try{
 
-            if ($this->editmode!='edit') {
+            $nomorterakhir = DB::table('invoices')->orderBy('id', 'DESC')->get();
 
-                $nomorterakhir = DB::table('tickets')->orderBy('id', 'DESC')->get();
-
-                if (count($nomorterakhir) == 0){
-                    $noticket = '0001/DO/'.date('m').'/'.date('Y');               
-                }else{
-                    if (
-                        substr($nomorterakhir[0]->noticket, 8, 2) == date('m')
-                        &&
-                        substr($nomorterakhir[0]->noticket, 11, 4) == date('Y')
-                    ) {
-                        $noakhir = intval(substr($nomorterakhir[0]->noticket, 0, 4)) + 1;
-                        $noticket = substr('0000' . $noakhir, -4) . '/DO/' . date('m') . '/' . date('Y');
-                    } else {
-                        $noticket = '0001/DO/' . date('m') . '/' . date('Y');
-                    }
+            if (count($nomorterakhir) == 0){
+                $noinvoice = '0001/IV/'.date('m').'/'.date('Y');               
+            }else{
+                if (
+                    substr($nomorterakhir[0]->noinvoice, 8, 2) == date('m')
+                    &&
+                    substr($nomorterakhir[0]->noinvoice, 11, 4) == date('Y')
+                ) {
+                    $noakhir = intval(substr($nomorterakhir[0]->noinvoice, 0, 4)) + 1;
+                    $noinvoice = substr('0000' . $noakhir, -4) . '/IV/' . date('m') . '/' . date('Y');
+                } else {
+                    $noinvoice = '0001/IV/' . date('m') . '/' . date('Y');
                 }
             }
 
-            $this->ticket->noticket = $noticket;
+            $this->invoice->noinvoice = $noinvoice;
+            $this->invoice->tipe_so = $this->tipe_so;
+            $this->invoice->so_id = $this->so_id;
+            $this->invoice->tipe = $this->dp;
+            $this->invoice->customer_id = $this->customer_id;
+            
+            if ($this->invoice->tipe == 'DP'){
+                $this->invoice->total = floatval($this->jumlah_dp);
+            }else{
+                if (floatval($this->dp_sebelum) > floatval($this->jumlah_total)){
+                    $this->invoice->total = floatval($this->jumlah_total);
 
-            $this->ticket->save();
+                    DB::table('invoices')->where('so_id', $this->so_id)
+                    ->where('tipe_so',$this->tipe_so)
+                    ->where('tipe','DP')
+                    ->where('status','open')
+                    ->update([
+                        'status' => 'change'
+                    ]);
+                }else{
+                    $this->invoice->total = floatval($this->jumlah_total) - floatval($this->jumlah_dp);
+                    DB::table('invoices')->where('so_id', $this->so_id)
+                    ->where('tipe_so',$this->tipe_so)
+                    ->where('tipe','DP')
+                    ->where('status','open')
+                    ->update([
+                        'status' => 'Finish'
+                    ]);
+                }
+            }
+            $this->invoice->sisa_invoice = $this->invoice->total;
+            $this->invoice->dpp = $this->invoice->total / (1+$this->pajak/100);
+            $this->invoice->ppn = $this->invoice->dpp * $this->pajak/100;
+            $this->invoice->status='Open';
+            $this->invoice->save();
 
+            if ($this->tipe_so=='Sewa'){
+
+                $sewas = DSalesorderSewa::where('d_salesorder_sewas.m_salesorder_sewa_id',$this->so_id)
+                ->where('d_salesorder_sewas.status_detail','Open')
+                ->get();
+
+                foreach($sewas as $sewa){
+                    $datasewa = DSalesorderSewa::find($sewa->id);
+                    $datasewa['status_detail'] = 'Finish';
+                    $datasewa->save();
+
+                    $dinvoice = new DInvoice();
+                    $dinvoice['invoice_id']=$this->invoice->id;
+                    $dinvoice['tipe']='Sewa';
+                    $dinvoice['trans_id']=$sewa->id;
+                    $dinvoice['status_detail']='Open';
+                    $dinvoice->save();
+                }
+
+
+            }else{
+
+                $tickets = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
+                ->select('tickets.*','d_salesorders.jumlah','d_salesorders.harga_intax')
+                ->where('d_salesorders.m_salesorder_id', $this->so_id)
+                ->where('tickets.status','Open')
+                ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+                ->get();
+
+                $concretes = Concretepump::where('m_salesorder_id', $this->so_id)
+                ->where('concretepumps.status','Open')
+                ->whereBetween(DB::raw('date(concretepumps.created_at)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+                ->get();
+
+                foreach($tickets as $ticket){
+                    $dataticket = Ticket::find($ticket->id);
+                    $dataticket['status'] = 'Finish';
+                    $dataticket->save();
+
+                    $dinvoice = new DInvoice();
+                    $dinvoice['invoice_id']=$this->invoice->id;
+                    $dinvoice['tipe']='Ticket';
+                    $dinvoice['trans_id']=$ticket->id;
+                    $dinvoice['status_detail']='Open';
+                    $dinvoice->save();
+                }
+
+                foreach($concretes as $concrete){
+                    $dataconcrete = Concretepump::find($concrete->id);
+                    $dataconcrete['status'] = 'Finish';
+                    $dataconcrete->save();
+
+                    $dinvoice = new DInvoice();
+                    $dinvoice['invoice_id']=$this->invoice->id;
+                    $dinvoice['tipe']='Concrete Pump';
+                    $dinvoice['trans_id']=$concrete->id;
+                    $dinvoice['status_detail']='Open';
+                    $dinvoice->save();
+                }
+        
+            }
+
+            DB::commit();
+
+            $this->closeModal();
+
+            $this->alert('success', 'Save Success', [
+                'position' => 'center'
+            ]);
+
+            $this->emitTo('invoice.invoice-table', 'pg:eventRefresh-default');
+
+        }
+        catch(Throwable $e){
+            $this->alert('error', $e->getMessage(), [
+                'position' => 'center'
+            ]);
+        }
 
     }
 
