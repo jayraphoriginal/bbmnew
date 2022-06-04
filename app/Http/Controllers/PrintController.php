@@ -166,9 +166,10 @@ class PrintController extends Controller
                 ->join('customers','m_salesorders.customer_id','customers.id')
                 ->join('kendaraans','concretepumps.kendaraan_id','kendaraans.id')
                 ->join('drivers','concretepumps.driver_id','drivers.id')    
-                ->where('concretepumps.id',$id);
+                ->where('concretepumps.id',$id)
+                ->get();
 
-        return $header;
+        // return $header;
 
         $customPaper = array(0,0,609.44,396.85);
 
