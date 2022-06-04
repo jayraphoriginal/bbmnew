@@ -179,6 +179,15 @@ final class RekapConcretepumpTable extends PowerGridComponent
                     'tipe' => 'include mixer',
                     'd_so_id' => 'id'
             ]),
+
+            Button::add('cetak')
+            ->caption(__('Cetak'))
+            ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->target('_blank')
+            ->method('get')
+            ->route("printconcretepump",[
+                'id' => 'id'
+            ]),
         ];
     }
 

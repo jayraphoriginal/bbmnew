@@ -7,6 +7,7 @@ use App\Models\Mpajak;
 use App\Models\MSalesorder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Concretepump;
 use PDF;
 
 class PrintController extends Controller
@@ -156,5 +157,25 @@ class PrintController extends Controller
             ))->setPaper($customPaper);
             return $pdf->stream();
         }        
+    } 
+
+    public function concretepump($id){
+    
+        $header = Concretepump::select('concretepumps.*','customers.nama_customer','kendaraans.nopol','drivers.nama_driver')
+                ->join('m_salesorders','concretepumps.m_salesorder_id','m_salesorders.id')
+                ->join('customers','m_salesorders.customer_id','customers.id')
+                ->join('kendaraans','concretepumps.kendaraan_id','kendaraans.id')
+                ->join('drivers','concretepumps.driver_id','drivers.id')    
+                ->where('concretepumps.id',$id);
+
+        return $header;
+
+        $customPaper = array(0,0,609.44,396.85);
+
+        $pdf = PDF::loadView('print.concretepump', array(
+            'header' => $header,
+            // 'detail' => $detail
+        ))->setPaper($customPaper);
+        return $pdf->stream();
     } 
 }
