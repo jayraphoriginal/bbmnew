@@ -2,10 +2,12 @@
 
 namespace App\Http\Livewire\Sewa;
 
+use App\Models\Concretepump;
 use App\Models\Timesheet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use DB;
 
 class TimesheetModal extends ModalComponent
 {
@@ -54,6 +56,16 @@ class TimesheetModal extends ModalComponent
     public function save(){
 
         $this->validate();
+        
+        if($this->timesheet->tipe =='include mixer'){
+
+            $concretepumps = Concretepump::find($this->timesheet->d_so_id);
+            
+            $this->timesheet->keterangan = DB::table('d_salesorders')
+            ->where('d_salesorders.m_salesorder_id',$concretepumps->m_salesorder_id)
+            ->sum('jumlah');
+            
+        }
 
         $this->timesheet->save();
 

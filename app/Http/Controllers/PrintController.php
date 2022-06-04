@@ -8,6 +8,7 @@ use App\Models\MSalesorder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Concretepump;
+use App\Models\Timesheet;
 use PDF;
 
 class PrintController extends Controller
@@ -161,21 +162,27 @@ class PrintController extends Controller
 
     public function concretepump($id){
     
-        $header = Concretepump::select('concretepumps.*','customers.nama_customer','kendaraans.nopol','drivers.nama_driver')
+        $header = Concretepump::select('concretepumps.*','customers.nama_customer','kendaraans.nopol','drivers.nama_driver','rates.tujuan')
                 ->join('m_salesorders','concretepumps.m_salesorder_id','m_salesorders.id')
                 ->join('customers','m_salesorders.customer_id','customers.id')
                 ->join('kendaraans','concretepumps.kendaraan_id','kendaraans.id')
                 ->join('drivers','concretepumps.driver_id','drivers.id')    
+                ->join('rates','concretepumps.rate_id','rates.id')
                 ->where('concretepumps.id',$id)
-                ->get();
+                ->first();
 
-        // return $header;
+        //  return $header;
+
+        $detail = Timesheet::select('timesheets.*')
+                ->where('timesheets.d_so_id',$id)
+                ->orderBy('id','desc')
+                ->first();
 
         $customPaper = array(0,0,609.44,396.85);
 
         $pdf = PDF::loadView('print.concretepump', array(
             'header' => $header,
-            // 'detail' => $detail
+            'detail' => $detail
         ))->setPaper($customPaper);
         return $pdf->stream();
     } 

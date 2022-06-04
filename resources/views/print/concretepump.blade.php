@@ -5,7 +5,7 @@
         <style>
             *{
                 font-family: Arial, Helvetica, sans-serif
-                font-size:12px;
+                font-size:14px;
             }
 
             @page{
@@ -28,23 +28,23 @@
             }
             .tglkanan{
                 float:right;
-                font-size:16px;
+                font-size:14px;
             }
             .captioncenter{
                 font-weight:bold;
                 text-align:center;
-                font-size:16px;
+                font-size:14px;
             }
             .captionleft{
                 font-weight:bold;
                 text-align:left;
                 width:20%;
-                font-size:15px;
+                font-size:14px;
             }
             .captionright{
                 font-weight:bold;
                 text-align:right;
-                font-size:15px;
+                font-size:14px;
             }  
             .table{
                 outline-style: solid;
@@ -53,17 +53,20 @@
             .borderleft{
                 border-left: 2px solid;
             }
+            td{
+                font-size:14px;
+            }
         </style>
         <title>Concrete Pump</title>
     </head>
 
 
     <body>
-        <div style="border: 2px solid; margin:auto; padding-left:1rem">
-            <h2 style="text-align:center; text-decoration:underline">LAPORAN OPERASI MESIN</h2>
-            <p style="text-align:center">MACHINE OPERATION REPORT</p>
+        <div style="margin:auto; padding-left:1rem">
+            <h6 style="text-align:center; text-decoration:underline">LAPORAN OPERASI MESIN</h6>
+            <h6 style="text-align:center">MACHINE OPERATION REPORT</h6>
         </div>
-        <table class="table table-sm" style="margin-top:1rem">
+        <table style="margin-top:1rem">
             <tr>
                 <td class="kl1">NOPOL</td>
                 <td class="kl2">: {{ $header->nopol }}</td>
@@ -82,41 +85,54 @@
             </tr>
         </table>
         
-        <table class="table table-sm" style="margin-top:1em;">
+        <table style="margin-top:1rem; margin-bottom:1rem; width:100%;">
+            <thead>
+                <tr>
+                    <td colspan="2" style="text-align: center; border: solid 1px #000">Waktu Operasi</td>
+                    <td rowspan="2" style="text-align: center; border: solid 1px #000">Jumlah Waktu Beroperasi</td>
+                    <td rowspan="2" style="text-align: center; border: solid 1px #000">Keterangan (Volume M<sup>3</sup></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; border: solid 1px #000">Awal</td>
+                    <td style="text-align: center; border: solid 1px #000">Akhir</td>
+                </tr>
+            </thead>
             <tbody>
+                @if(!is_null($detail))
+                    <tr>
+                        <td style="height:6rem; text-align:center; border: solid 1px #000">{{ date_format(date_create($detail->jam_awal),'h:i') }}</td>
+                        <td style="height:6rem; text-align:center;border: solid 1px #000">{{ date_format(date_create($detail->jam_akhir),'h:i') }}</td>
+                        <td style="height:6rem; text-align:center;border: solid 1px #000">{{ date_diff(date_create($detail->jam_awal),date_create($detail->jam_akhir))->format('%h Jam %i Menit') }}</td>
+                        <td style="height:6rem; text-align:center;border: solid 1px #000">{{ $detail->keterangan }}</td>
+                    </tr>
+                @else
                 <tr>
-                   
-                   
+                   <td style="height:6rem; border: solid 1px #000"></td>
+                   <td style="height:6rem; border: solid 1px #000"></td>
+                   <td style="height:6rem; border: solid 1px #000"></td>
+                   <td style="height:6rem; border: solid 1px #000"></td>
                 </tr>
-                <tr>
-                    
-                </tr>
-                <tr>
-                   
-                </tr>
-                <tr>
-                    
-                </tr>
+                @endif
             </tbody>
         </table>
 
-        <table class="table table-sm" style="width:100%;">
+        <table style="width:100%;">
             <tr>
-                <td style="height:4em;text-align:center; width:33%;font-weight:bold;">Pengawas Pihak</td>
-                <td class="border-left" style="text-align:center;width:33%;font-weight:bold"></td>
-                <td class="border-left" style="text-align:center;font-weight:bold">Operator / Supir</td>
+                <td style="text-align:center; width:20%;">Pengawas Pihak</td>
+                <td style="text-align:center;width:60%;"></td>
+                <td style="text-align:center;width:30%">Operator / Supir</td>
             </tr>
 
             <tr>
-                <td class="text-align:center" style="width:33%">Controller</td>
-                <td class="border-left" style="width:33%;text-align:center"></td>
-                <td class="text-align:center border-left">(                 )</td>
+                <td style="height:5em; text-align:center; vertical-align:top; width:20%;">Controller</td>
+                <td style="height:5em; text-align:center; vertical-align:top; width:60%;"></td>
+                <td style="height:5em; text-align:center; vertical-align:top; width:30%"></td>
             </tr>
 
             <tr>
-                <td class="text-align:center" style="width:33%"></td>
-                <td class="border-left" style="width:33%;text-align:center"></td>
-                <td class="text-align:center border-left">{{ '('.$header->nama_driver.')' }}</td>
+                <td style="text-align:center;width:20%;">(_______________)</td>
+                <td style="text-align:center;width:60%;"></td>
+                <td style="text-align:center;width:30%">{{ '('.$header->nama_driver.')' }}</td>
             </tr>
         </table>
 
