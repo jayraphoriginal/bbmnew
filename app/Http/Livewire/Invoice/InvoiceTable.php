@@ -209,23 +209,31 @@ final class InvoiceTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    /*
+    
     public function actions(): array
     {
        return [
-           Button::add('edit')
-               ->caption('Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('invoice.edit', ['invoice' => 'id']),
+            Button::add('cetak')
+            ->caption(__('Cetak'))
+            ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->target('_blank')
+            ->method('get')
+            ->route("printinvoice",[
+                'id' => 'id'
+            ]),
+        //    Button::add('edit')
+        //        ->caption('Edit')
+        //        ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
+        //        ->route('invoice.edit', ['invoice' => 'id']),
 
-           Button::add('destroy')
-               ->caption('Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('invoice.destroy', ['invoice' => 'id'])
-               ->method('delete')
+        //    Button::add('destroy')
+        //        ->caption('Delete')
+        //        ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+        //        ->route('invoice.destroy', ['invoice' => 'id'])
+        //        ->method('delete')
         ];
     }
-    */
+    
 
     /*
     |--------------------------------------------------------------------------

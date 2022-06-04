@@ -51,4 +51,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printsosewa/{id}', [\App\Http\Controllers\PrintController::class,'sosewa'])->name('printsosewa');
     Route::get('printticket/{id}', [\App\Http\Controllers\PrintController::class,'ticket'])->name('printticket');
     Route::get('printpo/{id}', [\App\Http\Controllers\PrintController::class,'po'])->name('printpo');
+    Route::get('printinvoice/{id}', [\App\Http\Controllers\PrintController::class,'invoice'])->name('printinvoice');
 });
