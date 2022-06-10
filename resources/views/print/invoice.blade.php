@@ -119,13 +119,13 @@
                 <td style="height:1em;text-align:left; width:30%">Pembayaran di Transfer Ke</td>
             </tr>
             <tr>
-                <td style="height:1em;text-align:left; font-weight:bold; width:30%">Rekening Mandiri</td>
+                <td style="height:1em;text-align:left; font-weight:bold; width:30%">Rekening {{ $data[0]->nama_bank }}</td>
             </tr>
             <tr>
-                <td style="height:1em;text-align:left; width:30%" style="width:30%">No. 113 000 8998 993</td>
+                <td style="height:1em;text-align:left; width:30%" style="width:30%">{{ $data[0]->norek }}</td>
             </tr>
             <tr>
-                <td style="height:1em;text-align:left; width:30%" style="width:30%">An PT. Bintang Beton Mandala</td>
+                <td style="height:1em;text-align:left; width:30%" style="width:30%">{{ $data[0]->atas_nama }}</td>
             </tr>
         </table>
         <table style="float:right;width:45%">
@@ -136,7 +136,7 @@
                 <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
             </tr>
             <tr>
-                <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ 'Sony Suherman' }}</td>
+                <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
             </tr>
         </table>
     </body>

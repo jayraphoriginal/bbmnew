@@ -35,6 +35,13 @@
         />
     </x-form-group>
 
+    <x-form-group caption="Penjualan Retail">
+        <x-number-text
+            readonly
+            wire:model="jumlah_penjualan_retail"
+        />
+    </x-form-group>
+
     @if($dp == "DP")
         <x-form-group caption="Jumlah Invoice DP">
             <x-number-text
@@ -53,6 +60,17 @@
     <x-form-group caption="Rekening">
         <livewire:bank.rekening-select :deskripsi="$rekening"/>
         @error('invoice.rekening_id')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Tanda Tangan">
+        <x-combobox wire:model="invoice.tanda_tangan">
+            <option value="">-- Isi Tanda Tangan --</option>
+            <option value="Sony Suherman">Sony Suherman</option>
+            <option value="Tedy Suherman">Tedy Suherman</option>
+        </x-combobox>
+        @error('invoice.tanda_tangan')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>

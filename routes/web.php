@@ -43,6 +43,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('salesordersewa', \App\Http\Livewire\Sewa\SalesorderSewaComponent::class)->name('salesordersewa');
     Route::get('purchaseorder', \App\Http\Livewire\Pembelian\PurchaseorderComponent::class)->name('purchaseorder');
     Route::get('ticketmaterial', \App\Http\Livewire\Penjualan\TicketComponent::class)->name('ticketmaterial');
+    Route::get('penjualanretail', \App\Http\Livewire\Penjualan\PenjualanRetailComponent::class)->name('penjualanretail');
     Route::get('invoice', \App\Http\Livewire\Invoice\InvoiceComponent::class)->name('invoice');
 
 

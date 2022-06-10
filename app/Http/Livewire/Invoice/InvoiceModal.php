@@ -9,6 +9,7 @@ use App\Models\DSalesorderSewa;
 use App\Models\Invoice;
 use App\Models\MSalesorder;
 use App\Models\MSalesorderSewa;
+use App\Models\PenjualanRetail;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -22,7 +23,7 @@ class InvoiceModal extends ModalComponent
 
     public $noso, $so_id, $tipe_so, $customer;
     public Invoice $invoice;    
-    public $tgl_awal, $tgl_akhir, $jumlah_total, $dp, $jumlah_dp;
+    public $tgl_awal, $tgl_akhir, $jumlah_total, $dp, $jumlah_dp, $jumlah_penjualan_retail;
     public $rekening, $dp_sebelum, $pajak, $customer_id;
 
     protected $listeners = ['selectrekening' => 'selectrekening'];
@@ -30,7 +31,8 @@ class InvoiceModal extends ModalComponent
     protected $rules =[
         'invoice.rekening_id' => 'required',
         'tgl_awal' => 'required',
-        'tgl_akhir' => 'required'
+        'tgl_akhir' => 'required',
+        'invoice.tanda_tangan' => 'required'
     ];
 
     public function selectrekening($id){
@@ -91,8 +93,21 @@ class InvoiceModal extends ModalComponent
             ->sum('concretepumps.harga_sewa');
 
             $this->jumlah_total = $jumlah_ticket + $jumlah_concrete;
+
+            $tambahanbiaya = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
+            ->where('d_salesorders.m_salesorder_id', $this->so_id)
+            ->where('tickets.status','Open')
+            ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->sum('tambahan_biaya');
+
+            $penjualanretail = PenjualanRetail::where('m_salesorder_id', $this->so_id)
+            ->where('status_detail','Open')
+            ->sum(DB::raw('jumlah * harga'));
+
+            $this->jumlah_penjualan_retail = $tambahanbiaya + $penjualanretail;
+
         }
-        if ($this->jumlah_total > 0) {
+        if ($this->jumlah_total + $this->jumlah_penjualan_retail > 0) {
             $this->dp = "";
         }else{
             $this->dp = "DP";
@@ -120,8 +135,21 @@ class InvoiceModal extends ModalComponent
             ->sum('concretepumps.harga_sewa');
 
             $this->jumlah_total = $jumlah_ticket + $jumlah_concrete;
+
+            $tambahanbiaya = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
+            ->where('d_salesorders.m_salesorder_id', $this->so_id)
+            ->where('tickets.status','Open')
+            ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->sum('tambahan_biaya');
+
+            $penjualanretail = PenjualanRetail::where('m_salesorder_id', $this->so_id)
+            ->where('status_detail','Open')
+            ->sum(DB::raw('jumlah * harga'));
+
+            $this->jumlah_penjualan_retail = $tambahanbiaya + $penjualanretail;
+
         }
-        if ($this->jumlah_total > 0) {
+        if ($this->jumlah_total + $this->jumlah_penjualan_retail > 0) {
             $this->dp = "";
         }else{
             $this->dp = "DP";
@@ -142,63 +170,114 @@ class InvoiceModal extends ModalComponent
 
         $this->validate();
 
+        if ($this->jumlah_total + $this->jumlah_penjualan_retail <= 0 && $this->jumlah_dp <=0){
+            $this->alert('error', 'Jumlah Nol', [
+                'position' => 'center'
+            ]);
+            exit();
+        }
+
         DB::beginTransaction();
 
         try{
 
-            $nomorterakhir = DB::table('invoices')->orderBy('id', 'DESC')->get();
+            if ($this->jumlah_total > 0){
 
-            if (count($nomorterakhir) == 0){
-                $noinvoice = '0001/IV/'.date('m').'/'.date('Y');               
-            }else{
-                if (
-                    substr($nomorterakhir[0]->noinvoice, 8, 2) == date('m')
-                    &&
-                    substr($nomorterakhir[0]->noinvoice, 11, 4) == date('Y')
-                ) {
-                    $noakhir = intval(substr($nomorterakhir[0]->noinvoice, 0, 4)) + 1;
-                    $noinvoice = substr('0000' . $noakhir, -4) . '/IV/' . date('m') . '/' . date('Y');
-                } else {
-                    $noinvoice = '0001/IV/' . date('m') . '/' . date('Y');
-                }
-            }
+                $nomorterakhir = DB::table('invoices')->orderBy('id', 'DESC')
+                ->where('tipe','<>','Retail')->get();
 
-            $this->invoice->noinvoice = $noinvoice;
-            $this->invoice->tipe_so = $this->tipe_so;
-            $this->invoice->so_id = $this->so_id;
-            $this->invoice->tipe = $this->dp;
-            $this->invoice->customer_id = $this->customer_id;
-            
-            if ($this->invoice->tipe == 'DP'){
-                $this->invoice->total = floatval($this->jumlah_dp);
-            }else{
-                if (floatval($this->dp_sebelum) > floatval($this->jumlah_total)){
-                    $this->invoice->total = floatval($this->jumlah_total);
-
-                    DB::table('invoices')->where('so_id', $this->so_id)
-                    ->where('tipe_so',$this->tipe_so)
-                    ->where('tipe','DP')
-                    ->where('status','open')
-                    ->update([
-                        'status' => 'change'
-                    ]);
+                if (count($nomorterakhir) == 0){
+                    $noinvoice = '0001/IV/'.date('m').'/'.date('Y');               
                 }else{
-                    $this->invoice->total = floatval($this->jumlah_total) - floatval($this->jumlah_dp);
-                    DB::table('invoices')->where('so_id', $this->so_id)
-                    ->where('tipe_so',$this->tipe_so)
-                    ->where('tipe','DP')
-                    ->where('status','open')
-                    ->update([
-                        'status' => 'Finish'
-                    ]);
+                    if (
+                        substr($nomorterakhir[0]->noinvoice, 8, 2) == date('m')
+                        &&
+                        substr($nomorterakhir[0]->noinvoice, 11, 4) == date('Y')
+                    ) {
+                        $noakhir = intval(substr($nomorterakhir[0]->noinvoice, 0, 4)) + 1;
+                        $noinvoice = substr('0000' . $noakhir, -4) . '/IV/' . date('m') . '/' . date('Y');
+                    } else {
+                        $noinvoice = '0001/IV/' . date('m') . '/' . date('Y');
+                    }
                 }
-            }
-            $this->invoice->sisa_invoice = $this->invoice->total;
-            $this->invoice->dpp = $this->invoice->total / (1+$this->pajak/100);
-            $this->invoice->ppn = $this->invoice->dpp * $this->pajak/100;
-            $this->invoice->status='Open';
-            $this->invoice->save();
 
+                $this->invoice->noinvoice = $noinvoice;
+                $this->invoice->tipe_so = $this->tipe_so;
+                $this->invoice->so_id = $this->so_id;
+                $this->invoice->tipe = $this->dp;
+                $this->invoice->customer_id = $this->customer_id;
+                
+                if ($this->invoice->tipe == 'DP'){
+                    $this->invoice->total = floatval($this->jumlah_dp);
+                }else{
+                    if (floatval($this->dp_sebelum) > floatval($this->jumlah_total)){
+                        $this->invoice->total = floatval($this->jumlah_total);
+
+                        DB::table('invoices')->where('so_id', $this->so_id)
+                        ->where('tipe_so',$this->tipe_so)
+                        ->where('tipe','DP')
+                        ->where('status','open')
+                        ->update([
+                            'status' => 'change'
+                        ]);
+                    }else{
+                        $this->invoice->total = floatval($this->jumlah_total) - floatval($this->jumlah_dp);
+                        DB::table('invoices')->where('so_id', $this->so_id)
+                        ->where('tipe_so',$this->tipe_so)
+                        ->where('tipe','DP')
+                        ->where('status','open')
+                        ->update([
+                            'status' => 'Finish'
+                        ]);
+                    }
+                }
+                $this->invoice->sisa_invoice = $this->invoice->total;
+                $this->invoice->dpp = $this->invoice->total / (1+$this->pajak/100);
+                $this->invoice->ppn = $this->invoice->dpp * $this->pajak/100;
+                $this->invoice->status='Open';
+                $this->invoice->save();
+            }
+            if ($this->jumlah_penjualan_retail>0){
+
+                $nomorterakhir = DB::table('invoices')->orderBy('id', 'DESC')
+                ->where('tipe','Retail')->get();
+
+                if (count($nomorterakhir) == 0){
+                    $noinvoice = '0001/IVR/'.date('m').'/'.date('Y');               
+                }else{
+                    if (
+                        substr($nomorterakhir[0]->noinvoice, 9, 2) == date('m')
+                        &&
+                        substr($nomorterakhir[0]->noinvoice, 12, 4) == date('Y')
+                    ) {
+                        $noakhir = intval(substr($nomorterakhir[0]->noinvoice, 0, 4)) + 1;
+                        $noinvoice = substr('0000' . $noakhir, -4) . '/IVR/' . date('m') . '/' . date('Y');
+                    } else {
+                        $noinvoice = '0001/IVR/' . date('m') . '/' . date('Y');
+                    }
+                }
+
+                $invoice = new Invoice();
+                $invoice->noinvoice = $noinvoice;
+                $invoice->tipe_so = $this->tipe_so;
+                $invoice->so_id = $this->so_id;
+                $invoice->tipe = 'Retail';
+                $invoice->customer_id = $this->customer_id;
+                $invoice->rekening_id = $this->invoice->rekening_id;
+                $invoice->tanda_tangan = $this->invoice->tanda_tangan;
+                $invoice->total = $this->jumlah_penjualan_retail;
+                $invoice->sisa_invoice = $this->jumlah_penjualan_retail;
+                $invoice->dpp = $this->jumlah_penjualan_retail;
+                $invoice->ppn = 0;
+                $invoice->status='Open';
+                $invoice->save();
+
+                PenjualanRetail::where('m_salesorder_id',$this->so_id)->update([
+                    'status_detail'=> 'Finish'
+                ]);
+
+            }
+            
             if ($this->tipe_so=='Sewa'){
 
                 $sewas = DSalesorderSewa::where('d_salesorder_sewas.m_salesorder_sewa_id',$this->so_id)

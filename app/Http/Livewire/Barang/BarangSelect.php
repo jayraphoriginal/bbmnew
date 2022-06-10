@@ -28,6 +28,7 @@ class BarangSelect extends Component
     {
         $this->deskripsi = Barang::find($id)->nama_barang;
         $this->emitTo('pembelian.purchaseorder-detail-modal','selectbarang', $id);
+        $this->emitTo('penjualan.penjualan-retail-modal','selectbarang', $id);
         $this->emitTo('mutubeton.komposisi-modal','selectbarang', $id);
     }
 
