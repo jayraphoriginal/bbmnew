@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             *{
-                font-size:10px;
+                font-size:14px;
             }
             table{margin:0rem}
             @page{
@@ -42,18 +42,28 @@
     </head>
 
     <body>
-        <h4 style="margin-top:1em; text-align:center; text-decoration:underline">FAKTUR INVOICE</h4>
-        <h4 style="text-align:center">FAKTUR TAGIHAN</h4>
-
+        <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
+        
         <table style="float:right">
             <tr>
-                <td class="captioncenter">{{ "No Invoice. ".$data[0]->noinvoice }}</td>
+                <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->noinvoice }}</td>
             </tr>
         </table>
 
-        <p>Kepada </p>
-        <p style="font-weight:bold;">{{ $data[0]->nama_customer }}</p>
-        <p>di - Tempat</p>
+        <table style="width:100%">
+            <tr>
+                <td style="width: 150px;height:50px;">Telah diterima dari</td>
+                <td style="width:20px;">:</td>
+                <td>{{ $data[0]->nama_customer }}</td>
+            </tr>
+            <tr>
+                <td>Uang Sejumlah</td>
+                <td>:</td>
+                <td style="background-color:#ccc;font-weight:bold;font-size:16px;">{{ ucwords($terbilang).' Rupiah' }}</td>
+            </tr>
+        </table>
+
+        <p style="margin-top:20px;">Untuk Pembayaran : </p>
 
         <table class="table table-sm table-bordered" style="margin-top:1.5em; margin-bottom:1em">
             <thead>
@@ -92,45 +102,8 @@
                 @endforeach
                 
             </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan=4 class="captionleft">DPP</td>
-                    <td class="captionright">{{ number_format($data[0]->dpp,2,",",".") }}</td>
-                </tr>
-                @if (empty($jual->uraian))
-                    <tr>
-                        <td colspan=4 class="captionleft">PPN {{ '0%' }}</td>
-                        <td class="captionright">{{ number_format(0,2,",",".") }}</td>
-                    </tr>
-                @else
-                    <tr>
-                        <td colspan=4 class="captionleft">PPN {{ $data[0]->pajak.'%' }}</td>
-                        <td class="captionright">{{ number_format($data[0]->ppn,2,",",".") }}</td>
-                    </tr>
-                @endif
-                <tr>
-                    <td colspan=4 class="captionleft">Total</td>
-                    <td class="captionright">{{ number_format($data[0]->total,2,",",".") }}</td>
-                </tr>
-                <tr>
-                    <td colspan="5" style="font-size:16px; font-weight: bold;">{{ ucwords($terbilang).' Rupiah' }}</td>
-                </tr>
-            </tfoot>
         </table>
-        <table style="float:left;width:45%">
-            <tr>
-                <td style="height:1em;text-align:left; width:30%">Pembayaran di Transfer Ke</td>
-            </tr>
-            <tr>
-                <td style="height:1em;text-align:left; font-weight:bold; width:30%">Rekening {{ $data[0]->nama_bank }}</td>
-            </tr>
-            <tr>
-                <td style="height:1em;text-align:left; width:30%" style="width:30%">{{ $data[0]->norek }}</td>
-            </tr>
-            <tr>
-                <td style="height:1em;text-align:left; width:30%" style="width:30%">{{ $data[0]->atas_nama }}</td>
-            </tr>
-        </table>
+        
         <table style="float:right;width:45%">
             <tr>
                 <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>

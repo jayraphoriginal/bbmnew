@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('ticketmaterial', \App\Http\Livewire\Penjualan\TicketComponent::class)->name('ticketmaterial');
     Route::get('penjualanretail', \App\Http\Livewire\Penjualan\PenjualanRetailComponent::class)->name('penjualanretail');
     Route::get('invoice', \App\Http\Livewire\Invoice\InvoiceComponent::class)->name('invoice');
+    Route::get('coa',  \App\Http\Livewire\Coa\CoaComponent::class)->name('coa');
 
 
     //Print
@@ -53,5 +54,6 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printticket/{id}', [\App\Http\Controllers\PrintController::class,'ticket'])->name('printticket');
     Route::get('printpo/{id}', [\App\Http\Controllers\PrintController::class,'po'])->name('printpo');
     Route::get('printinvoice/{id}', [\App\Http\Controllers\PrintController::class,'invoice'])->name('printinvoice');
+    Route::get('printkwitansi/{id}', [\App\Http\Controllers\PrintController::class,'kwitansi'])->name('printkwitansi');
     Route::get('printconcretepump/{id}', [\App\Http\Controllers\PrintController::class,'concretepump'])->name('printconcretepump');
 });

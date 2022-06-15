@@ -65,76 +65,76 @@ class PenjualanRetailModal extends ModalComponent
             
             $this->penjualanretail->save();
 
-            $jumlahstok = DBarang::where('barang_id',$this->penjualanretail->barang_id)
-                                ->sum('jumlah');
+            // $jumlahstok = DBarang::where('barang_id',$this->penjualanretail->barang_id)
+            //                     ->sum('jumlah');
 
-            $pemakaianstok = $this->penjualanretail->jumlah;
+            // $pemakaianstok = $this->penjualanretail->jumlah;
                 
-            if ($jumlahstok < $pemakaianstok){
-                $barang = Barang::find($this->penjualanretail->barang_id);
-                DB::Rollback();
-                $this->alert('error', 'Stok '.$barang->nama_barang.' tidak mencukupi', [
-                    'position' => 'center'
-                ]);
-                return;
-            }else{
-                $detailbarang = DBarang::where('barang_id',$this->penjualanretail->barang_id)
-                                ->where('jumlah', '>',0)
-                                ->orderBy('tgl_masuk','asc')
-                                ->get();
+            // if ($jumlahstok < $pemakaianstok){
+            //     $barang = Barang::find($this->penjualanretail->barang_id);
+            //     DB::Rollback();
+            //     $this->alert('error', 'Stok '.$barang->nama_barang.' tidak mencukupi', [
+            //         'position' => 'center'
+            //     ]);
+            //     return;
+            // }else{
+            //     $detailbarang = DBarang::where('barang_id',$this->penjualanretail->barang_id)
+            //                     ->where('jumlah', '>',0)
+            //                     ->orderBy('tgl_masuk','asc')
+            //                     ->get();
 
-                foreach($detailbarang as $barang){
+            //     foreach($detailbarang as $barang){
 
-                    if ($pemakaianstok > 0){
-                        if($pemakaianstok > $barang->jumlah){
+            //         if ($pemakaianstok > 0){
+            //             if($pemakaianstok > $barang->jumlah){
                             
-                            $stok = DBarang::find($barang->id);
-                            $pemakaianstok = $pemakaianstok - $stok->jumlah;
-                            $pengurangan = $stok->jumlah;
-                            $stok['jumlah']=0;
-                            $stok->save();
+            //                 $stok = DBarang::find($barang->id);
+            //                 $pemakaianstok = $pemakaianstok - $stok->jumlah;
+            //                 $pengurangan = $stok->jumlah;
+            //                 $stok['jumlah']=0;
+            //                 $stok->save();
 
-                            $jumlahstok = DBarang::where('barang_id',$this->penjualanretail->barang_id)
-                                ->sum('jumlah');
+            //                 $jumlahstok = DBarang::where('barang_id',$this->penjualanretail->barang_id)
+            //                     ->sum('jumlah');
 
-                            $kartustok = new Kartustok();
-                            $kartustok['barang_id']=$this->penjualanretail->barang_id;
-                            $kartustok['tipe']='Penjualan Retail';
-                            $kartustok['trans_id']=$this->penjualanretail->id;
-                            $kartustok['increase']=0;
-                            $kartustok['decrease']=$pengurangan;
-                            $kartustok['harga_debet']=0;
-                            $kartustok['harga_kredit']=$stok->hpp;
-                            $kartustok['qty']=$jumlahstok;
-                            $kartustok['modal']=$stok->hpp;
-                            $kartustok->save();
+            //                 $kartustok = new Kartustok();
+            //                 $kartustok['barang_id']=$this->penjualanretail->barang_id;
+            //                 $kartustok['tipe']='Penjualan Retail';
+            //                 $kartustok['trans_id']=$this->penjualanretail->id;
+            //                 $kartustok['increase']=0;
+            //                 $kartustok['decrease']=$pengurangan;
+            //                 $kartustok['harga_debet']=0;
+            //                 $kartustok['harga_kredit']=$stok->hpp;
+            //                 $kartustok['qty']=$jumlahstok;
+            //                 $kartustok['modal']=$stok->hpp;
+            //                 $kartustok->save();
 
-                        }else{
+            //             }else{
 
-                            $stok = DBarang::find($barang->id);
-                            $stok['jumlah']=$stok['jumlah']-$pemakaianstok;
-                            $stok->save();
+            //                 $stok = DBarang::find($barang->id);
+            //                 $stok['jumlah']=$stok['jumlah']-$pemakaianstok;
+            //                 $stok->save();
 
-                            $jumlahstok = DBarang::where('barang_id',$this->penjualanretail->barang_id)
-                                ->sum('jumlah');
+            //                 $jumlahstok = DBarang::where('barang_id',$this->penjualanretail->barang_id)
+            //                     ->sum('jumlah');
 
-                            $kartustok = new Kartustok();
-                            $kartustok['barang_id']=$this->penjualanretail->barang_id;
-                            $kartustok['tipe']='Penjualan Retail';
-                            $kartustok['trans_id']=$this->penjualanretail->id;
-                            $kartustok['increase']=0;
-                            $kartustok['decrease']=$pemakaianstok;
-                            $kartustok['harga_debet']=0;
-                            $kartustok['harga_kredit']=$stok->hpp;
-                            $kartustok['qty']=$jumlahstok;
-                            $kartustok['modal']=$stok->hpp;
-                            $kartustok->save();
+            //                 $kartustok = new Kartustok();
+            //                 $kartustok['barang_id']=$this->penjualanretail->barang_id;
+            //                 $kartustok['tipe']='Penjualan Retail';
+            //                 $kartustok['trans_id']=$this->penjualanretail->id;
+            //                 $kartustok['increase']=0;
+            //                 $kartustok['decrease']=$pemakaianstok;
+            //                 $kartustok['harga_debet']=0;
+            //                 $kartustok['harga_kredit']=$stok->hpp;
+            //                 $kartustok['qty']=$jumlahstok;
+            //                 $kartustok['modal']=$stok->hpp;
+            //                 $kartustok->save();
 
-                            $pemakaianstok = 0;
-                        }
-                    }
-                }
-            }        
+            //                 $pemakaianstok = 0;
+            //             }
+            //         }
+            //     }
+            // }        
             DB::commit();
         }
         catch(Throwable $e){

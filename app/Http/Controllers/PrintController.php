@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Concretepump;
 use App\Models\Timesheet;
+use Riskihajar\Terbilang\Facades\Terbilang;
 use PDF;
 
 class PrintController extends Controller
@@ -117,6 +118,61 @@ class PrintController extends Controller
 
     }
 
+    public function kwitansi($id){
+
+        $invoice = Invoice::find($id);
+        
+        if ($invoice->tipe_so == 'Sewa'){
+
+            $data = Invoice::select('invoices.*','m_salesorder_sewas.noso', 'm_salesorder_sewas.pajak' ,'customers.nama_customer', 
+            'rekenings.norek', 'banks.nama_bank', 'rekenings.atas_nama',
+            DB::raw('itemsewas.nama_item as uraian'), 'satuans.satuan', DB::raw('d_salesorder_sewas.lama as jumlah'), 'd_salesorder_sewas.harga_intax')
+            ->join('m_salesorder_sewas','invoices.so_id', 'm_salesorder_sewas.id')
+            ->join('customers','m_salesorder_sewas.customer_id','customers.id')
+            ->join('d_invoices', 'invoices.id', 'd_invoices.invoice_id')
+            ->join('d_salesorder_sewas', 'd_invoices.trans_id', 'd_salesorder_sewas.id')
+            ->join('itemsewas', 'd_salesorder_sewas.itemsewa_id', 'itemsewas.id')
+            ->join('satuans', 'd_salesorder_sewas.satuan_id','satuans.id')
+            ->join('rekenings','invoices.rekening_id','rekenings.id')
+            ->join('banks','rekenings.bank_id','bank.id')
+            ->where('invoices.tipe_so','sewa')
+            ->where('invoices.id',$id)
+            ->get();
+
+            $terbilang = Terbilang::make($data[0]->total);
+
+            
+            $customPaper = array(0,0,609.44,396.85);
+
+            $pdf = PDF::loadView('print.kwitansi', array(
+                'data' => $data,
+                'terbilang' => $terbilang,
+            ))->setPaper($customPaper);
+            return $pdf->stream();
+        }   
+        else{
+            $data = Invoice::select('invoices.*','m_salesorders.pajak', 'customers.nama_customer','v_detail_invoice.satuan', 'v_detail_invoice.tipe_detail', 
+                        'v_detail_invoice.uraian', 'v_detail_invoice.jumlah', 'v_detail_invoice.harga_intax', 'rekenings.norek', 'banks.nama_bank','rekenings.atas_nama')
+            ->join('customers','invoices.customer_id','customers.id', 'm_salesorders.pajak')
+            ->join('m_salesorders','invoices.so_id','m_salesorders.id')
+            ->join('rekenings','invoices.rekening_id','rekenings.id')
+            ->join('banks','rekenings.bank_id','banks.id')
+            ->leftjoin('v_detail_invoice','invoices.id','v_detail_invoice.invoice_id')
+            ->where('invoices.id',$id)
+            ->get();
+
+            $terbilang = Terbilang::make($data[0]->total);
+
+            $customPaper = array(0,0,609.44,396.85);
+
+            $pdf = PDF::loadView('print.kwitansi', array(
+                'data' => $data,
+                'terbilang' => $terbilang,
+            ))->setPaper($customPaper);
+            return $pdf->stream();
+        }        
+    }
+
     public function invoice($id){
     
         $invoice = Invoice::find($id);
@@ -138,11 +194,14 @@ class PrintController extends Controller
             ->where('invoices.id',$id)
             ->get();
 
+            $terbilang = Terbilang::make($data[0]->total);
+
             
             $customPaper = array(0,0,609.44,396.85);
 
             $pdf = PDF::loadView('print.invoice', array(
                 'data' => $data,
+                'terbilang' => $terbilang,
             ))->setPaper($customPaper);
             return $pdf->stream();
         }   
@@ -157,10 +216,13 @@ class PrintController extends Controller
             ->where('invoices.id',$id)
             ->get();
 
+            $terbilang = Terbilang::make($data[0]->total);
+
             $customPaper = array(0,0,609.44,396.85);
 
             $pdf = PDF::loadView('print.invoice', array(
-                'data' => $data
+                'data' => $data,
+                'terbilang' => $terbilang,
             ))->setPaper($customPaper);
             return $pdf->stream();
         }        

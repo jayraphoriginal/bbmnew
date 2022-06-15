@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Invoice;
+namespace App\Http\Livewire\Coa;
 
-use App\Models\Invoice;
+use App\Models\Coa;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class InvoiceTable extends PowerGridComponent
+final class CoaTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -47,13 +47,11 @@ final class InvoiceTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\Invoice>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\Coa>|null
     */
     public function datasource(): ?Builder
     {
-        return Invoice::join('customers','invoices.customer_id','customers.id')
-        ->join('rekenings','invoices.rekening_id','rekenings.id')
-        ->select('invoices.*','customers.nama_customer','rekenings.norek');
+        return Coa::query()->orderBy('kode_akun');
     }
 
     /*
@@ -86,25 +84,16 @@ final class InvoiceTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('noinvoice')
-            ->addColumn('tipe_so')
-            ->addColumn('nama_customer')
-            ->addColumn('norek')
+            ->addColumn('kode_akun')
+            ->addColumn('nama_akun')
+            ->addColumn('level')
             ->addColumn('tipe')
-            ->addColumn('total', function(Invoice $model) {
-                return number_format($model->total,2,",",".");
-            })
-            ->addColumn('ppn', function(Invoice $model) {
-                return number_format($model->ppn,2,",",".");
-            })
-            ->addColumn('dpp', function(Invoice $model) {
-                return number_format($model->dpp,2,",",".");
-            })
-            ->addColumn('status')
-            ->addColumn('created_at_formatted', function(Invoice $model) { 
+            ->addColumn('posisi')
+            ->addColumn('header_akun')
+            ->addColumn('created_at_formatted', function(Coa $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(Invoice $model) { 
+            ->addColumn('updated_at_formatted', function(Coa $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }
@@ -126,70 +115,46 @@ final class InvoiceTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-
+        
             Column::add()
-            ->title('NO INVOICE')
-            ->field('noinvoice')
-            ->searchable()
-            ->sortable()
-            ->makeInputText(),
-
-            Column::add()
-            ->title('TIPE SO')
-            ->field('tipe_so')
-            ->searchable()
-            ->sortable()
-            ->makeInputText(),
-
-            Column::add()
-            ->title('CUSTOMER')
-            ->field('nama_customer')
-            ->searchable()
-            ->sortable()
-            ->makeInputText(),
-
-            Column::add()
-            ->title('NO REKENING')
-            ->field('norek')
-            ->searchable()
-            ->sortable()
-            ->makeInputText(),
-
-            Column::add()
-            ->title('DP')
-            ->field('tipe')
-            ->searchable()
-            ->sortable()
-            ->makeInputText(),
-
-            Column::add()
-            ->title('TOTAL')
-            ->field('total')
-            ->sortable(),
-
-            Column::add()
-            ->title('PPN')
-            ->field('ppn')
-            ->sortable(),
-
-            Column::add()
-            ->title('DPP')
-            ->field('dpp')
-            ->sortable(),
-
-            Column::add()
-                ->title('CREATED AT')
-                ->field('created_at_formatted', 'created_at')
-                ->searchable()
+                ->title('KODE AKUN')
+                ->field('kode_akun')
                 ->sortable()
-                ->makeInputDatePicker('created_at'),
+                ->searchable()
+                ->makeInputText(),
 
             Column::add()
-                ->title('UPDATED AT')
-                ->field('updated_at_formatted', 'updated_at')
-                ->searchable()
+                ->title('NAMA AKUN')
+                ->field('nama_akun')
                 ->sortable()
-                ->makeInputDatePicker('updated_at'),
+                ->searchable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('LEVEL')
+                ->field('level')
+                ->makeInputRange(),
+
+            Column::add()
+                ->title('TIPE')
+                ->field('tipe')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('POSISI')
+                ->field('posisi')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('HEADER AKUN')
+                ->field('header_akun')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
 
         ]
 ;
@@ -204,7 +169,7 @@ final class InvoiceTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Invoice Action Buttons.
+     * PowerGrid Coa Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
@@ -212,37 +177,27 @@ final class InvoiceTable extends PowerGridComponent
     
     public function actions(): array
     {
-       return [
-            Button::add('cetak')
-            ->caption(__('Cetak'))
-            ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-            ->target('_blank')
-            ->method('get')
-            ->route("printinvoice",[
-                'id' => 'id'
-            ]),
+        return [
+            Button::add('edit')
+                ->caption(__('Edit'))
+                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->openModal('coa.coa-modal',[
+                    'editmode' => 'edit',
+                    'coa_id' => 'id'
+                ]),
 
-            Button::add('kwitansi')
-            ->caption(__('Kwitansi'))
-            ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-            ->target('_blank')
-            ->method('get')
-            ->route("printkwitansi",[
-                'id' => 'id'
-            ]),
-        //    Button::add('edit')
-        //        ->caption('Edit')
-        //        ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-        //        ->route('invoice.edit', ['invoice' => 'id']),
 
-        //    Button::add('destroy')
-        //        ->caption('Delete')
-        //        ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-        //        ->route('invoice.destroy', ['invoice' => 'id'])
-        //        ->method('delete')
+            Button::add('destroy')
+                ->caption(__('Delete'))
+                ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
+                ->openModal('delete-modal', [
+                    'data_id'                 => 'id',
+                    'TableName'               => 'coas',
+                    'confirmationTitle'       => 'Delete Coa',
+                    'confirmationDescription' => 'apakah yakin ingin hapus coa?',
+                ]),
         ];
     }
-    
 
     /*
     |--------------------------------------------------------------------------
@@ -253,7 +208,7 @@ final class InvoiceTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Invoice Action Rules.
+     * PowerGrid Coa Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -265,7 +220,7 @@ final class InvoiceTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($invoice) => $invoice->id === 1)
+                ->when(fn($coa) => $coa->id === 1)
                 ->hide(),
         ];
     }
@@ -281,7 +236,7 @@ final class InvoiceTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Invoice Update.
+     * PowerGrid Coa Update.
      *
      * @param array<string,string> $data
      */
@@ -290,7 +245,7 @@ final class InvoiceTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = Invoice::query()->findOrFail($data['id'])
+           $updated = Coa::query()->findOrFail($data['id'])
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

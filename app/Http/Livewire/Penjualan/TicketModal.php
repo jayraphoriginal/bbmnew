@@ -141,6 +141,7 @@ class TicketModal extends ModalComponent
             }
 
             $this->ticket->noticket = $noticket;
+            $this->ticket->status = 'Open';
 
             $this->ticket->save();
 
