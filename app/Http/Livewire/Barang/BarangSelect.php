@@ -30,6 +30,9 @@ class BarangSelect extends Component
         $this->emitTo('pembelian.purchaseorder-detail-modal','selectbarang', $id);
         $this->emitTo('penjualan.penjualan-retail-modal','selectbarang', $id);
         $this->emitTo('mutubeton.komposisi-modal','selectbarang', $id);
+        $this->emitTo('produksi.produksi-detail-modal','selectbarang', $id);
+        $this->emitTo('produksi.produksi-modal','selectbarang', $id);
+        $this->emitTo('penjualan.penjualan-detail-modal','selectbarang', $id);
     }
 
     public function selectDeskripsi($id){

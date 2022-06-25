@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Pembelian;
 
 use App\Models\Alat;
+use App\Models\Kendaraan;
 use App\Models\MPurchaseorder;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +32,7 @@ class PurchaseorderModal extends ModalComponent
         'Mpo.supplier_id'=> 'required',
         'Mpo.pembebanan'=> 'required',
         'Mpo.jenis_pembebanan'=> 'required',
+        'Mpo.beban_id' => 'nullable'
     ];
 
     public function mount(){
@@ -40,10 +42,10 @@ class PurchaseorderModal extends ModalComponent
             $this->supplier = Supplier::find($this->Mpo->supplier_id)->nama_supplier;
             
             if ($this->Mpo->jenis_pembebanan=='Biaya Kendaraan'){
-                $this->kendaraan = Supplier::find($this->Mpo->beban_id)->nopol;
+               $this->kendaraan = Kendaraan::find($this->Mpo->beban_id)->nopol;
             }
             elseif($this->Mpo->jenis_pembebanan=='Biaya Alat'){
-                $this->alat = Alat::find($this->Mpo->beban_id)->nama_alat;
+               $this->alat = Alat::find($this->Mpo->beban_id)->nama_alat;
             }
         }else{
             $this->Mpo = new MPurchaseorder();

@@ -46,8 +46,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('penjualanretail', \App\Http\Livewire\Penjualan\PenjualanRetailComponent::class)->name('penjualanretail');
     Route::get('invoice', \App\Http\Livewire\Invoice\InvoiceComponent::class)->name('invoice');
     Route::get('coa',  \App\Http\Livewire\Coa\CoaComponent::class)->name('coa');
-
-
+    Route::get('kategori',  \App\Http\Livewire\Barang\KategoriComponent::class)->name('kategori');
+    Route::get('produksi',  \App\Http\Livewire\Produksi\ProduksiComponent::class)->name('produksi'); 
+    Route::get('penjualan',  \App\Http\Livewire\Penjualan\PenjualanComponent::class)->name('penjualan');
     //Print
     Route::get('printso/{id}', [\App\Http\Controllers\PrintController::class,'so'])->name('printso');
     Route::get('printsosewa/{id}', [\App\Http\Controllers\PrintController::class,'sosewa'])->name('printsosewa');

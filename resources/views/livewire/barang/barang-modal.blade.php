@@ -12,6 +12,13 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Kategori">
+        <livewire:barang.kategori-select :deskripsi="$kategori"/>
+        @error('barang.kategori_id')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="Tipe">
         <x-combobox
             wire:model="barang.tipe"

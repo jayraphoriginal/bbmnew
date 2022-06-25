@@ -106,7 +106,6 @@ final class PurchaseorderTable extends PowerGridComponent
             })
             ->addColumn('pembebanan')
             ->addColumn('jenis_pembebanan')
-            ->addColumn('deskripsi')
             ->addColumn('created_at_formatted', function(MPurchaseorder $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
@@ -184,12 +183,6 @@ final class PurchaseorderTable extends PowerGridComponent
             Column::add()
                 ->title('JENIS PEMBEBANAN')
                 ->field('jenis_pembebanan')
-                ->searchable()
-                ->sortable()
-                ->makeInputText(),
-            Column::add()
-                ->title('DESKRIPSI')
-                ->field('deskripsi')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),

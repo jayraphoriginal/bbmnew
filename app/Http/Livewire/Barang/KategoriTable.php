@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Barang;
 
-use App\Models\Barang;
+use App\Models\Kategori;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class BarangTable extends PowerGridComponent
+final class KategoriTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -47,13 +47,12 @@ final class BarangTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\Barang>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\Kategori>|null
     */
     public function datasource(): ?Builder
     {
-        return Barang::join('satuans','barangs.satuan_id','satuans.id')
-            ->leftjoin('kategoris','barangs.kategori_id','kategoris.id')
-            ->select('barangs.*','satuans.satuan');
+        return Kategori::join('coas','kategoris.coa_id','coas.id')
+        ->select('kategoris.*','coas.nama_akun');
     }
 
     /*
@@ -86,12 +85,15 @@ final class BarangTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('nama_barang')
             ->addColumn('kategori')
-            ->addColumn('tipe')
-            ->addColumn('merk')
-            ->addColumn('satuan_id')
-            ->addColumn('satuan');
+            ->addColumn('coa_id')
+            ->addColumn('nama_akun')
+            ->addColumn('created_at_formatted', function(Kategori $model) { 
+                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            })
+            ->addColumn('updated_at_formatted', function(Kategori $model) { 
+                return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
+            });
     }
 
     /*
@@ -111,17 +113,6 @@ final class BarangTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::add()
-                ->title('ID')
-                ->field('id')
-                ->makeInputRange(),
-
-            Column::add()
-                ->title('NAMA BARANG')
-                ->field('nama_barang')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
 
             Column::add()
                 ->title('KATEGORI')
@@ -130,23 +121,9 @@ final class BarangTable extends PowerGridComponent
                 ->searchable()
                 ->makeInputText(),
 
-            Column::add()
-                ->title('TIPE')
-                ->field('tipe')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('MERK')
-                ->field('merk')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('SATUAN')
-                ->field('satuan')
+                Column::add()
+                ->title('NAMA AKUN')
+                ->field('nama_akun')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),
@@ -164,11 +141,10 @@ final class BarangTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Barang Action Buttons.
+     * PowerGrid Kategori Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
-
 
     public function actions(): array
     {
@@ -176,9 +152,9 @@ final class BarangTable extends PowerGridComponent
             Button::add('edit')
                 ->caption(__('Edit'))
                 ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('barang.barang-modal',[
+                ->openModal('barang.kategori-modal',[
                     'editmode' => 'edit',
-                    'barang_id' => 'id'
+                    'kategori_id' => 'id'
                 ]),
 
 
@@ -187,13 +163,12 @@ final class BarangTable extends PowerGridComponent
                 ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
                 ->openModal('delete-modal', [
                     'data_id'                 => 'id',
-                    'TableName'               => 'barangs',
-                    'confirmationTitle'       => 'Delete Barang',
-                    'confirmationDescription' => 'apakah yakin ingin hapus barang?',
+                    'TableName'               => 'kategoris',
+                    'confirmationTitle'       => 'Delete Kategori',
+                    'confirmationDescription' => 'apakah yakin ingin hapus kategori?',
                 ]),
         ];
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -204,7 +179,7 @@ final class BarangTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Barang Action Rules.
+     * PowerGrid Kategori Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -213,10 +188,10 @@ final class BarangTable extends PowerGridComponent
     public function actionRules(): array
     {
        return [
-
+           
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($barang) => $barang->id === 1)
+                ->when(fn($kategori) => $kategori->id === 1)
                 ->hide(),
         ];
     }
@@ -232,7 +207,7 @@ final class BarangTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Barang Update.
+     * PowerGrid Kategori Update.
      *
      * @param array<string,string> $data
      */
@@ -241,7 +216,7 @@ final class BarangTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = Barang::query()->findOrFail($data['id'])
+           $updated = Kategori::query()->findOrFail($data['id'])
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

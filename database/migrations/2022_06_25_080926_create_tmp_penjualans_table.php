@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDBarangsTable extends Migration
+class CreateTmpPenjualansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateDBarangsTable extends Migration
      */
     public function up()
     {
-        Schema::create('d_barangs', function (Blueprint $table) {
+        Schema::create('tmp_penjualans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('barang_id')->constrained()->ondelete('restrict');
-            $table->foreignId('d_purchaseorder_id')->nullable()->constrained()->onDelete('restrict');
-            $table->date('tgl_masuk');
-            $table->float('jumlah_masuk');
+            $table->double('harga_intax');
             $table->float('jumlah');
-            $table->double('hpp');
+            $table->foreignId('satuan_id')->constrained()->ondelete('restrict');
+            $table->foreignId('user_id')->constrained()->ondelete('restrict');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ class CreateDBarangsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('d_barangs');
+        Schema::dropIfExists('tmp_penjualans');
     }
 }

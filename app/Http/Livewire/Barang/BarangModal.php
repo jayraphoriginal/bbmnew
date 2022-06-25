@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Barang;
 
 use App\Models\Barang;
+use App\Models\Kategori;
 use App\Models\Satuan;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
@@ -13,15 +14,19 @@ class BarangModal extends ModalComponent
 
     public Barang $barang;
     public $editmode, $barang_id;
-    public $satuan;
+    public $satuan, $kategori;
 
-    protected $listeners = ['selectsatuan' => 'selectsatuan'];
+    protected $listeners = [
+        'selectsatuan' => 'selectsatuan',
+        'selectkategori' => 'selectkategori',
+    ];
 
     protected $rules=[
         'barang.nama_barang' => 'required',
         'barang.tipe' => 'required',
         'barang.merk' => 'required',
-        'barang.satuan_id' => 'required'
+        'barang.satuan_id' => 'required',
+        'barang.kategori_id' => 'required'
     ];
 
     public function mount(){
@@ -29,6 +34,7 @@ class BarangModal extends ModalComponent
         if ($this->editmode=='edit') {
             $this->barang = Barang::find($this->barang_id);
             $this->satuan = Satuan::find($this->barang->satuan_id)->satuan;
+            $this->kategori = Kategori::find($this->barang->kategori_id)->kategori;
         }else{
             $this->barang = new Barang();
         }
@@ -42,6 +48,10 @@ class BarangModal extends ModalComponent
 
     public function selectsatuan($id){
         $this->barang->satuan_id=$id;
+    }
+
+    public function selectkategori($id){
+        $this->barang->kategori_id=$id;
     }
 
     public function save(){

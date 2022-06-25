@@ -22,6 +22,7 @@ class CreateSuppliersTable extends Migration
             $table->string('nofax');
             $table->string('nama_pemilik');
             $table->string('jenis_usaha');
+            $table->foreignId('coa_id')->nullable()->constrained()->onDelete('restrict');
             $table->timestamps();
         });
     }

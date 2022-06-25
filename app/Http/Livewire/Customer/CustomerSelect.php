@@ -30,6 +30,7 @@ class CustomerSelect extends Component
         $this->deskripsi = Customer::find($id)->nama_customer;
         $this->emitTo('penjualan.salesorder-modal','selectcustomer', $id);
         $this->emitTo('sewa.salesorder-sewa-modal','selectcustomer', $id);
+        $this->emitTo('penjualan.penjualan-modal','selectcustomer', $id);
     }
 
     public function selectDeskripsi($id){

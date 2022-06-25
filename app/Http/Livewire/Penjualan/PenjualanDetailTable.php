@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Http\Livewire\Barang;
+namespace App\Http\Livewire\Penjualan;
 
-use App\Models\Barang;
+use App\Models\DPenjualan;
+use App\Models\TmpPenjualan;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class BarangTable extends PowerGridComponent
+final class PenjualanDetailTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -47,13 +48,14 @@ final class BarangTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\Barang>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\DPenjualan>|null
     */
     public function datasource(): ?Builder
     {
-        return Barang::join('satuans','barangs.satuan_id','satuans.id')
-            ->leftjoin('kategoris','barangs.kategori_id','kategoris.id')
-            ->select('barangs.*','satuans.satuan');
+        return TmpPenjualan::join('barangs','tmp_penjualans.barang_id','barangs.id')
+        ->join('satuans','tmp_penjualans.satuan_id','satuans.id')
+        ->select('tmp_penjualans.*','barangs.nama_barang','satuans.satuan')
+        ->where('user_id',Auth::user()->id);
     }
 
     /*
@@ -85,13 +87,31 @@ final class BarangTable extends PowerGridComponent
     public function addColumns(): ?PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('id')
-            ->addColumn('nama_barang')
-            ->addColumn('kategori')
-            ->addColumn('tipe')
-            ->addColumn('merk')
-            ->addColumn('satuan_id')
-            ->addColumn('satuan');
+        ->addColumn('id')
+        ->addColumn('barang_id')
+        ->addColumn('nama_barang')
+        ->addColumn('jumlah')
+        ->addColumn('harga_intax')
+        ->addColumn('harga_intax_formatted', function(TmpPenjualan $model) { 
+            return number_format($model->harga_intax,2,',','.');
+        })
+        ->addColumn('subtotal', function(TmpPenjualan $model) { 
+            return $model->harga_intax * $model->jumlah;
+        })
+        ->addColumn('subtotal_formatted', function(TmpPenjualan $model) { 
+            return number_format($model->harga_intax * $model->jumlah,2,',','.');;
+        })
+        ->addColumn('created_at_formatted', function(TmpPenjualan $model) { 
+            return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+        })
+        ->addColumn('satuan_id')
+        ->addColumn('satuan')
+        ->addColumn('created_at_formatted', function(TmpPenjualan $model) { 
+            return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+        })
+        ->addColumn('updated_at_formatted', function(TmpPenjualan $model) { 
+            return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
+        });
     }
 
     /*
@@ -111,45 +131,41 @@ final class BarangTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::add()
-                ->title('ID')
-                ->field('id')
-                ->makeInputRange(),
 
             Column::add()
-                ->title('NAMA BARANG')
+                ->title('KOMPOSISI')
                 ->field('nama_barang')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),
 
             Column::add()
-                ->title('KATEGORI')
-                ->field('kategori')
+                ->title('JUMLAH')
+                ->field('jumlah')
+                ->bodyAttribute('text-right')
                 ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->searchable(),
 
             Column::add()
-                ->title('TIPE')
-                ->field('tipe')
+                ->title('HARGA INTAX')
+                ->field('harga_intax_formatted','harga_intax')
+                ->bodyAttribute('text-right')
                 ->sortable()
-                ->searchable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('MERK')
-                ->field('merk')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->searchable(),
 
             Column::add()
                 ->title('SATUAN')
                 ->field('satuan')
                 ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->searchable(),
+
+            Column::add()
+                ->title('SUBTOTAL')
+                ->field('subtotal_formatted','subtotal')
+                ->bodyAttribute('text-right')
+                ->withSum('Total', false, true)
+                ->sortable()
+                ->searchable(),
 
         ]
 ;
@@ -164,36 +180,35 @@ final class BarangTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Barang Action Buttons.
+     * PowerGrid DPenjualan Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-
+    
     public function actions(): array
     {
         return [
             Button::add('edit')
                 ->caption(__('Edit'))
                 ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('barang.barang-modal',[
+                ->openModal('penjualan.penjualan-detail-modal',[
                     'editmode' => 'edit',
-                    'barang_id' => 'id'
+                    'tmp_id' => 'id'
                 ]),
-
 
             Button::add('destroy')
                 ->caption(__('Delete'))
                 ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
                 ->openModal('delete-modal', [
                     'data_id'                 => 'id',
-                    'TableName'               => 'barangs',
-                    'confirmationTitle'       => 'Delete Barang',
-                    'confirmationDescription' => 'apakah yakin ingin hapus barang?',
+                    'TableName'               => 'tmp_penjualans',
+                    'confirmationTitle'       => 'Delete Detail Penjualan',
+                    'confirmationDescription' => 'apakah yakin ingin hapus detail Penjualan?',
                 ]),
         ];
     }
-
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -204,7 +219,7 @@ final class BarangTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Barang Action Rules.
+     * PowerGrid DPenjualan Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -213,10 +228,10 @@ final class BarangTable extends PowerGridComponent
     public function actionRules(): array
     {
        return [
-
+           
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($barang) => $barang->id === 1)
+                ->when(fn($d-penjualan) => $d-penjualan->id === 1)
                 ->hide(),
         ];
     }
@@ -232,7 +247,7 @@ final class BarangTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid Barang Update.
+     * PowerGrid DPenjualan Update.
      *
      * @param array<string,string> $data
      */
@@ -241,7 +256,7 @@ final class BarangTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = Barang::query()->findOrFail($data['id'])
+           $updated = DPenjualan::query()->findOrFail($data['id'])
                 ->update([
                     $data['field'] => $data['value'],
                 ]);
