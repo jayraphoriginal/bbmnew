@@ -25,7 +25,7 @@ class CreateMPurchaseordersTable extends Migration
             $table->double('ppn');
             $table->double('total');
             $table->string('pembebanan');
-            $table->string('jenis_pembebanan')->nullable();
+            $table->unsignedBigInteger('jenis_pembebanan')->nullable();
             $table->unsignedBigInteger('beban_id')->nullable();
             $table->string('status');
             $table->timestamps();

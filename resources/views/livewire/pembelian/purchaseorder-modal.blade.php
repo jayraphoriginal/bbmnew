@@ -63,42 +63,43 @@
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
-            <x-form-group caption="Jenis Pembebanan">
+            <x-form-group caption="Jenis Biaya">
                 <x-combobox
-                    wire:model="Mpo.jenis_pembebanan"
+                    wire:model="kode_biaya"
                 >
-                    <option value="">-- Isi Jenis Biaya --</option>
-                    <option value="Biaya Kendaraan">Biaya Kendaraan</option>
-                    <option value="Biaya Alat">Biaya Alat</option>
-                    <option value="Biaya Lain-lain">Biaya Lain-lain</option>
+                    <option value="">-- Isi COA Biaya --</option>
+                    @foreach ($coa as $item)
+                        <option value="{{ $item->kode_akun }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
+                    @endforeach
                 </x-combobox>
+                @error('kode_biaya')
+                <x-error-form>{{ $message }}</x-error-form>
+                @enderror
             </x-form-group>
             
-            @if($Mpo->jenis_pembebanan == 'Biaya Kendaraan')
-                <x-form-group caption="Kendaraan">
+            @if($this->kode_biaya =='601001')
+            <x-form-group caption="Kendaraan">
                     <livewire:kendaraan.kendaraan-select :deskripsi="$kendaraan"/>
-                    @error('MSalesorder.beban_id')
+                    @error('Mpo.beban_id')
                     <x-error-form>{{ $message }}</x-error-form>
                     @enderror
-                </x-form-group>
-            @elseif($Mpo->jenis_pembebanan == 'Biaya Alat')
-                <x-form-group caption="Kendaraan">
+            </x-form-group>
+            @elseif($this->kode_biaya =='601002')
+            <x-form-group caption="Alat">
                     <livewire:alat.alat-select :deskripsi="$alat"/>
-                    @error('MSalesorder.beban_id')
+                    @error('Mpo.beban_id')
                     <x-error-form>{{ $message }}</x-error-form>
                     @enderror
-                </x-form-group>
+            </x-form-group>
             @endif
-            
         </div>
 
     </div>
 
-    <button
-        class="px-4 py-2 my-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-        wire:click='save'>
-        Tambah Detail
-    </button>
+    <x-button
+    class="mt-2"
+    wire:click.prevent="$emit('openModal', 'pembelian.purchaseorder-detail-modal')"
+    >Tambah Detail</x-button>
 
 
     <livewire:pembelian.purchaseorder-detail-table po_id={{$po_id}}/>
@@ -107,5 +108,10 @@
         <x-secondary-button
             wire:click="$emit('closeModal')"
         >Tutup</x-secondary-button>
+        <x-button
+            wire:click="save">
+            Save
+        </x-button>
     </x-footer-modal>
+    
 </div>

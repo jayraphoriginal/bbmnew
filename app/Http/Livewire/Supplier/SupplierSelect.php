@@ -30,6 +30,7 @@ class SupplierSelect extends Component
     {
         $this->deskripsi = Supplier::find($id)->nama_supplier;
         $this->emitTo('pembelian.purchaseorder-modal','selectsupplier', $id);
+        $this->emitTo('bbm.pengisian-bbm-modal','selectsupplier', $id);
     }
 
     public function selectDeskripsi($id){

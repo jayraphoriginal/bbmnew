@@ -130,6 +130,7 @@ class PenjualanModal extends ModalComponent
                                 $dpenjualan['m_penjualan_id']=$this->MPenjualan->id;
                                 $dpenjualan['barang_id']=$tmpbarang->barang_id;
                                 $dpenjualan['jumlah']=$pengurangan;
+                                $dpenjualan['sisa']=$pengurangan;
                                 $dpenjualan['satuan_id']=$tmpbarang->satuan_id;
                                 $dpenjualan['harga_intax']=$tmpbarang->harga_intax;
                                 $dpenjualan['status_detail']='Open';
@@ -160,6 +161,7 @@ class PenjualanModal extends ModalComponent
                                     $dpenjualan['m_penjualan_id']=$this->MPenjualan->id;
                                     $dpenjualan['barang_id']=$tmpbarang->barang_id;
                                     $dpenjualan['jumlah']=$pemakaianmaterial;
+                                    $dpenjualan['sisa']=$pemakaianmaterial;
                                     $dpenjualan['satuan_id']=$tmpbarang->satuan_id;
                                     $dpenjualan['harga_intax']=$tmpbarang->harga_intax;
                                     $dpenjualan['status_detail']='Open';

@@ -21,7 +21,7 @@ class BarangSelect extends Component
     public function resetdata()
     {
         $this->search = '';
-        $this->satuan = [];
+        $this->barang = [];
     }
 
     public function selectdata($id)

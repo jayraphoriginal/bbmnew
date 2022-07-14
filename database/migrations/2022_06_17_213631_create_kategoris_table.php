@@ -16,7 +16,8 @@ class CreateKategorisTable extends Migration
         Schema::create('kategoris', function (Blueprint $table) {
             $table->id();
             $table->string('kategori');
-            $table->foreignId('coa_id')->constrained()->onDelete('restrict');
+            $table->unsignedBigInteger('coa_asset_id')->references('id')->on('coas')->onDelete('restrict');;
+            $table->unsignedBigInteger('coa_hpp_id')->references('id')->on('coas')->onDelete('restrict');;
             $table->timestamps();
         });
     }

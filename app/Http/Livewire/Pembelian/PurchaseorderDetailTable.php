@@ -3,9 +3,11 @@
 namespace App\Http\Livewire\Pembelian;
 
 use App\Models\DPurchaseorder;
+use App\Models\TmpPembelian;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -50,10 +52,10 @@ final class PurchaseorderDetailTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return DPurchaseorder::join('barangs','d_purchaseorders.barang_id','barangs.id')
-        ->join('satuans','d_purchaseorders.satuan_id','satuans.id')
-        ->where('m_purchaseorder_id',$this->po_id)
-        ->select('d_purchaseorders.*','barangs.nama_barang','satuans.satuan');
+        return TmpPembelian::join('barangs','tmp_pembelians.barang_id','barangs.id')
+        ->join('satuans','tmp_pembelians.satuan_id','satuans.id')
+        ->where('tmp_pembelians.user_id',Auth::user()->id)
+        ->select('tmp_pembelians.*','barangs.nama_barang','satuans.satuan');
     }
 
     /*
@@ -86,21 +88,19 @@ final class PurchaseorderDetailTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('m_purchaseorder_id')
             ->addColumn('barang_id')
             ->addColumn('nama_barang')
             ->addColumn('jumlah')
             ->addColumn('satuan_id')
             ->addColumn('satuan')
-            ->addColumn('harga', function(DPurchaseorder $model) { 
+            ->addColumn('harga', function(TmpPembelian $model) { 
                 return number_format($model->harga,2,',','.');
             })
-            ->addColumn('status_detail')
             ->addColumn('user_id')
-            ->addColumn('created_at_formatted', function(DPurchaseorder $model) { 
+            ->addColumn('created_at_formatted', function(TmpPembelian $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(DPurchaseorder $model) { 
+            ->addColumn('updated_at_formatted', function(TmpPembelian $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }
@@ -165,8 +165,7 @@ final class PurchaseorderDetailTable extends PowerGridComponent
                 ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
                 ->openModal('pembelian.purchaseorder-detail-modal',[
                     'editmode' => 'edit',
-                    'po_id' => 'm_purchaseorder_id',
-                    'd_purchaseorder_id' => 'id'
+                    'tmp_id' => 'id'
                 ]),
 
             Button::add('destroy')
@@ -174,7 +173,7 @@ final class PurchaseorderDetailTable extends PowerGridComponent
                 ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
                 ->openModal('delete-modal', [
                     'data_id'                 => 'id',
-                    'TableName'               => 'd_purchaseorders',
+                    'TableName'               => 'tmp_pembelians',
                     'confirmationTitle'       => 'Delete Detail Purchase Order',
                     'confirmationDescription' => 'apakah yakin ingin hapus detail PO?',
                 ]),

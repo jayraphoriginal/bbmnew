@@ -5,15 +5,15 @@
 
     <x-form-group caption="Item">
         <livewire:barang.barang-select :deskripsi="$barang" />
-        @error('DPurchaseorder.barang_id')
+        @error('tmp.barang_id')
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
 
     <x-form-group caption="Jumlah">
         <x-number-text
-            wire:model="DPurchaseorder.jumlah"/>
-        @error('DPurchaseorder.jumlah')
+            wire:model="tmp.jumlah"/>
+        @error('tmp.jumlah')
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
@@ -23,16 +23,16 @@
             readonly
             wire:model="satuan"
         />
-        @error('DPurchaseorder.satuan_id')
+        @error('tmp.satuan_id')
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
 
     <x-form-group caption="Harga Intax">
         <x-number-text
-            wire:model="DPurchaseorder.harga"
+            wire:model="tmp.harga"
         />
-        @error('DPurchaseorder.harga')
+        @error('tmp.harga')
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>

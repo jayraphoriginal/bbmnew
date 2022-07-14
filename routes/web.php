@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CreateCoaCustomerSupplier;
+use App\Http\Controllers\PrintController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +51,11 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('kategori',  \App\Http\Livewire\Barang\KategoriComponent::class)->name('kategori');
     Route::get('produksi',  \App\Http\Livewire\Produksi\ProduksiComponent::class)->name('produksi'); 
     Route::get('penjualan',  \App\Http\Livewire\Penjualan\PenjualanComponent::class)->name('penjualan');
+    Route::get('pengisianbbm',  \App\Http\Livewire\Bbm\PengisianBbmComponent::class)->name('pengisianbbm');
+    Route::get('tambahanbbm',  \App\Http\Livewire\Bbm\PenambahanBbmComponent::class)->name('tambahanbbm');
+    Route::get('biaya',  \App\Http\Livewire\Biaya\BiayaComponent::class)->name('biaya');
+    Route::get('migrasicoa', [CreateCoaCustomerSupplier::class,'index'])->name('migrasicoa');
+
     //Print
     Route::get('printso/{id}', [\App\Http\Controllers\PrintController::class,'so'])->name('printso');
     Route::get('printsosewa/{id}', [\App\Http\Controllers\PrintController::class,'sosewa'])->name('printsosewa');
@@ -57,4 +64,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printinvoice/{id}', [\App\Http\Controllers\PrintController::class,'invoice'])->name('printinvoice');
     Route::get('printkwitansi/{id}', [\App\Http\Controllers\PrintController::class,'kwitansi'])->name('printkwitansi');
     Route::get('printconcretepump/{id}', [\App\Http\Controllers\PrintController::class,'concretepump'])->name('printconcretepump');
+    Route::get('laporanrekapgaji/{tgl_awal}/{tgl_akhir}', [PrintController::class,'gaji'])->name('rekapgaji');
 });

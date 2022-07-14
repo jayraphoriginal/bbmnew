@@ -218,23 +218,23 @@ final class PurchaseorderTable extends PowerGridComponent
                     'id' => 'id'
                 ]),
 
-            Button::add('edit')
-                ->caption(__('Edit'))
-                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('pembelian.purchaseorder-modal',[
-                    'editmode' => 'edit',
-                    'po_id' => 'id'
-                ]),
+            // Button::add('edit')
+            //     ->caption(__('Edit'))
+            //     ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            //     ->openModal('pembelian.purchaseorder-modal',[
+            //         'editmode' => 'edit',
+            //         'po_id' => 'id'
+            //     ]),
 
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('delete-modal', [
-                    'data_id'                 => 'id',
-                    'TableName'               => 'm_purchaseorders',
-                    'confirmationTitle'       => 'Delete Purchase Order',
-                    'confirmationDescription' => 'apakah yakin ingin hapus PO?',
-                ]),
+            // Button::add('destroy')
+            //     ->caption(__('Delete'))
+            //     ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
+            //     ->openModal('delete-modal', [
+            //         'data_id'                 => 'id',
+            //         'TableName'               => 'm_purchaseorders',
+            //         'confirmationTitle'       => 'Delete Purchase Order',
+            //         'confirmationDescription' => 'apakah yakin ingin hapus PO?',
+            //     ]),
         ];
     }
     

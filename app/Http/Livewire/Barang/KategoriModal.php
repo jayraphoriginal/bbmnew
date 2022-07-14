@@ -4,8 +4,10 @@ namespace App\Http\Livewire\Barang;
 
 use App\Models\Coa;
 use App\Models\Kategori;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
+use Throwable;
 
 class KategoriModal extends ModalComponent
 {
@@ -19,14 +21,12 @@ class KategoriModal extends ModalComponent
         return [
             'kategori.kategori' => 'required|min:2',
             'kategori.coa_id' => 'nullable',
-            'header_akun' => 'required'
         ];
     }
 
     public function mount(){
         if ($this->editmode=='edit') {
             $this->kategori = Kategori::find($this->kategori_id);
-            $this->header_akun = Coa::find($this->kategori->coa_id)->header_akun;
         }else{
             $this->kategori = new Kategori();
         }
@@ -36,41 +36,70 @@ class KategoriModal extends ModalComponent
 
         $this->validate();
 
-        if ($this->editmode != 'edit'){
-            $nomorterakhir = Coa::where('header_akun',$this->header_akun)
-                    ->orderBy('kode_akun', 'DESC')->get();
-            if (count($nomorterakhir) == 0){
-                $kodeakun = substr($this->header_akun,0,5).'01';            
+        try{
+            if ($this->editmode != 'edit'){
+                $nomorterakhir = Coa::where('header_akun','120000')
+                        ->orderBy('kode_akun', 'DESC')->get();
+                if (count($nomorterakhir) == 0){
+                    $kodeakun = '120001';            
+                }else{
+                    $noakhir = intval(substr($nomorterakhir[0]->kode_akun, 3)) + 1;
+                    $kodeakun = '120'.substr('000' . $noakhir, -3);
+                }
+                $coapersediaan = New Coa();
+                $coapersediaan['kode_akun'] = $kodeakun;
+                $coapersediaan['nama_akun'] = 'Persediaan '.$this->kategori->kategori;
+                $coapersediaan['level'] = 5;
+                $coapersediaan['tipe'] = 'Detail';
+                $coapersediaan['posisi'] = 'Asset';
+                $coapersediaan['header_akun'] = '120000';
+                $coapersediaan->save();
+
+                $nomorterakhir = Coa::where('header_akun','500000')
+                        ->orderBy('kode_akun', 'DESC')->get();
+                if (count($nomorterakhir) == 0){
+                    $kodeakun = '500001';            
+                }else{
+                    $noakhir = intval(substr($nomorterakhir[0]->kode_akun, 3)) + 1;
+                    $kodeakun = '500'.substr('000' . $noakhir, -3);
+                }
+                $coahpp = New Coa();
+                $coahpp['kode_akun'] = $kodeakun;
+                $coahpp['nama_akun'] = 'HPP '.$this->kategori->kategori;
+                $coahpp['level'] = 5;
+                $coahpp['tipe'] = 'Detail';
+                $coahpp['posisi'] = 'Expense';
+                $coahpp['header_akun'] = '500000';
+                $coahpp->save();
+
             }else{
-                $noakhir = intval(substr($nomorterakhir[0]->kode_akun, 0, 2)) + 1;
-                $kodeakun = substr($this->header_akun,0,5).substr('00' . $noakhir, -2);
+                $coapersediaan = Coa::find($this->kategori->coa_asset_id);
+                $coapersediaan['nama_akun'] = 'Persediaan '.$this->kategori->kategori;
+                $coapersediaan->save();
+
+                $coahpp = Coa::find($this->kategori->coa_hpp_id);
+                $coahpp['nama_akun'] = 'HPP '.$this->kategori->kategori;
+                $coahpp->save();
             }
-            $coa = New Coa();
-            $coa['kode_akun'] = $kodeakun;
-            $coa['nama_akun'] = 'Persediaan '.$this->kategori->kategori;
-            $coa['level'] = 5;
-            $coa['tipe'] = 'Detail';
-            $coa['posisi'] = 'Neraca';
-            $coa['header_akun'] = $this->header_akun;
-            $coa->save();
-        }else{
-            $coa = Coa::find($this->kategori->coa_id);
-            $coa['nama_akun'] = 'Persediaan '.$this->kategori->kategori;
-            $coa->save();
-        }
 
-        $this->kategori->coa_id = $coa->id;
+            $this->kategori->coa_asset_id = $coapersediaan->id;
+            $this->kategori->coa_hpp_id = $coahpp->id;
+    
+            $this->kategori->save();
+            DB::commit();
+            $this->closeModal();
+    
+            $this->alert('success', 'Save Success', [
+                'position' => 'center'
+            ]);
 
-        $this->kategori->save();
-
-        $this->closeModal();
-
-        $this->alert('success', 'Save Success', [
-            'position' => 'center'
-        ]);
-
+        }catch(Throwable $e){
+            DB::rollBack();
+            $this->alert('error', $e->getMessage(), [
+                'position' => 'center'
+            ]);
+        }   
         $this->emitTo('barang.kategori-table', 'pg:eventRefresh-default');
-
     }
 
 

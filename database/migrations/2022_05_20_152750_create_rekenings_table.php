@@ -19,6 +19,7 @@ class CreateRekeningsTable extends Migration
             $table->string('norek');
             $table->string('atas_nama');
             $table->decimal('saldo',20,2)->nullable();
+            $table->unsignedBigInteger('coa_id');
             $table->timestamps();
         });
     }

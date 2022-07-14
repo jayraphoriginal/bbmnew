@@ -17,6 +17,8 @@ class CreateMpajaksTable extends Migration
             $table->id();
             $table->string('jenis_pajak');
             $table->float('persen');
+            $table->unsignedBigInteger('coa_id_debet');
+            $table->unsignedBigInteger('coa_id_kredit');
             $table->timestamps();
         });
     }

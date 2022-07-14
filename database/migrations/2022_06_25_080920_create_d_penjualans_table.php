@@ -19,6 +19,7 @@ class CreateDPenjualansTable extends Migration
             $table->foreignId('barang_id')->constrained()->ondelete('restrict');
             $table->double('harga_intax');
             $table->float('jumlah');
+            $table->float('sisa');
             $table->foreignId('satuan_id')->constrained()->ondelete('restrict');
             $table->string('status_detail');
             $table->timestamps();

@@ -4,9 +4,11 @@ namespace App\Http\Livewire\Supplier;
 
 use App\Models\Coa;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use Throwable;
 
 class SupplierModal extends ModalComponent
 {
@@ -41,39 +43,48 @@ class SupplierModal extends ModalComponent
     public function save(){
 
         $this->validate();
-
-        if ($this->editmode != 'edit'){
-            $nomorterakhir = Coa::where('header_akun','220.000')
-                    ->orderBy('kode_akun', 'DESC')->get();
+        DB::beginTransaction();
+        try{
+            if ($this->editmode != 'edit'){
+                $nomorterakhir = Coa::where('header_akun','210000')
+                        ->orderBy('kode_akun', 'DESC')->get();
+                
+                if (count($nomorterakhir) == 0){
+                    $kodeakun = '210001';
+                }else{
+                    $noakhir = intval(substr($nomorterakhir[0]->kode_akun, 3)) + 1;
+                    $kodeakun = '21'.substr('0000' . $noakhir, -4);
+                }
             
-            if (count($nomorterakhir) == 0){
-                $kodeakun = '220.001';
+                $coa = New Coa();
+                $coa['kode_akun'] = $kodeakun;
+                $coa['nama_akun'] = $this->supplier->nama_supplier;
+                $coa['level'] = 5;
+                $coa['tipe'] = 'Detail';
+                $coa['posisi'] = 'Liability';
+                $coa['header_akun'] = '210000';
+                $coa->save();
             }else{
-                $noakhir = intval(substr($nomorterakhir[0]->kode_akun, 0, 3)) + 1;
-                $kodeakun = '220.'.substr('000' . $noakhir, -3);
+                $coa = Coa::find($this->supplier->coa_id);
+                $coa['nama_akun'] = $this->supplier->nama_supplier;
+                $coa->save();
             }
-           
-            $coa = New Coa();
-            $coa['kode_akun'] = $kodeakun;
-            $coa['nama_akun'] = $this->supplier->nama_supplier;
-            $coa['level'] = 3;
-            $coa['tipe'] = 'Detail';
-            $coa['posisi'] = 'Neraca';
-            $coa['header_akun'] = '220.000';
-            $coa->save();
-        }else{
-            $coa = Coa::find($this->supplier->coa_id);
-            $coa['nama_akun'] = $this->supplier->nama_supplier;
-            $coa->save();
+        
+            $this->supplier->save();
+            DB::commit();
+
+            $this->closeModal();
+
+            $this->alert('success', 'Save Success', [
+                'position' => 'center'
+            ]);
+        }catch(Throwable $e){
+            DB::rollBack();
+            $this->alert('error', $e->getMessage(), [
+                'position' => 'center'
+            ]);
         }
-
-        $this->supplier->save();
-
-        $this->closeModal();
-
-        $this->alert('success', 'Save Success', [
-            'position' => 'center'
-        ]);
+        
 
         $this->emitTo('supplier.supplier-table', 'pg:eventRefresh-default');
 
