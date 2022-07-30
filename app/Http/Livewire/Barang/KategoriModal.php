@@ -20,7 +20,8 @@ class KategoriModal extends ModalComponent
     protected function rules() {
         return [
             'kategori.kategori' => 'required|min:2',
-            'kategori.coa_id' => 'nullable',
+            'kategori.coa_asset_id' => 'nullable',
+            'kategori.coa_hpp_id' => 'nullable',
         ];
     }
 

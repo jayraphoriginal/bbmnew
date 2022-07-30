@@ -6,7 +6,9 @@ use App\Models\Barang;
 use App\Models\DBarang;
 use App\Models\Driver;
 use App\Models\DSalesorder;
+use App\Models\Journal;
 use App\Models\Kartustok;
+use App\Models\Kategori;
 use App\Models\Kendaraan;
 use App\Models\Komposisi;
 use App\Models\Mutubeton;
@@ -198,6 +200,27 @@ class TicketModal extends ModalComponent
                                 $kartustok['modal']=$stok->hpp;
                                 $kartustok->save();
 
+                                $databarang = Barang::find($barang->id);
+                                $kategori = Kategori::find($databarang->kategori_id);
+
+                                $journal = new Journal();
+                                $journal['tipe']='Ticket';
+                                $journal['trans_id']=$this->ticket->id;
+                                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                                $journal['coa_id']=$kategori->coa_hpp_id;
+                                $journal['debet']=$stok->hpp*$pengurangan;
+                                $journal['kredit']=0;
+                                $journal->save();
+
+                                $journal = new Journal();
+                                $journal['tipe']='Ticket';
+                                $journal['trans_id']=$this->ticket->id;
+                                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                                $journal['coa_id']=$kategori->coa_asset_id;
+                                $journal['debet']=0;
+                                $journal['kredit']=$stok->hpp*$pengurangan;
+                                $journal->save();
+
                             }else{
 
                                 $stok = DBarang::find($barang->id);
@@ -219,12 +242,32 @@ class TicketModal extends ModalComponent
                                 $kartustok['modal']=$stok->hpp;
                                 $kartustok->save();
 
-                                $pemakaianmaterial = 0;
+                                $databarang = Barang::find($barang->id);
+                                $kategori = Kategori::find($databarang->kategori_id);
 
+                                $journal = new Journal();
+                                $journal['tipe']='Ticket';
+                                $journal['trans_id']=$this->ticket->id;
+                                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                                $journal['coa_id']=$kategori->coa_hpp_id;
+                                $journal['debet']=$stok->hpp*$jumlahstok;
+                                $journal['kredit']=0;
+                                $journal->save();
+
+                                $journal = new Journal();
+                                $journal['tipe']='Ticket';
+                                $journal['trans_id']=$this->ticket->id;
+                                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                                $journal['coa_id']=$kategori->coa_asset_id;
+                                $journal['debet']=0;
+                                $journal['kredit']=$stok->hpp*$jumlahstok;
+                                $journal->save();
+
+                                $pemakaianmaterial = 0;
                             }
                         }
                     }
-                }                
+                }
             }
 
             DB::table('d_salesorders')->where('sisa','<=',0)->update([

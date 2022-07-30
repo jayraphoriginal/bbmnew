@@ -51,8 +51,9 @@ final class KategoriTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return Kategori::join('coas','kategoris.coa_id','coas.id')
-        ->select('kategoris.*','coas.nama_akun');
+        return Kategori::join('coas as a','kategoris.coa_asset_id','a.id')
+        ->join('coas as b','kategoris.coa_hpp_id','b.id')
+        ->select('kategoris.*','a.nama_akun as nama_akun_asset','b.nama_akun as nama_akun_hpp');
     }
 
     /*
@@ -86,8 +87,10 @@ final class KategoriTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('kategori')
-            ->addColumn('coa_id')
-            ->addColumn('nama_akun')
+            ->addColumn('coa_asset_id')
+            ->addColumn('coa_hpp_id')
+            ->addColumn('nama_akun_asset')
+            ->addColumn('nama_akun_hpp')
             ->addColumn('created_at_formatted', function(Kategori $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
@@ -122,8 +125,15 @@ final class KategoriTable extends PowerGridComponent
                 ->makeInputText(),
 
                 Column::add()
-                ->title('NAMA AKUN')
-                ->field('nama_akun')
+                ->title('NAMA AKUN ASSET')
+                ->field('nama_akun_asset')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+                Column::add()
+                ->title('NAMA AKUN HPP')
+                ->field('nama_akun_hpp')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),
