@@ -15,7 +15,7 @@ class CreateTimesheetsTable extends Migration
     {
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('d_so_id');
+            $table->BigInteger('d_so_id');
             $table->date('tanggal');
             $table->foreignId('driver_id')->constrained();
             $table->string('tipe');

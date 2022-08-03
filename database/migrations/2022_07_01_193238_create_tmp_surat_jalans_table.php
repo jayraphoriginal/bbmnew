@@ -15,9 +15,9 @@ class CreateTmpSuratJalansTable extends Migration
     {
         Schema::create('tmp_surat_jalans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('barang_id')->constrained()->onDelete('cascade');
+            $table->foreignId('barang_id')->constrained();
             $table->string('jumlah');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

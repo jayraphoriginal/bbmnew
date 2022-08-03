@@ -17,11 +17,11 @@ class CreateMProduksisTable extends Migration
             $table->id();
             $table->foreignId('barang_id');
             $table->float('jumlah');
-            $table->foreignId('satuan_id')->constrained()->onDelete('restrict');
+            $table->foreignId('satuan_id')->constrained();
             $table->decimal('hpp',10,4);
             $table->string('keterangan');
             $table->decimal('biaya',10,4);
-            $table->foreignId('driver_id')->nullable()->constrained()->onDelete('restrict');
+            $table->foreignId('driver_id')->nullable()->constrained();
             $table->timestamps();
         });
     }

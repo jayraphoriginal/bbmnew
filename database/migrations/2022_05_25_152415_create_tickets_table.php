@@ -15,13 +15,13 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('d_salesorder_id')->constrained()->ondelete('restrict');
+            $table->foreignId('d_salesorder_id')->constrained();
             $table->string('noticket');
             $table->bigInteger('kendaraan_id');
             $table->bigInteger('driver_id');
             $table->datetime('jam_ticket')->nullable();
             $table->float('jumlah');
-            $table->foreignId('satuan_id')->constrained()->ondelete('cascade');
+            $table->foreignId('satuan_id')->constrained();
             $table->float('loading');
             $table->decimal('tambahan_biaya',20,2);
             $table->decimal('lembur',10,2);

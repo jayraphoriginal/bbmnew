@@ -15,10 +15,10 @@ class CreateTmpProduksisTable extends Migration
     {
         Schema::create('tmp_produksis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('barang_id')->constrained()->onDelete('restrict');
+            $table->foreignId('barang_id')->constrained();
             $table->float('jumlah');
-            $table->foreignId('satuan_id')->constrained()->onDelete('restrict');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('satuan_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

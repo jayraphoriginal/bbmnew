@@ -28,7 +28,7 @@ class CreateKendaraansTable extends Migration
             $table->date('siu');
             $table->integer('muatan');
             $table->float('loading');
-            $table->foreignId('driver_id')->constrained()->onDelete('restrict');
+            $table->foreignId('driver_id')->constrained();
             $table->timestamps();
         });
     }

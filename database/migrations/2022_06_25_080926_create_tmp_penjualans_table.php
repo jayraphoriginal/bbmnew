@@ -15,11 +15,11 @@ class CreateTmpPenjualansTable extends Migration
     {
         Schema::create('tmp_penjualans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('barang_id')->constrained()->ondelete('restrict');
+            $table->foreignId('barang_id')->constrained();
             $table->double('harga_intax');
             $table->float('jumlah');
-            $table->foreignId('satuan_id')->constrained()->ondelete('restrict');
-            $table->foreignId('user_id')->constrained()->ondelete('restrict');
+            $table->foreignId('satuan_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

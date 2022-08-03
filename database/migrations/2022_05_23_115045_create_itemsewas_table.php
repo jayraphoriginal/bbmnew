@@ -18,7 +18,7 @@ class CreateItemsewasTable extends Migration
             $table->string('nama_item');
             $table->string('tipe');
             $table->decimal('harga_intax',20,2);
-            $table->foreignId('satuan_id')->constrained()->onDelete('restrict');
+            $table->foreignId('satuan_id')->constrained();
             $table->timestamps();
         });
     }

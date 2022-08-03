@@ -21,7 +21,7 @@ class CreateMPenjualansTable extends Migration
             $table->string('pembayaran');
             $table->string('jenis_pembayaran');
             $table->date('jatuh_tempo');
-            $table->foreignId('customer_id')->constrained()->ondelete('restrict');
+            $table->foreignId('customer_id')->constrained();
             $table->string('status');
             $table->float('pajak');
             $table->timestamps();

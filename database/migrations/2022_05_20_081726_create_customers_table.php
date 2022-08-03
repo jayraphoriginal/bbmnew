@@ -22,7 +22,7 @@ class CreateCustomersTable extends Migration
             $table->string('nofax');
             $table->string('nama_pemilik');
             $table->string('jenis_usaha');
-            $table->foreignid('coa_id')->nullable()->constrained()->onDelete('restrict');
+            $table->foreignid('coa_id')->nullable()->constrained();
             $table->timestamps();
         });
     }

@@ -15,8 +15,8 @@ class CreateDBarangsTable extends Migration
     {
         Schema::create('d_barangs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('barang_id')->constrained()->ondelete('restrict');
-            $table->foreignId('d_purchaseorder_id')->nullable()->constrained()->onDelete('restrict');
+            $table->foreignId('barang_id')->constrained();
+            $table->foreignId('d_purchaseorder_id')->nullable()->constrained();
             $table->date('tgl_masuk');
             $table->float('jumlah_masuk');
             $table->float('jumlah');

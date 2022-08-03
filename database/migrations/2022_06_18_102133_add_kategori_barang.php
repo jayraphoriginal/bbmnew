@@ -14,7 +14,7 @@ class AddKategoriBarang extends Migration
     public function up()
     {
         Schema::table('barangs', function (Blueprint $table) {
-            $table->foreignid('kategori_id')->nullable()->constrained()->onDelete('restrict');
+            $table->foreignid('kategori_id')->nullable()->constrained();
         });
     }
 

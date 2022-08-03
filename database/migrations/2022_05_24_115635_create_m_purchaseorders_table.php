@@ -19,14 +19,14 @@ class CreateMPurchaseordersTable extends Migration
             $table->string('nofaktur');
             $table->string('tgl_masuk');
             $table->string('jatuh_tempo');
-            $table->foreignId('supplier_id')->constrained()->ondelete('cascade');
+            $table->foreignId('supplier_id')->constrained();
             $table->string('tipe');
             $table->double('dpp');
             $table->double('ppn');
             $table->double('total');
             $table->string('pembebanan');
-            $table->unsignedBigInteger('jenis_pembebanan')->nullable();
-            $table->unsignedBigInteger('beban_id')->nullable();
+            $table->biginteger('jenis_pembebanan')->nullable();
+            $table->biginteger('beban_id')->nullable();
             $table->string('status');
             $table->timestamps();
         });

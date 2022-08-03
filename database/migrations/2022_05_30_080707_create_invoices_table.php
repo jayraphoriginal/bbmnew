@@ -17,9 +17,9 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->string('noinvoice');
             $table->string('tipe_so');
-            $table->unsignedBigInteger('so_id');
-            $table->foreignId('customer_id')->constrained()->ondelete('restrict');
-            $table->foreignId('rekening_id')->constrained()->ondelete('restrict');
+            $table->BigInteger('so_id');
+            $table->foreignId('customer_id')->constrained();
+            $table->foreignId('rekening_id')->constrained();
             $table->date('tgl_pembayaran')->nullable();
             $table->string('tipe');
             $table->double('total');

@@ -15,9 +15,9 @@ class CreateDInvoicesTable extends Migration
     {
         Schema::create('d_invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id')->constrained()->ondelete('restrict');
+            $table->foreignId('invoice_id')->constrained();
             $table->string('tipe');
-            $table->unsignedBigInteger('trans_id');
+            $table->BigInteger('trans_id');
             $table->string('status_detail');
             $table->timestamps();
         });

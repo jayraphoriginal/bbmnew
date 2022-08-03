@@ -15,10 +15,10 @@ class CreateKomposisisTable extends Migration
     {
         Schema::create('komposisis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mutubeton_id')->constrained()->onDelete('restrict');
-            $table->foreignId('barang_id')->constrained()->onDelete('restrict');
+            $table->foreignId('mutubeton_id')->constrained();
+            $table->foreignId('barang_id')->constrained();
             $table->float('jumlah');
-            $table->foreignId('satuan_id')->constrained()->onDelete('restrict');
+            $table->foreignId('satuan_id')->constrained();
             $table->timestamps();
         });
     }

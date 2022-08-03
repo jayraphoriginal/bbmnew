@@ -16,9 +16,9 @@ class CreateTambahanBbmsTable extends Migration
         Schema::create('tambahan_bbms', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal_penambahan');
-            $table->foreignId('kendaraan_id')->constrained()->ondelete('cascade');
-            $table->foreignId('driver_id')->constrained()->ondelete('cascade');
-            $table->foreignId('bahan_bakar_id')->constrained()->ondelete('cascade');
+            $table->foreignId('kendaraan_id')->constrained();
+            $table->foreignId('driver_id')->constrained();
+            $table->foreignId('bahan_bakar_id')->constrained();
             $table->decimal('jumlah',10,2);
             $table->string('keterangan');
             $table->timestamps();

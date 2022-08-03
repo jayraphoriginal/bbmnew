@@ -16,9 +16,9 @@ class CreateJournalsTable extends Migration
         Schema::create('journals', function (Blueprint $table) {
             $table->id();
             $table->string('tipe');
-            $table->unsignedBigInteger('trans_id');
+            $table->BigInteger('trans_id');
             $table->date('tanggal_transaksi');
-            $table->foreignId('coa_id')->constrained()->onDelete('restrict');
+            $table->foreignId('coa_id')->constrained();
             $table->decimal('debet',20,2);
             $table->decimal('kredit',20,2);
             $table->timestamps();

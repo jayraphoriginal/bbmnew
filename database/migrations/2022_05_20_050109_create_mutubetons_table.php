@@ -17,7 +17,7 @@ class CreateMutubetonsTable extends Migration
             $table->id();
             $table->string('kode_mutu')->unique();
             $table->float('jumlah');
-            $table->ForeignId('satuan_id')->constrained()->ondelete('restrict');
+            $table->ForeignId('satuan_id')->constrained();
             $table->float('berat_jenis');
             $table->timestamps();
         });

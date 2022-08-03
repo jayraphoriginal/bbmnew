@@ -15,7 +15,7 @@ class CreateKartustoksTable extends Migration
     {
         Schema::create('kartustoks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('barang_id')->constrained()->ondelete('restrict');
+            $table->foreignId('barang_id')->constrained();
             $table->string('tipe');
             $table->bigInteger('trans_id');
             $table->float('increase');

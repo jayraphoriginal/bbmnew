@@ -16,7 +16,7 @@ class CreateMBiayasTable extends Migration
         Schema::create('m_biayas', function (Blueprint $table) {
             $table->id();
             $table->string('nama_biaya');
-            $table->unsignedBigInteger('coa_id');
+            $table->BigInteger('coa_id');
             $table->timestamps();
         });
     }

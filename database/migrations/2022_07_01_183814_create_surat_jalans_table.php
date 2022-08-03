@@ -17,9 +17,9 @@ class CreateSuratJalansTable extends Migration
             $table->id();
             $table->string('nosuratjalan');
             $table->date('tgl_pengiriman');
-            $table->foreignId('m_penjualan_id')->constrained()->onDelete('restrict');
-            $table->foreignId('rate_id')->constrained()->onDelete('restrict');
-            $table->foreignid('customer_id')->constrained()->onDelete('restrict');
+            $table->foreignId('m_penjualan_id')->constrained();
+            $table->foreignId('rate_id')->constrained();
+            $table->foreignid('customer_id')->constrained();
             $table->string('driver');
             $table->string('nopol');
             $table->timestamps();

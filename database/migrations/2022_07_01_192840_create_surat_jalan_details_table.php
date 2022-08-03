@@ -15,8 +15,8 @@ class CreateSuratJalanDetailsTable extends Migration
     {
         Schema::create('surat_jalan_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('surat_jalan_id')->constrained()->onDelete('restrict');
-            $table->foreignId('barang_id')->constrained()->onDelete('restrict');
+            $table->foreignId('surat_jalan_id')->constrained();
+            $table->foreignId('barang_id')->constrained();
             $table->string('jumlah');
             $table->timestamps();
         });

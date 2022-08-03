@@ -22,7 +22,7 @@ class CreateMSalesordersTable extends Migration
             $table->string('pembayaran');
             $table->string('jenis_pembayaran');
             $table->date('jatuh_tempo');
-            $table->foreignId('customer_id')->constrained()->ondelete('rectrict');
+            $table->foreignId('customer_id')->constrained();
             $table->string('status_so');
             $table->float('pajak');
             $table->timestamps();

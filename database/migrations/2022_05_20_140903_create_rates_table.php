@@ -15,7 +15,7 @@ class CreateRatesTable extends Migration
     {
         Schema::create('rates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('jarak_tempuh_id')->constrained()->ondelete('restrict');
+            $table->foreignId('jarak_tempuh_id')->constrained();
             $table->string('lokasi_awal');
             $table->string('tujuan');
             $table->float('estimasi_jarak');

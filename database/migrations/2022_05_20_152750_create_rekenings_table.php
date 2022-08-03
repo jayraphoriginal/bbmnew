@@ -15,7 +15,7 @@ class CreateRekeningsTable extends Migration
     {
         Schema::create('rekenings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bank_id')->constrained()->ondelete('restrict');
+            $table->foreignId('bank_id')->constrained();
             $table->string('norek');
             $table->string('atas_nama');
             $table->decimal('saldo',20,2)->nullable();

@@ -18,7 +18,7 @@ class CreateBarangsTable extends Migration
             $table->string('nama_barang');
             $table->string('tipe');
             $table->string('merk');
-            $table->foreignId('satuan_id')->constrained()->onDelete('restrict');
+            $table->foreignId('satuan_id')->constrained();
             $table->timestamps();
         });
     }

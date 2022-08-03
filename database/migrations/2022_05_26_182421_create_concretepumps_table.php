@@ -15,11 +15,11 @@ class CreateConcretepumpsTable extends Migration
     {
         Schema::create('concretepumps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('m_salesorder_id')->constrained()->ondelete('restrict');
-            $table->foreignId('kendaraan_id')->constrained()->ondelete('restrict');
-            $table->foreignId('driver_id')->constrained()->ondelete('restrict');
-            $table->foreignId('jarak_tempuh_id')->constrained()->ondelete('cascade');
-            $table->foreignId('rate_id')->constrained()->ondelete('cascade');
+            $table->foreignId('m_salesorder_id')->constrained();
+            $table->foreignId('kendaraan_id')->constrained();
+            $table->foreignId('driver_id')->constrained();
+            $table->foreignId('jarak_tempuh_id')->constrained();
+            $table->foreignId('rate_id')->constrained();
             $table->double('harga_sewa');
             $table->string('keterangan')->nullable();
             $table->string('status');

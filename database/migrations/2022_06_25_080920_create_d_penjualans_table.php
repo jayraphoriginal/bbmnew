@@ -15,12 +15,12 @@ class CreateDPenjualansTable extends Migration
     {
         Schema::create('d_penjualans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('m_penjualan_id')->constrained()->ondelete('restrict');
-            $table->foreignId('barang_id')->constrained()->ondelete('restrict');
+            $table->foreignId('m_penjualan_id')->constrained();
+            $table->foreignId('barang_id')->constrained();
             $table->double('harga_intax');
             $table->float('jumlah');
             $table->float('sisa');
-            $table->foreignId('satuan_id')->constrained()->ondelete('restrict');
+            $table->foreignId('satuan_id')->constrained();
             $table->string('status_detail');
             $table->timestamps();
         });

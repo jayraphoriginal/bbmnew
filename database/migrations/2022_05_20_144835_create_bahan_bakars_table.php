@@ -18,7 +18,7 @@ class CreateBahanBakarsTable extends Migration
             $table->string('bahan_bakar');
             $table->decimal('harga_beli',20,2);
             $table->decimal('harga_claim',20,2);
-            $table->foreignId('satuan_id')->constrained()->ondelete('restrict');
+            $table->foreignId('satuan_id')->constrained();
             $table->timestamps();
         });
     }
