@@ -89,7 +89,9 @@ final class MutubetonTable extends PowerGridComponent
             ->addColumn('jumlah')
             ->addColumn('satuan_id')
             ->addColumn('satuan')
-            ->addColumn('berat_jenis');
+            ->addColumn('berat_jenis', function(Mutubeton $model) { 
+                return number_format($model->berat_jenis,2,',','.');
+            });
     }
 
     /*

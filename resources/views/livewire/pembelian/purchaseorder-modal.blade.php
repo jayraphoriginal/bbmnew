@@ -77,14 +77,14 @@
                 @enderror
             </x-form-group>
             
-            @if($this->kode_biaya =='601001')
+            @if($this->kode_biaya =='601002')
             <x-form-group caption="Kendaraan">
                     <livewire:kendaraan.kendaraan-select :deskripsi="$kendaraan"/>
                     @error('Mpo.beban_id')
                     <x-error-form>{{ $message }}</x-error-form>
                     @enderror
             </x-form-group>
-            @elseif($this->kode_biaya =='601002')
+            @elseif($this->kode_biaya =='601001')
             <x-form-group caption="Alat">
                     <livewire:alat.alat-select :deskripsi="$alat"/>
                     @error('Mpo.beban_id')

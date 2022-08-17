@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Penjualan;
+namespace App\Http\Livewire\PengeluaranBiaya;
 
-use App\Models\VSalesOrder;
-use App\Models\Rate;
+use App\Models\VPengeluaranBiaya;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,13 +13,10 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
-use DB;
 
-final class SalesorderDetailTable extends PowerGridComponent
+final class PengeluaranBiayaTable extends PowerGridComponent
 {
     use ActionButton;
-
-    public $m_salesorder_id;
 
     //Messages informing success/error data is updated.
     public bool $showUpdateMessages = true;
@@ -35,7 +31,9 @@ final class SalesorderDetailTable extends PowerGridComponent
     public function setUp(): void
     {
         $this->showCheckBox()
-            ->showPerPage();
+            ->showPerPage()
+            ->showSearchInput()
+            ->showExportOption('download', ['excel', 'csv']);
     }
 
     /*
@@ -45,17 +43,15 @@ final class SalesorderDetailTable extends PowerGridComponent
     | Provides data to your Table using a Model or Collection
     |
     */
-
+    
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\DSalesorder>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\VPengeluaranBiaya>|null
     */
     public function datasource(): ?Builder
     {
-       //$this->m_salesorder_id=str_replace($this->m_salesorder_id,'/','');
-       
-        return VSalesOrder::where('id',$this->m_salesorder_id);
+        return VPengeluaranBiaya::query();
     }
 
     /*
@@ -88,36 +84,24 @@ final class SalesorderDetailTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('m_salesorder_id')
-            ->addColumn('rate_id')
-            ->addColumn('tujuan')
-            ->addColumn('jarak_tempuh_id')
-            ->addColumn('tipe')
-            ->addColumn('mutubeton_id')
-            ->addColumn('kode_mutu')
-            ->addColumn('harga_intax', function(VSalesOrder $model) {
-                return number_format($model->harga_intax,2,",",".");
+            ->addColumn('nama_supplier')
+            ->addColumn('nama_biaya')
+            ->addColumn('tipe_pembayaran')
+            ->addColumn('jenis_pajak')
+            ->addColumn('kode_bank')
+            ->addColumn('norek')
+            ->addColumn('atas_nama')
+            ->addColumn('persen_pajak')
+            ->addColumn('pajak', function (VPengeluaranBiaya $model){
+                return number_format($model->total,2,",",".");
             })
-            ->addColumn('estimasi_jarak', function(VSalesOrder $model) {
-                return number_format($model->estimasi_jarak,2,",",".");
+            ->addColumn('total', function (VPengeluaranBiaya $model){
+                return number_format($model->total,2,",",".");
             })
-            ->addColumn('jumlah')
-            ->addColumn('sisa')
-            ->addColumn('satuan_id')
-            ->addColumn('satuan')
-            ->addColumn('tgl_awal_formatted', function(VSalesOrder $model) {
-                return Carbon::parse($model->tgl_awal)->format('d/m/Y');
-            })
-            ->addColumn('tgl_akhir_formatted', function(VSalesOrder $model) {
-                return Carbon::parse($model->tgl_akhir)->format('d/m/Y');
-            })
-            ->addColumn('status_detail')
-            ->addColumn('user_id')
-            ->addColumn('created_at_formatted', function(VSalesOrder $model) {
+            ->addColumn('keterangan')
+            ->addColumn('created_at')
+            ->addColumn('created_at_formatted', function(VPengeluaranBiaya $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-            })
-            ->addColumn('updated_at_formatted', function(VSalesOrder $model) {
-                return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }
 
@@ -140,45 +124,87 @@ final class SalesorderDetailTable extends PowerGridComponent
         return [
             Column::add()
                 ->title('ID')
-                ->field('id'),
-
-            Column::add()
-                ->title('KODE MUTU')
-                ->field('kode_mutu')
+                ->field('id')
+                ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title('RATE')
-                ->field('tujuan'),
-
-            Column::add()
-                ->title('Estimasi Jarak')
-                ->field('estimasi_jarak'),   
-
-            Column::add()
-                ->title('HARGA INTAX')
-                ->field('harga_intax'),
-
-            Column::add()
-                ->title('JUMLAH')
-                ->field('jumlah'),
-
-            Column::add()
-                ->title('SATUAN')
-                ->field('satuan'),
-
-            Column::add()
-                ->title('TGL AWAL')
-                ->field('tgl_awal_formatted', 'tgl_awal')
+                ->title('SUPPLIER')
+                ->field('nama_supplier')
+                ->searchable()
+                ->makeInputText()
                 ->sortable(),
 
-            Column::add()
-                ->title('TGL AKHIR')
-                ->field('tgl_akhir_formatted', 'tgl_akhir')
+                Column::add()
+                ->title('BIAYA')
+                ->field('nama_biaya')
+                ->searchable()
+                ->makeInputText()
                 ->sortable(),
 
-        ]
-;
+                Column::add()
+                ->title('TIPE PEMBAYARAN')
+                ->field('tipe_pembayaran')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('JENIS PAJAK')
+                ->field('jenis_pajak')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('BANK')
+                ->field('kode_bank')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('NOREK')
+                ->field('norek')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('ATAS NAMA')
+                ->field('atas_nama')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('PERSEN PAJAK')
+                ->field('persen_pajak')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('PAJAK')
+                ->field('pajak')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('TOTAL')
+                ->field('total')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('KETERANGAN')
+                ->field('keterangan')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+        ];
     }
 
     /*
@@ -190,37 +216,28 @@ final class SalesorderDetailTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid DSalesorder Action Buttons.
+     * PowerGrid VPengeluaranBiaya Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    
+    /*
     public function actions(): array
     {
-        return [
-            Button::add('edit')
-                ->caption(__('Edit'))
-                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('penjualan.salesorder-detail-modal',[
-                    'editmode' => 'edit',
-                    'dsalesorder_id' => 'id',
-                    'm_salesorder_id' => 'm_salesorder_id'
-                ]),
+       return [
+           Button::add('edit')
+               ->caption('Edit')
+               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
+               ->route('v-pengeluaran-biaya.edit', ['v-pengeluaran-biaya' => 'id']),
 
-
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('delete-modal', [
-                    'data_id'                 => 'id',
-                    'TableName'               => 'd_salesorders',
-                    'confirmationTitle'       => 'Delete Item',
-                    'confirmationDescription' => 'apakah yakin ingin hapus item?',
-                ]),
+           Button::add('destroy')
+               ->caption('Delete')
+               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+               ->route('v-pengeluaran-biaya.destroy', ['v-pengeluaran-biaya' => 'id'])
+               ->method('delete')
         ];
     }
-    
+    */
 
     /*
     |--------------------------------------------------------------------------
@@ -231,7 +248,7 @@ final class SalesorderDetailTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid DSalesorder Action Rules.
+     * PowerGrid VPengeluaranBiaya Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -240,10 +257,10 @@ final class SalesorderDetailTable extends PowerGridComponent
     public function actionRules(): array
     {
        return [
-
+           
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($d-salesorder) => $d-salesorder->id === 1)
+                ->when(fn($v-pengeluaran-biaya) => $v-pengeluaran-biaya->id === 1)
                 ->hide(),
         ];
     }
@@ -259,7 +276,7 @@ final class SalesorderDetailTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid DSalesorder Update.
+     * PowerGrid VPengeluaranBiaya Update.
      *
      * @param array<string,string> $data
      */
@@ -268,7 +285,7 @@ final class SalesorderDetailTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = DSalesorder::query()->findOrFail($data['id'])
+           $updated = VPengeluaranBiaya::query()
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

@@ -18,7 +18,7 @@ class CreateDSalesordersTable extends Migration
             $table->foreignId('m_salesorder_id')->constrained();
             $table->foreignId('rate_id')->constrained();
             $table->foreignId('jarak_tempuh_id')->constrained();
-            $table->foreignId('mutubeton_id');
+            $table->foreignId('mutubeton_id')->constrained();
             $table->decimal('harga_intax',20,2);
             $table->float('jumlah');
             $table->float('sisa');

@@ -28,7 +28,7 @@
             </x-form-group>
 
             <x-form-group caption="Sisa SO">
-                <x-number-text
+                <x-textbox
                     readonly
                     wire:model="sisa_so"
                 />
