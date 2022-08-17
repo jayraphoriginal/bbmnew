@@ -16,7 +16,7 @@
         >
             <option value="">-- Isi Biaya --</option>
             @foreach ($biaya as $item)
-                <option value="{{ $item->id }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
+                <option value="{{ $item->id }}">{{ $item->nama_biaya }}</option>
             @endforeach
         </x-combobox>
         @error('pengeluaran.m_biaya_id')
