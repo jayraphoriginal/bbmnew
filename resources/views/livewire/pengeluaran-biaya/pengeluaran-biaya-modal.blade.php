@@ -14,8 +14,8 @@
         <x-combobox
             wire:model="pengeluaran.m_biaya_id"
         >
-            <option value="">-- Isi COA Biaya --</option>
-            @foreach ($coa as $item)
+            <option value="">-- Isi Biaya --</option>
+            @foreach ($biaya as $item)
                 <option value="{{ $item->id }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
             @endforeach
         </x-combobox>
@@ -60,7 +60,7 @@
                 <option value="{{ $item->id }}">{{ $item->kode_bank.' - '.$item->norek }}</option>
             @endforeach
         </x-combobox>
-        @error('pengeluaran.mpajak_id')
+        @error('pengeluaran.rekening_id')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>

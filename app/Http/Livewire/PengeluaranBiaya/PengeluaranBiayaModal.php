@@ -55,27 +55,24 @@ class PengeluaranBiayaModal extends ModalComponent
 
     public function save(){
 
-        $this->validate();
-
         $this->pengeluaran->total = str_replace('.', '', $this->pengeluaran->total);
         $this->pengeluaran->total = str_replace(',', '.', $this->pengeluaran->total);
 
-    
+        if (!is_null($this->pengeluaran->mpajak_id)){
+
+            $datapajak = Mpajak::find($this->pengeluaran->mpajak_id);
+            $this->pengeluaran->persen_pajak = $datapajak->persen;
+            $this->pengeluaran->pajak = $this->pengeluaran->total / (1 + $this->pengeluaran->persen_pajak);
+
+        }else{
+            $this->pengeluaran->persen_pajak = 0;
+            $this->pengeluaran->pajak = 0;
+        }
+
+        $this->validate();
 
         DB::beginTransaction();
         try{
-
-            if (!is_null($this->pengeluaran->mpajak_id)){
-
-                $datapajak = Mpajak::find($this->pengeluaran->mpajak_id);
-                $this->pengeluaran->persen_pajak = $datapajak->persen;
-                $this->pengeluaran->pajak = $this->pengeluaran->total / (1 + $this->pengeluaran->persen_pajak);
-
-            }else{
-                $this->pengeluaran->persen_pajak = 0;
-                $this->pengeluaran->pajak = 0;
-            }
-
 
             $this->pengeluaran->save();
 
@@ -83,8 +80,8 @@ class PengeluaranBiayaModal extends ModalComponent
 
             $journal = new Journal();
             $journal['tipe']='Pengeluaran Biaya';
-            $journal['trans_id']=$this->Mpo->id;
-            $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
+            $journal['trans_id']=$this->pengeluaran->id;
+            $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
             $journal['coa_id']=$coabiaya->coa_id;
             $journal['debet']=$this->pengeluaran->total - $this->pengeluaran->pajak ;
             $journal['kredit']=0;
@@ -93,8 +90,8 @@ class PengeluaranBiayaModal extends ModalComponent
             if (!is_null($this->pengeluaran->mpajak_id)){
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
-                $journal['trans_id']=$this->Mpo->id;
-                $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
+                $journal['trans_id']=$this->pengeluaran->id;
+                $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
                 $journal['coa_id']=$datapajak->coa_id_debet;
                 $journal['debet']=$this->pengeluaran->pajak ;
                 $journal['kredit']=0;
@@ -114,8 +111,8 @@ class PengeluaranBiayaModal extends ModalComponent
                 $rekening = Rekening::find($this->pengeluaran->rekening_id);
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
-                $journal['trans_id']=$this->Mpo->id;
-                $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
+                $journal['trans_id']=$this->pengeluaran->id;
+                $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
                 $journal['coa_id']=$rekening->coa_id;
                 $journal['debet']=0;
                 $journal['kredit']=$this->pengeluaran->total;
@@ -134,8 +131,8 @@ class PengeluaranBiayaModal extends ModalComponent
                 $supplier = Supplier::find($this->pengeluaran->supplier_id);
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
-                $journal['trans_id']=$this->Mpo->id;
-                $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
+                $journal['trans_id']=$this->pengeluaran->id;
+                $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
                 $journal['coa_id']=$supplier->coa_id;
                 $journal['debet']=0;
                 $journal['kredit']=$this->pengeluaran->total;
@@ -162,7 +159,7 @@ class PengeluaranBiayaModal extends ModalComponent
     public function render()
     {
         return view('livewire.pengeluaran-biaya.pengeluaran-biaya-modal',[
-            'coa' => Coa::where('header_akun')->get(),
+            'biaya' => MBiaya::all(),
             'pajak' => Mpajak::all(),
             'rekening' => Rekening::all()
         ]);

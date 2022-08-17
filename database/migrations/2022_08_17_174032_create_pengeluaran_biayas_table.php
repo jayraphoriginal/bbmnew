@@ -15,11 +15,11 @@ class CreatePengeluaranBiayasTable extends Migration
     {
         Schema::create('pengeluaran_biayas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('supplier_id')->nullable()->constrained();
+            $table->foreignId('supplier_id')->nullable();
             $table->foreignId('m_biaya_id')->constrained();
             $table->string('tipe_pembayaran');
-            $table->string('mpajak_id')->nullable()->constrained();
-            $table->foreignId('rekening_id')->nullable()->constrained();
+            $table->string('mpajak_id')->nullable();
+            $table->foreignId('rekening_id')->nullable();
             $table->double('persen_pajak');
             $table->double('pajak');
             $table->double('total');
