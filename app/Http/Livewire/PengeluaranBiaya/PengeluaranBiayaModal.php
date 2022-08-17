@@ -75,7 +75,6 @@ class PengeluaranBiayaModal extends ModalComponent
         try{
 
             $this->pengeluaran->save();
-
             $coabiaya = MBiaya::find($this->pengeluaran->m_biaya_id);
 
             $journal = new Journal();
@@ -100,7 +99,7 @@ class PengeluaranBiayaModal extends ModalComponent
 
             if ($this->pengeluaran->tipe_pembayaran == 'Cash'){
 
-                if (!is_null($this->pengeluaran->rekening_id)){
+                if (is_null($this->pengeluaran->rekening_id)){
                     DB::rollBack();
                     $this->alert('error', 'Isi Rekening', [
                         'position' => 'center'
@@ -120,7 +119,7 @@ class PengeluaranBiayaModal extends ModalComponent
 
             }else{
 
-                if (!is_null($this->pengeluaran->supplier_id)){
+                if (is_null($this->pengeluaran->supplier_id)){
                     DB::rollBack();
                     $this->alert('error', 'Isi Supplier', [
                         'position' => 'center'

@@ -64,11 +64,15 @@ class SupplierModal extends ModalComponent
                 $coa['posisi'] = 'Liability';
                 $coa['header_akun'] = '210000';
                 $coa->save();
+
+                $this->supplier->coa_id=$coa->id;
             }else{
                 $coa = Coa::find($this->supplier->coa_id);
                 $coa['nama_akun'] = $this->supplier->nama_supplier;
                 $coa->save();
             }
+
+           
         
             $this->supplier->save();
             DB::commit();
