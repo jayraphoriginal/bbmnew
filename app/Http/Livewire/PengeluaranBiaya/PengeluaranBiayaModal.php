@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\PengeluaranBiaya;
 
+use App\Models\Coa;
 use App\Models\Journal;
 use App\Models\MBiaya;
 use App\Models\Mpajak;
@@ -160,6 +161,10 @@ class PengeluaranBiayaModal extends ModalComponent
     
     public function render()
     {
-        return view('livewire.pengeluaran-biaya.pengeluaran-biaya-modal');
+        return view('livewire.pengeluaran-biaya.pengeluaran-biaya-modal',[
+            'coa' => Coa::where('header_akun')->get(),
+            'pajak' => Mpajak::all(),
+            'rekening' => Rekening::all()
+        ]);
     }
 }
