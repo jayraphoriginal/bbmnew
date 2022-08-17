@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Penjualan;
 
-use App\Models\DSalesorder;
+use App\Models\VSalesOrder;
 use App\Models\Rate;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
@@ -53,11 +53,9 @@ final class SalesorderDetailTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return DSalesorder::join('rates','d_salesorders.rate_id','rates.id')
-        ->join('satuans','d_salesorders.satuan_id','satuans.id')
-        ->join('mutubetons','d_salesorders.mutubeton_id','mutubetons.id')
-        ->where('m_salesorder_id', $this->m_salesorder_id)
-        ->select('d_salesorders.*','rates.tujuan', 'rates.estimasi_jarak','satuans.satuan','mutubetons.kode_mutu');
+       //$this->m_salesorder_id=str_replace($this->m_salesorder_id,'/','');
+       
+        return VSalesOrder::where('id',$this->m_salesorder_id);
     }
 
     /*
@@ -97,28 +95,28 @@ final class SalesorderDetailTable extends PowerGridComponent
             ->addColumn('tipe')
             ->addColumn('mutubeton_id')
             ->addColumn('kode_mutu')
-            ->addColumn('harga_intax', function(DSalesorder $model) {
+            ->addColumn('harga_intax', function(VSalesOrder $model) {
                 return number_format($model->harga_intax,2,",",".");
             })
-            ->addColumn('estimasi_jarak', function(DSalesorder $model) {
+            ->addColumn('estimasi_jarak', function(VSalesOrder $model) {
                 return number_format($model->estimasi_jarak,2,",",".");
             })
             ->addColumn('jumlah')
             ->addColumn('sisa')
             ->addColumn('satuan_id')
             ->addColumn('satuan')
-            ->addColumn('tgl_awal_formatted', function(DSalesorder $model) {
+            ->addColumn('tgl_awal_formatted', function(VSalesOrder $model) {
                 return Carbon::parse($model->tgl_awal)->format('d/m/Y');
             })
-            ->addColumn('tgl_akhir_formatted', function(DSalesorder $model) {
+            ->addColumn('tgl_akhir_formatted', function(VSalesOrder $model) {
                 return Carbon::parse($model->tgl_akhir)->format('d/m/Y');
             })
             ->addColumn('status_detail')
             ->addColumn('user_id')
-            ->addColumn('created_at_formatted', function(DSalesorder $model) {
+            ->addColumn('created_at_formatted', function(VSalesOrder $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(DSalesorder $model) {
+            ->addColumn('updated_at_formatted', function(VSalesOrder $model) {
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }

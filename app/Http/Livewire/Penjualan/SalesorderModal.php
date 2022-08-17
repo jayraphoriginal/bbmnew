@@ -7,6 +7,7 @@ use App\Models\Driver;
 use App\Models\Kendaraan;
 use App\Models\Mpajak;
 use App\Models\MSalesorder;
+use Brick\Math\BigInteger;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
@@ -17,7 +18,8 @@ class SalesorderModal extends ModalComponent
 {
     use LivewireAlert;
     public MSalesorder $MSalesorder;
-    public $editmode, $salesorder_id;
+    public $editmode;
+    public $salesorder_id;
     public $customer;
 
     protected $listeners = ['selectcustomer' => 'selectcustomer'];
@@ -39,6 +41,7 @@ class SalesorderModal extends ModalComponent
             $this->customer = Customer::find($this->MSalesorder->customer_id)->nama_customer;
         }else{
             $this->MSalesorder = new MSalesorder();
+            $this->salesorder_id = 0;
         }
 
     }

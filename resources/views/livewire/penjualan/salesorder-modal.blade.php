@@ -85,9 +85,7 @@
         wire:click='save'>
         Tambah Detail
     </button>
-
-
-    <livewire:penjualan.salesorder-detail-table m_salesorder_id={{$salesorder_id}}/>
+    <livewire:penjualan.salesorder-detail-table m_salesorder_id="{{$salesorder_id}}"/>
 
     <x-footer-modal>
         <x-secondary-button
