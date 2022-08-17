@@ -1,0 +1,96 @@
+<div>
+    <x-header-modal>
+        Input Pengeluaran Biaya
+    </x-header-modal>
+
+    <x-form-group caption="Supplier">
+        <livewire:supplier.supplier-select :deskripsi="$supplier"/>
+        @error('pengeluaran.supplier_id')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Biaya">
+        <x-combobox
+            wire:model="pengeluaran.m_biaya_id"
+        >
+            <option value="">-- Isi COA Biaya --</option>
+            @foreach ($coa as $item)
+                <option value="{{ $item->id }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
+            @endforeach
+        </x-combobox>
+        @error('pengeluaran.m_biaya_id')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Biaya">
+        <x-combobox
+            wire:model="pengeluaran.tipe_pembayaran"
+        >
+            <option value="">-- Isi Tipe Pembayaran --</option>
+            <option value="Cash">Cash</option>
+            <option value="Kredit">Kredit</option>
+        </x-combobox>
+        @error('pengeluaran.tipe_pembayaran')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Pajak">
+        <x-combobox
+            wire:model="pengeluaran.mpajak_id"
+        >
+            <option value="">-- Isi Pajak --</option>
+            @foreach ($pajak as $item)
+                <option value="{{ $item->id }}">{{ $item->jenis_pajak }}</option>
+            @endforeach
+        </x-combobox>
+        @error('pengeluaran.mpajak_id')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Rekening">
+        <x-combobox
+            wire:model="pengeluaran.rekening_id"
+        >
+            <option value="">-- Isi Rekening --</option>
+            @foreach ($rekening as $item)
+                <option value="{{ $item->id }}">{{ $item->kode_bank.' - '.$item->norek }}</option>
+            @endforeach
+        </x-combobox>
+        @error('pengeluaran.mpajak_id')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Jumlah Intax">
+        <x-number-text
+            wire:model="pengeluaran.total"
+        />
+        @error('pengeluaran.total')
+            <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Keterangan">
+        <x-textbox
+            wire:model="pengeluaran.keterangan"
+        />
+        @error('pengeluaran.keterangan')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-footer-modal>
+        <x-secondary-button
+            wire:click="$emit('closeModal')"
+        >Tutup</x-secondary-button>
+        <x-button
+            wire:click="save">
+            Save
+        </x-button>
+    </x-footer-modal>
+    
+</div>

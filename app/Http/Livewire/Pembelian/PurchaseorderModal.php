@@ -52,13 +52,6 @@ class PurchaseorderModal extends ModalComponent
         if ($this->editmode=='edit') {
             $this->Mpo = MPurchaseorder::find($this->po_id);
             $this->supplier = Supplier::find($this->Mpo->supplier_id)->nama_supplier;
-            
-            if ($this->Mpo->jenis_pembebanan=='Biaya Kendaraan'){
-               $this->kendaraan = Kendaraan::find($this->Mpo->beban_id)->nopol;
-            }
-            elseif($this->Mpo->jenis_pembebanan=='Biaya Alat'){
-               $this->alat = Alat::find($this->Mpo->beban_id)->nama_alat;
-            }
         }else{
             $this->Mpo = new MPurchaseorder();
         }
@@ -175,6 +168,7 @@ class PurchaseorderModal extends ModalComponent
                     $barang = Barang::find($tmp->barang_id);
                     $kategori = Kategori::find($barang->kategori_id);
 
+                    //Jurnal Persediaan
                     $journal = new Journal();
                     $journal['tipe']='Purchase Order';
                     $journal['trans_id']=$this->Mpo->id;
@@ -186,13 +180,12 @@ class PurchaseorderModal extends ModalComponent
 
                     if ($this->Mpo->tipe == 'PPN'){
 
-                        $coappn = Coa::where('kode_akun','131001')->first();
-
+                        //Jurnal Pajak
                         $journal = new Journal();
                         $journal['tipe']='Purchase Order';
                         $journal['trans_id']=$this->Mpo->id;
                         $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
-                        $journal['coa_id']=$coappn->id;
+                        $journal['coa_id']=$datapajak->coa_id_debet;
                         $journal['debet']=($tmp->harga-$dppdetail)*$tmp->jumlah;
                         $journal['kredit']=0;
                         $journal->save();
