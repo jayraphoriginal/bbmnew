@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\PemakaianBarang;
+namespace App\Http\Livewire\Inventaris;
 
-use App\Models\VPemakaianBarang;
+use App\Models\Inventaris;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class PemakaianBarangTable extends PowerGridComponent
+final class InventarisTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -47,11 +47,12 @@ final class PemakaianBarangTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\PemakaianBarang>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\Inventaris>|null
     */
     public function datasource(): ?Builder
     {
-        return VPemakaianBarang::query();
+        return Inventaris::join('golongans','inventaris.golongan_id','golongans.id')
+        ->select('inventaris.*','golongans.kelompok','golongans.masa_manfaat');
     }
 
     /*
@@ -84,10 +85,23 @@ final class PemakaianBarangTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('created_at_formatted', function(VPemakaianBarang $model) { 
+            ->addColumn('nama_inventaris')
+            ->addColumn('kelompok')
+            ->addColumn('masa_manfaat', function(Inventaris $model) { 
+                return $model->masa_manfaat.' Tahun';
+            })
+            ->addColumn('tgl_perolehan', function(Inventaris $model) { 
+                return Carbon::parse($model->tgl_perolehan)->format('d/m/Y');
+            })
+            ->addColumn('harga_perolehan', function(Inventaris $model) { 
+                return number_format($model->harga_perolehan,0,',','.');
+            })
+            ->addColumn('coa_asset_id')
+            ->addColumn('coa_penyusutan_id')
+            ->addColumn('created_at_formatted', function(Inventaris $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(VPemakaianBarang $model) { 
+            ->addColumn('updated_at_formatted', function(Inventaris $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }
@@ -109,24 +123,42 @@ final class PemakaianBarangTable extends PowerGridComponent
     public function columns(): array
     {
         return [
+
             Column::add()
-                ->title('ID')
-                ->field('id')
+                ->title('NAMA INVENTARIS')
+                ->field('nama_inventaris')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+                Column::add()
+                ->title('KELOMPOK')
+                ->field('kelompok')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+                Column::add()
+                ->title('MASA MANFAAT')
+                ->field('masa_manfaat')
+                ->sortable()
+                ->searchable()
                 ->makeInputRange(),
 
-            Column::add()
-                ->title('CREATED AT')
-                ->field('created_at_formatted', 'created_at')
-                ->searchable()
+                Column::add()
+                ->title('TANGGAL PEROLEHAN')
+                ->field('tgl_perolehan')
                 ->sortable()
-                ->makeInputDatePicker('created_at'),
+                ->searchable()
+                ->makeInputDatePicker(),
 
-            Column::add()
-                ->title('UPDATED AT')
-                ->field('updated_at_formatted', 'updated_at')
-                ->searchable()
+                Column::add()
+                ->title('HARGA PEROLEHAN')
+                ->field('harga_perolehan')
+                ->bodyAttribute('text-right')
                 ->sortable()
-                ->makeInputDatePicker('updated_at'),
+                ->searchable()
+                ->makeInputRange(),
 
         ]
 ;
@@ -141,7 +173,7 @@ final class PemakaianBarangTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid PemakaianBarang Action Buttons.
+     * PowerGrid Inventaris Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
@@ -153,12 +185,12 @@ final class PemakaianBarangTable extends PowerGridComponent
            Button::add('edit')
                ->caption('Edit')
                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('pemakaian-barang.edit', ['pemakaian-barang' => 'id']),
+               ->route('inventaris.edit', ['inventaris' => 'id']),
 
            Button::add('destroy')
                ->caption('Delete')
                ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('pemakaian-barang.destroy', ['pemakaian-barang' => 'id'])
+               ->route('inventaris.destroy', ['inventaris' => 'id'])
                ->method('delete')
         ];
     }
@@ -173,7 +205,7 @@ final class PemakaianBarangTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid PemakaianBarang Action Rules.
+     * PowerGrid Inventaris Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -185,7 +217,7 @@ final class PemakaianBarangTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($pemakaian-barang) => $pemakaian-barang->id === 1)
+                ->when(fn($inventaris) => $inventaris->id === 1)
                 ->hide(),
         ];
     }
@@ -201,7 +233,7 @@ final class PemakaianBarangTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid PemakaianBarang Update.
+     * PowerGrid Inventaris Update.
      *
      * @param array<string,string> $data
      */
@@ -210,7 +242,7 @@ final class PemakaianBarangTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = PemakaianBarang::query()->findOrFail($data['id'])
+           $updated = Inventaris::query()->findOrFail($data['id'])
                 ->update([
                     $data['field'] => $data['value'],
                 ]);
