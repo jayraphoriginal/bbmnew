@@ -71,8 +71,6 @@ class SupplierModal extends ModalComponent
                 $coa['nama_akun'] = $this->supplier->nama_supplier;
                 $coa->save();
             }
-
-           
         
             $this->supplier->save();
             DB::commit();

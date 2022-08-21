@@ -23,7 +23,6 @@ class BarangModal extends ModalComponent
 
     protected $rules=[
         'barang.nama_barang' => 'required',
-        'barang.tipe' => 'required',
         'barang.merk' => 'required',
         'barang.satuan_id' => 'required',
         'barang.kategori_id' => 'required'

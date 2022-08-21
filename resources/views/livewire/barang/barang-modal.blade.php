@@ -19,19 +19,6 @@
         @enderror
     </x-form-group>
 
-    <x-form-group caption="Tipe">
-        <x-combobox
-            wire:model="barang.tipe"
-            >
-            <option value="" selected>-- Isi Tipe --</option>
-            <option value="Barang">Barang</option>
-            <option value="Material">Material</option>
-        </x-combobox>
-        @error('barang.tipe')
-        <x-error-form>{{ $message }}</x-error-form>
-        @enderror
-    </x-form-group>
-
     <x-form-group caption="Merk">
         <x-textbox
             wire:model="barang.merk"

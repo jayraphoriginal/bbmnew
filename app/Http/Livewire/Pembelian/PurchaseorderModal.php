@@ -205,13 +205,12 @@ class PurchaseorderModal extends ModalComponent
                 $journal->save();
 
                 if ($this->Mpo->tipe == 'PPN'){
-                    $coappn = Coa::where('kode_akun','131001')->first();
 
                     $journal = new Journal();
                     $journal['tipe']='Purchase Order';
                     $journal['trans_id']=$this->Mpo->id;
                     $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
-                    $journal['coa_id']=$coappn->id;
+                    $journal['coa_id']=$datapajak->coa_id_debet;
                     $journal['debet']=$total-$dpp;
                     $journal['kredit']=0;
                     $journal->save();

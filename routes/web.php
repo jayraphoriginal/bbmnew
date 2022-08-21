@@ -55,6 +55,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('tambahanbbm',  \App\Http\Livewire\Bbm\PenambahanBbmComponent::class)->name('tambahanbbm');
     Route::get('biaya',  \App\Http\Livewire\Biaya\BiayaComponent::class)->name('biaya');
     Route::get('pengeluaranbiaya', \App\Http\Livewire\PengeluaranBiaya\PengeluaranBiayaComponent::class)->name('pengeluaranbiaya');
+    Route::get('pemakaianbarang', \App\Http\Livewire\PemakaianBarang\PemakaianBarangComponent::class)->name('pemakaianbarang');
+    Route::get('golongan', \App\Http\Livewire\Inventaris\GolonganComponent::class)->name('golongan');
     Route::get('migrasicoa', [CreateCoaCustomerSupplier::class,'index'])->name('migrasicoa');
 
     //Print
