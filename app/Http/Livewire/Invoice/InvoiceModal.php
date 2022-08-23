@@ -2,11 +2,14 @@
 
 namespace App\Http\Livewire\Invoice;
 
+use App\Models\Coa;
 use App\Models\Concretepump;
 use App\Models\Customer;
 use App\Models\DInvoice;
 use App\Models\DSalesorderSewa;
 use App\Models\Invoice;
+use App\Models\Journal;
+use App\Models\Mpajak;
 use App\Models\MSalesorder;
 use App\Models\MSalesorderSewa;
 use App\Models\PenjualanRetail;
@@ -236,6 +239,7 @@ class InvoiceModal extends ModalComponent
                 $this->invoice->ppn = $this->invoice->dpp * $this->pajak/100;
                 $this->invoice->status='Open';
                 $this->invoice->save();
+
             }
             if ($this->jumlah_penjualan_retail>0){
 
@@ -276,9 +280,65 @@ class InvoiceModal extends ModalComponent
                     'status_detail'=> 'Finish'
                 ]);
 
+                $customer = Customer::find($this->invoice->customer_id);
+                //Jurnal Piutang
+                $journal = new Journal();
+                $journal['tipe']='Invoice Retail';
+                $journal['trans_id']=$this->ticket->id;
+                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                $journal['coa_id']=$customer->coa_id;
+                $journal['debet']=$this->invoice->total;
+                $journal['kredit']=0;
+                $journal->save();
+
+                $coapenjualan = Coa::where('kode_akun','400002')->first();
+                // Jurnal penjualan
+                $journal = new Journal();
+                $journal['tipe']='Invoice Retail';
+                $journal['trans_id']=$this->ticket->id;
+                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                $journal['coa_id']=$coapenjualan->id;
+                $journal['debet']=0;
+                $journal['kredit']=$this->invoice->total;
+                $journal->save();
+
             }
             
             if ($this->tipe_so=='Sewa'){
+
+                $customer = Customer::find($this->invoice->customer_id);
+
+                $journal = new Journal();
+                $journal['tipe']='Invoice Sewa';
+                $journal['trans_id']=$this->ticket->id;
+                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                $journal['coa_id']=$customer->coa_id;
+                $journal['debet']=$this->invoice->total;
+                $journal['kredit']=0;
+                $journal->save();
+
+                $pajak = Mpajak::where('jenis_pajak','PPN')->first();
+
+                //Jurnal PPN Keluaran
+                $journal = new Journal();
+                $journal['tipe']='Ticket';
+                $journal['trans_id']=$this->ticket->id;
+                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                $journal['coa_id']=$pajak->coa_id_kredit;
+                $journal['debet']=0;
+                $journal['kredit']=$this->invoice->ppn;
+                $journal->save();
+
+                $coapenjualan = Coa::where('kode_akun','400002')->first();
+                // Jurnal penjualan
+                $journal = new Journal();
+                $journal['tipe']='Invoice Sewa';
+                $journal['trans_id']=$this->ticket->id;
+                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                $journal['coa_id']=$coapenjualan->id;
+                $journal['debet']=0;
+                $journal['kredit']=$invoice->dpp;
+                $journal->save();
 
                 $sewas = DSalesorderSewa::where('d_salesorder_sewas.m_salesorder_sewa_id',$this->so_id)
                 ->where('d_salesorder_sewas.status_detail','Open')
@@ -296,7 +356,6 @@ class InvoiceModal extends ModalComponent
                     $dinvoice['status_detail']='Open';
                     $dinvoice->save();
                 }
-
 
             }else{
 
@@ -337,7 +396,6 @@ class InvoiceModal extends ModalComponent
                     $dinvoice['status_detail']='Open';
                     $dinvoice->save();
                 }
-        
             }
 
             DB::commit();

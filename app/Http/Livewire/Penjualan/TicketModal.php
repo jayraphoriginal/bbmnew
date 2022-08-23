@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Penjualan;
 
 use App\Models\Barang;
+use App\Models\Coa;
+use App\Models\Customer;
 use App\Models\DBarang;
 use App\Models\Driver;
 use App\Models\DSalesorder;
@@ -11,6 +13,8 @@ use App\Models\Kartustok;
 use App\Models\Kategori;
 use App\Models\Kendaraan;
 use App\Models\Komposisi;
+use App\Models\Mpajak;
+use App\Models\MSalesorder;
 use App\Models\Mutubeton;
 use App\Models\Rate;
 use App\Models\Satuan;
@@ -273,6 +277,46 @@ class TicketModal extends ModalComponent
             DB::table('d_salesorders')->where('sisa','<=',0)->update([
                 'status_detail' => 'Finish'
             ]);
+
+            $msalesorder = MSalesorder::find($d_salesorder->m_salesorder_id);
+            
+            $pajak = Mpajak::where('jenis_pajak','PPN')->first();
+            $customer = Customer::find($msalesorder->customer_id);
+
+            $totalpenjualan = $d_salesorder->harga_intax * $this->ticket->jumlah;
+            $dpp = $totalpenjualan / (1 + ($pajak->persen / 100));
+            $ppn = $totalpenjualan - $dpp;
+
+            //Jurnal Piutang
+            $journal = new Journal();
+            $journal['tipe']='Ticket';
+            $journal['trans_id']=$this->ticket->id;
+            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['coa_id']=$customer->coa_id;
+            $journal['debet']=$totalpenjualan;
+            $journal['kredit']=0;
+            $journal->save();
+
+            //Jurnal PPN Keluaran
+            $journal = new Journal();
+            $journal['tipe']='Ticket';
+            $journal['trans_id']=$this->ticket->id;
+            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['coa_id']=$pajak->coa_id_kredit;
+            $journal['debet']=0;
+            $journal['kredit']=$ppn;
+            $journal->save();
+
+            $coapenjualan = Coa::where('kode_akun','400001')->first();
+            // Jurnal penjualan
+            $journal = new Journal();
+            $journal['tipe']='Ticket';
+            $journal['trans_id']=$this->ticket->id;
+            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['coa_id']=$coapenjualan->id;
+            $journal['debet']=0;
+            $journal['kredit']=$dpp;
+            $journal->save();
 
             DB::commit();
         }
