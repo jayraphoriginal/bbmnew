@@ -79,7 +79,7 @@
     </button>
 
 
-    <livewire:sewa.salesorder-sewa-detail-table m_salesorder_id={{$salesorder_id}}/>
+    <livewire:sewa.salesorder-sewa-detail-table m_salesorder_id="{{$salesorder_id}}"/>
 
     <x-footer-modal>
         <x-secondary-button
