@@ -87,13 +87,19 @@ final class PengeluaranBiayaTable extends PowerGridComponent
             ->addColumn('nama_supplier')
             ->addColumn('nama_biaya')
             ->addColumn('tipe_pembayaran')
-            ->addColumn('jenis_pajak')
+            ->addColumn('jenis_ppn')
+            ->addColumn('pajaklain')
             ->addColumn('kode_bank')
             ->addColumn('norek')
             ->addColumn('atas_nama')
-            ->addColumn('persen_pajak')
-            ->addColumn('pajak', function (VPengeluaranBiaya $model){
-                return number_format($model->total,2,",",".");
+            ->addColumn('persen_ppn', function (VPengeluaranBiaya $model){
+                return number_format($model->persen_ppn,2,",",".");
+            })
+            ->addColumn('persen_pajaklain', function (VPengeluaranBiaya $model){
+                return number_format($model->persen_pajaklain,2,",",".");
+            })
+            ->addColumn('ppn', function (VPengeluaranBiaya $model){
+                return number_format($model->ppn,2,",",".");
             })
             ->addColumn('total', function (VPengeluaranBiaya $model){
                 return number_format($model->total,2,",",".");
@@ -150,8 +156,15 @@ final class PengeluaranBiayaTable extends PowerGridComponent
                 ->sortable(),
 
                 Column::add()
-                ->title('JENIS PAJAK')
-                ->field('jenis_pajak')
+                ->title('PPN')
+                ->field('jenis_ppn')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('PAJAK LAIN')
+                ->field('pajaklain')
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),
@@ -178,15 +191,22 @@ final class PengeluaranBiayaTable extends PowerGridComponent
                 ->sortable(),
 
                 Column::add()
-                ->title('PERSEN PAJAK')
-                ->field('persen_pajak')
+                ->title('PERSEN PPN')
+                ->field('persen_ppn')
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),
 
                 Column::add()
-                ->title('PAJAK')
-                ->field('pajak')
+                ->title('PERSEN PAJAK LAIN')
+                ->field('persen_pajaklain')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+                Column::add()
+                ->title('JUMLAH PPN')
+                ->field('ppn')
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),

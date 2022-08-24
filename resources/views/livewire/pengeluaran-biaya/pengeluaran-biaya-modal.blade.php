@@ -37,16 +37,32 @@
         @enderror
     </x-form-group>
 
-    <x-form-group caption="Pajak">
+    <x-form-group caption="PPN">
         <x-combobox
-            wire:model="pengeluaran.mpajak_id"
+            wire:model="pengeluaran.ppn_id"
         >
-            <option value="">-- Isi Pajak --</option>
-            @foreach ($pajak as $item)
+            <option value="">-- Isi PPN --</option>
+            @foreach ($pajakppn as $item)
                 <option value="{{ $item->id }}">{{ $item->jenis_pajak }}</option>
             @endforeach
+            <option value="0">Non PPN</option>
         </x-combobox>
-        @error('pengeluaran.mpajak_id')
+        @error('pengeluaran.ppn_id')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Pajak Lain">
+        <x-combobox
+            wire:model="pengeluaran.pajaklain_id"
+        >
+            <option value="">-- Isi Pajak Lain --</option>
+            @foreach ($pajakpph as $item)
+                <option value="{{ $item->id }}">{{ $item->jenis_pajak }}</option>
+            @endforeach
+            <option value="0">Non Pajak</option>
+        </x-combobox>
+        @error('pengeluaran.pajaklain_id')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>

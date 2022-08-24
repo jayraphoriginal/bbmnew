@@ -18,10 +18,12 @@ class CreatePengeluaranBiayasTable extends Migration
             $table->foreignId('supplier_id')->nullable();
             $table->foreignId('m_biaya_id')->constrained();
             $table->string('tipe_pembayaran');
-            $table->string('mpajak_id')->nullable();
+            $table->string('ppn_id')->nullable();
+            $table->string('pajaklain_id')->nullable();
             $table->foreignId('rekening_id')->nullable();
-            $table->double('persen_pajak');
-            $table->double('pajak');
+            $table->double('persen_ppn');
+            $table->double('persen_pajaklain');
+            $table->double('ppn');
             $table->double('total');
             $table->string('keterangan')->nullable();
             $table->timestamps();
