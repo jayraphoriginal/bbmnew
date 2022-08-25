@@ -118,14 +118,14 @@ final class SalesorderFull2Table extends PowerGridComponent
     {
         return [
             Column::add()
-                ->title('NOSO')
+                ->title('NOPO')
                 ->field('noso')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),
 
             Column::add()
-                ->title('TGL SO')
+                ->title('TGL PO')
                 ->field('tgl_so_formatted', 'tgl_so')
                 ->searchable()
                 ->sortable()
@@ -139,7 +139,7 @@ final class SalesorderFull2Table extends PowerGridComponent
                 ->makeInputText(),
 
             Column::add()
-                ->title('NOPO')
+                ->title('NOPO Customer')
                 ->field('nopo')
                 ->sortable()
                 ->searchable()
@@ -167,7 +167,7 @@ final class SalesorderFull2Table extends PowerGridComponent
                 ->makeInputDatePicker('jatuh_tempo'),
 
             Column::add()
-                ->title('STATUS SO')
+                ->title('STATUS PO')
                 ->field('status_so')
                 ->sortable()
                 ->searchable()

@@ -59,8 +59,7 @@ final class RekapConcretepumpTable extends PowerGridComponent
         ->join('rates','concretepumps.rate_id','rates.id')
         ->where('concretepumps.m_salesorder_id', $this->m_salesorder_id)
         ->select('concretepumps.*','kendaraans.nopol','drivers.nama_driver','jarak_tempuhs.awal',
-        'jarak_tempuhs.akhir','rates.tujuan','rates.estimasi_jarak')
-        ->orderBy('concretepumps.id', 'desc');
+        'jarak_tempuhs.akhir','rates.tujuan','rates.estimasi_jarak');
     }
 
     /*

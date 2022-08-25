@@ -58,7 +58,7 @@ class SalesorderModal extends ModalComponent
                 ->orderBy('id', 'DESC')->get();
 
             if (count($nomorterakhir) == 0){
-                $noso = '0001/SO/'.date('m').'/'.date('Y');               
+                $noso = '0001/PC/'.date('m').'/'.date('Y');               
             }else{
                 if (
                     substr($nomorterakhir[0]->noso, 8, 2) == date('m')
@@ -66,9 +66,9 @@ class SalesorderModal extends ModalComponent
                     substr($nomorterakhir[0]->noso, 11, 4) == date('Y')
                 ) {
                     $noakhir = intval(substr($nomorterakhir[0]->noso, 0, 4)) + 1;
-                    $noso = substr('0000' . $noakhir, -4) . '/SO/' . date('m') . '/' . date('Y');
+                    $noso = substr('0000' . $noakhir, -4) . '/PC/' . date('m') . '/' . date('Y');
                 } else {
-                    $noso = '0001/SO/' . date('m') . '/' . date('Y');
+                    $noso = '0001/PC/' . date('m') . '/' . date('Y');
                 }
             }
 

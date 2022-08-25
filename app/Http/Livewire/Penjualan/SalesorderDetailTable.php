@@ -55,7 +55,7 @@ final class SalesorderDetailTable extends PowerGridComponent
     {
        //$this->m_salesorder_id=str_replace($this->m_salesorder_id,'/','');
        
-        return VSalesOrder::where('id',$this->m_salesorder_id);
+        return VSalesOrder::where('m_salesorder_id',$this->m_salesorder_id);
     }
 
     /*
@@ -105,6 +105,8 @@ final class SalesorderDetailTable extends PowerGridComponent
             ->addColumn('sisa')
             ->addColumn('satuan_id')
             ->addColumn('satuan')
+            ->addColumn('tgl_awal')
+            ->addColumn('tgl_akhir')
             ->addColumn('tgl_awal_formatted', function(VSalesOrder $model) {
                 return Carbon::parse($model->tgl_awal)->format('d/m/Y');
             })
@@ -169,12 +171,12 @@ final class SalesorderDetailTable extends PowerGridComponent
 
             Column::add()
                 ->title('TGL AWAL')
-                ->field('tgl_awal_formatted', 'tgl_awal')
+                ->field('tgl_awal_formatted')
                 ->sortable(),
 
             Column::add()
                 ->title('TGL AKHIR')
-                ->field('tgl_akhir_formatted', 'tgl_akhir')
+                ->field('tgl_akhir_formatted')
                 ->sortable(),
 
         ]

@@ -1,11 +1,11 @@
 <div>
     <x-header-modal>
-        Input Sales Order
+        Input PO Customer
     </x-header-modal>
 
     <div class="xl:flex lg:flex  xl:gap-4 lg:gap-4">
         <div class="lg:w-1/2">
-            <x-form-group caption="Tanggal SO">
+            <x-form-group caption="Tanggal PO">
                 <x-datepicker
                     wire:model="MSalesorder.tgl_so"
                 />
