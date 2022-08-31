@@ -28,10 +28,12 @@ class PengeluaranBiayaModal extends ModalComponent
         'pengeluaran.supplier_id' => 'nullable',
         'pengeluaran.m_biaya_id' => 'required',
         'pengeluaran.tipe_pembayaran' => 'required',
-        'pengeluaran.mpajak_id' => 'nullable',
+        'pengeluaran.ppn_id' => 'required',
+        'pengeluaran.pajaklain_id' => 'required',
         'pengeluaran.rekening_id' => 'nullable',
-        'pengeluaran.persen_pajak' => 'required',
-        'pengeluaran.pajak' => 'required',
+        'pengeluaran.persen_ppn' => 'required',
+        'pengeluaran.persen_pajaklain' => 'required',
+        'pengeluaran.ppn' => 'required',
         'pengeluaran.total' => 'required',
         'pengeluaran.keterangan' => 'nullable',
     ];
@@ -57,19 +59,31 @@ class PengeluaranBiayaModal extends ModalComponent
 
         $this->pengeluaran->total = str_replace('.', '', $this->pengeluaran->total);
         $this->pengeluaran->total = str_replace(',', '.', $this->pengeluaran->total);
+        $this->validate();
 
-        if (!is_null($this->pengeluaran->mpajak_id)){
-
-            $datapajak = Mpajak::find($this->pengeluaran->mpajak_id);
-            $this->pengeluaran->persen_pajak = $datapajak->persen;
-            $this->pengeluaran->pajak = $this->pengeluaran->total / (1 + $this->pengeluaran->persen_pajak);
-
+        $dpp =0;
+        $nettbiaya=0;
+        if ($this->pengeluaran->ppn_id!=0){
+            $datappn = Mpajak::find($this->pengeluaran->ppn_id);
+            $this->pengeluaran->persen_ppn = $datappn->persen;
+            $dpp = $this->pengeluaran->total / (1 + $this->pengeluaran->persen_ppn);
+            $this->pengeluaran->ppn = $this->pengeluaran->total - $dpp;
         }else{
-            $this->pengeluaran->persen_pajak = 0;
-            $this->pengeluaran->pajak = 0;
+            $this->pengeluaran->persen_ppn = 0;
+            $dpp = $this->pengeluaran->total;
+            $this->pengeluaran->ppn = $this->pengeluaran->total - $dpp;
         }
 
-        $this->validate();
+        if ($this->pengeluaran->pajaklain_id!=0){
+            $datapajak = Mpajak::find($this->pengeluaran->pajaklain_id);
+            $this->pengeluaran->persen_pajaklain = $datapajak->persen;
+            $nettbiaya = $dpp / (1 + $this->pengeluaran->persen_pajaklain);
+        }
+        else{
+            $this->pengeluaran->persen_pajaklain = 0;
+            $nettbiaya = $dpp;
+        }
+        
 
         DB::beginTransaction();
         try{
@@ -82,17 +96,28 @@ class PengeluaranBiayaModal extends ModalComponent
             $journal['trans_id']=$this->pengeluaran->id;
             $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
             $journal['coa_id']=$coabiaya->coa_id;
-            $journal['debet']=$this->pengeluaran->total - $this->pengeluaran->pajak ;
+            $journal['debet']=$nettbiaya;
             $journal['kredit']=0;
             $journal->save();
 
-            if (!is_null($this->pengeluaran->mpajak_id)){
+            if ($this->pengeluaran->ppn_id!=0){
+                $journal = new Journal();
+                $journal['tipe']='Pengeluaran Biaya';
+                $journal['trans_id']=$this->pengeluaran->id;
+                $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
+                $journal['coa_id']=$datappn->coa_id_debet;
+                $journal['debet']=$this->pengeluaran->ppn ;
+                $journal['kredit']=0;
+                $journal->save();
+            }
+
+            if ($this->pengeluaran->pajaklain_id!=0){
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
                 $journal['trans_id']=$this->pengeluaran->id;
                 $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
                 $journal['coa_id']=$datapajak->coa_id_debet;
-                $journal['debet']=$this->pengeluaran->pajak ;
+                $journal['debet']=$dpp - $nettbiaya ;
                 $journal['kredit']=0;
                 $journal->save();
             }
@@ -159,7 +184,8 @@ class PengeluaranBiayaModal extends ModalComponent
     {
         return view('livewire.pengeluaran-biaya.pengeluaran-biaya-modal',[
             'biaya' => MBiaya::all(),
-            'pajak' => Mpajak::all(),
+            'pajakppn' => Mpajak::where('jenis_pajak','PPN')->get(),
+            'pajakpph' => Mpajak::where('jenis_pajak','<>','PPN')->get(),
             'rekening' => Rekening::all()
         ]);
     }

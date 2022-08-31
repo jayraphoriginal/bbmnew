@@ -145,7 +145,7 @@ final class SalesorderFullTable extends PowerGridComponent
     {
         return [
             Column::add()
-                ->title('NOSO')
+                ->title('NOPO')
                 ->field('noso')
                 ->searchable()
                 ->sortable()

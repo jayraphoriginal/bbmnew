@@ -61,6 +61,30 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Penyetoran PPN">
+        <x-combobox
+            wire:model="customer.penyetoran_ppn">
+            <option value="">-- Isi Penyetoran PPN --</option>
+            <option value="disetorkan">Disetorkan</option>
+            <option value="setor sendiri">Setor Sendiri</option>
+        </x-combobox>
+        @error('customer.penyetoran_ppn')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Penyetoran PPH">
+        <x-combobox
+            wire:model="customer.penyetoran_pph">
+            <option value="">-- Isi Penyetoran PPH --</option>
+            <option value="disetorkan">Disetorkan</option>
+            <option value="setor sendiri">Setor Sendiri</option>
+        </x-combobox>
+        @error('customer.penyetoran_pph')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-footer-modal>
         <x-secondary-button
             wire:click="$emit('closeModal')">

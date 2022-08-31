@@ -89,7 +89,9 @@ final class CustomerTable extends PowerGridComponent
             ->addColumn('notelp')
             ->addColumn('nofax')
             ->addColumn('nama_pemilik')
-            ->addColumn('jenis_usaha');
+            ->addColumn('jenis_usaha')
+            ->addColumn('penyetoran_ppn')
+            ->addColumn('penyetoran_pph');
     }
 
     /*
@@ -155,6 +157,20 @@ final class CustomerTable extends PowerGridComponent
             Column::add()
                 ->title('JENIS USAHA')
                 ->field('jenis_usaha')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('PENYETORAN PPN')
+                ->field('penyetoran_ppn')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('PENYETORAN PPH')
+                ->field('penyetoran_pph')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),

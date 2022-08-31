@@ -45,7 +45,26 @@
 
     <body>
 
-        <h1>PT. Bintang Beton Mandala</h1>
+        <h1>{{ $data[0]->nama_customer }} </h1>
+        <p> {{ $data[0]->alamat }}</p>
+        <table>
+            <tr>
+                <td class="kl1">Telp</td>
+                <td>{{ $data[0]->notelp }}</td>
+            </tr>
+            <tr>
+                <td class="kl1">Fax</td>
+                <td>{{ $data[0]->nofax }}</td>
+            </tr>
+        </table>
+
+        <p class="tglkanan">Tanggal Order : {{ date_format(date_create($data[0]->tgl_so),'d M Y') }}</p>
+
+        <h2 style="margin-top:1em; text-align:center; text-decoration:underline">Purchase Order</h2>
+        <p style="text-align:center">{{ $data[0]->noso }}</p>
+
+        <p>Kepada Yang Terhormat Bapak / Ibu</p>
+        <p style="font-weight:bold;">PT. Bintang Beton Mandala</p>
         <p>Jl. Soekarno Hatta No. 1C RT.006 RW 009 Siring Agung Ilir Barat 1 Palembang</p>
         <table>
             <tr>
@@ -59,25 +78,6 @@
             <tr>
                 <td class="kl1">Email</td>
                 <td>bintangbetonmandala@gmail.com</td>
-            </tr>
-        </table>
-
-        <p class="tglkanan">Tanggal Order : {{ date_format(date_create($data[0]->tgl_so),'d M Y') }}</p>
-
-        <h2 style="margin-top:1em; text-align:center; text-decoration:underline">Sales Order</h2>
-        <p style="text-align:center">{{ $data[0]->noso }}</p>
-
-        <p>Kepada Yang Terhormat Bapak / Ibu</p>
-        <p style="font-weight:bold;">{{ $data[0]->nama_customer }}</p>
-        <p>{{ $data[0]->alamat }}</p>
-        <table>
-            <tr>
-                <td class="kl1">Telp</td>
-                <td>{{ $data[0]->notelp }}</td>
-            </tr>
-            <tr>
-                <td class="kl1">Fax</td>
-                <td>{{ $data[0]->nofax }}</td>
             </tr>
         </table>
 
@@ -193,18 +193,17 @@
 
         <p style="text-align:right">Palembang, {{ date_format(now(), 'd M Y') }}</p>
 
-       
         <table style="width:100%">
             <tr>
-                <td style="height:8em;text-align:center; width:30%">Marketing</td>
+                <td style="height:8em;text-align:center; width:30%">Customer</td>
                 <td style="height:8em;width:55%"></td>
-                <td style="height:8em;text-align:center">Customer</td>
+                <td style="height:8em;text-align:center">PT. Bintang Beton Mandala</td>
             </tr>
 
             <tr>
-                <td class="captioncenter" style="width:30%">{{$data[0]->marketing}}</td>
+                <td class="captioncenter" style="width:30%">{{$data[0]->nama_customer}} </td>
                 <td style="width:55%"></td>
-                <td class="captioncenter">{{$data[0]->nama_customer}}</td>
+                <td class="captioncenter">{{$data[0]->marketing}}</td>
             </tr>
         </table>
 

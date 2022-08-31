@@ -27,6 +27,8 @@ class CustomerModal extends ModalComponent
         'customer.nofax' => 'required',
         'customer.nama_pemilik' => 'required',
         'customer.jenis_usaha' => 'required',
+        'customer.penyetoran_ppn' => 'required',
+        'customer.penyetoran_pph' => 'required'
     ];
 
     public function mount(){
