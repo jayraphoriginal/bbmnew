@@ -410,6 +410,7 @@ class InvoiceModal extends ModalComponent
 
         }
         catch(Throwable $e){
+            DB::rollBack();
             $this->alert('error', $e->getMessage(), [
                 'position' => 'center'
             ]);
