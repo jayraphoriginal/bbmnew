@@ -5,7 +5,7 @@
             Tambah Jurnal
         </x-button>
 
-        <livewire:jurnal.purchaseorder-table/>
+        <livewire:jurnal.jurnal-manual-table/>
 
     </x-container>
 </div>

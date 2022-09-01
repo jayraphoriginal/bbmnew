@@ -65,12 +65,13 @@ class CustomerModal extends ModalComponent
                 $coa['posisi'] = 'Asset';
                 $coa['header_akun'] = '110000';
                 $coa->save();
+                $this->customer->coa_id = $coa->id;
             }else{
                 $coa = Coa::find($this->customer->coa_id);
                 $coa['nama_akun'] = $this->customer->nama_customer;
                 $coa->save();
             }
-
+            
             $this->customer->save();
             DB::commit();
 

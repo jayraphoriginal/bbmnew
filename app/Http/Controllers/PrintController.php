@@ -284,8 +284,8 @@ class PrintController extends Controller
                 $tickets = Ticket::select('tickets.driver_id', 'tickets.jam_ticket',
                 'tickets.loading', 'tickets.lembur', 'tickets.d_salesorder_id',
                 'tickets.kendaraan_id')
-                ->where(DB::raw('convert(jam_ticket,DATE)'),'>=',$tgl_awal)
-                ->where(DB::raw('convert(jam_ticket,DATE)'),'<=',$tgl_akhir)
+                ->where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+                ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
                 ->where(
                     function ($query) use ($kendaraan,$driver) {
                         $query->where('tickets.kendaraan_id',$kendaraan->id)
@@ -342,8 +342,8 @@ class PrintController extends Controller
                 }
 
                 $pengisianbbms = PengisianBbm::where('kendaraan_id', $kendaraan->id)
-                                ->where(DB::raw('convert(tanggal_pengisian,DATE)'),'>=',$tgl_awal)
-                                ->where(DB::raw('convert(tanggal_pengisian,DATE)'),'<=',$tgl_akhir)
+                                ->where(DB::raw('convert(date,tanggal_pengisian)'),'>=',$tgl_awal)
+                                ->where(DB::raw('convert(date,tanggal_pengisian)'),'<=',$tgl_akhir)
                                 ->get();
 
                 foreach($pengisianbbms as $pengisianbbm){
@@ -368,8 +368,8 @@ class PrintController extends Controller
                 }
 
                 $tambahanbbms = TambahanBbm::where('kendaraan_id', $kendaraan->id)
-                                ->where(DB::raw('convert(tanggal_penambahan,DATE)'),'>=',$tgl_awal)
-                                ->where(DB::raw('convert(tanggal_penambahan,DATE)'),'<=',$tgl_akhir)
+                                ->where(DB::raw('convert(date,tanggal_penambahan)'),'>=',$tgl_awal)
+                                ->where(DB::raw('convert(date,tanggal_penambahan)'),'<=',$tgl_akhir)
                                 ->get();
 
                 foreach($tambahanbbms as $tambahanbbm){

@@ -30,6 +30,7 @@ class RateSelect extends Component
         $this->deskripsi = $rate->tujuan.' - '.$rate->estimasi_jarak.' KM';
         $this->emitTo('penjualan.salesorder-detail-modal','selectrate', $id);
         $this->emitTo('penjualan.concretepump-modal','selectrate', $id);
+        $this->emitTo('penjualan.ticket-modal','selectrate', $id);
     }
 
     public function selectDeskripsi($id){

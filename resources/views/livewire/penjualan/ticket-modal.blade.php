@@ -52,6 +52,12 @@
             
         </div>
         <div class="lg:w-1/2">
+            <x-form-group caption="Rate">
+                <livewire:rate.rate-select :deskripsi="$rate"/>
+                @error('ticket.rate_id')
+                    <x-error-form>{{ $message }}</x-error-form>
+                @enderror
+            </x-form-group>
 
             <x-form-group caption="Jam Ticket">
                 <x-datetime-picker
@@ -89,6 +95,8 @@
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
+
+
            
         </div>
 

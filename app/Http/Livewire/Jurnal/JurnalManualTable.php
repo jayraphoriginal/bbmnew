@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Penjualan;
+namespace App\Http\Livewire\Jurnal;
 
-use App\Models\DSalesorder;
+use App\Models\ManualJournal;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class SalesorderFullTable extends PowerGridComponent
+final class JurnalManualTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -32,6 +32,7 @@ final class SalesorderFullTable extends PowerGridComponent
     {
         $this->showCheckBox()
             ->showPerPage()
+            ->showSearchInput()
             ->showExportOption('download', ['excel', 'csv']);
     }
 
@@ -42,24 +43,15 @@ final class SalesorderFullTable extends PowerGridComponent
     | Provides data to your Table using a Model or Collection
     |
     */
-
+    
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\DSalesorder>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\ManualJournal>|null
     */
     public function datasource(): ?Builder
     {
-        return DSalesorder::join('rates','d_salesorders.rate_id','rates.id')
-        ->join('satuans','d_salesorders.satuan_id','satuans.id')
-        ->join('mutubetons','d_salesorders.mutubeton_id','mutubetons.id')
-        ->join('m_salesorders','d_salesorders.m_salesorder_id','m_salesorders.id')
-        ->join('customers','m_salesorders.customer_id','customers.id')
-        //->where('d_salesorders.status_detail', 'open')
-        ->select('d_salesorders.*','rates.tujuan', 
-        'm_salesorders.noso', 'customers.nama_customer',
-        'rates.estimasi_jarak','satuans.satuan','mutubetons.kode_mutu');
-   
+        return ManualJournal::query();
     }
 
     /*
@@ -91,41 +83,19 @@ final class SalesorderFullTable extends PowerGridComponent
     public function addColumns(): ?PowerGridEloquent
     {
         return PowerGrid::eloquent()
-        ->addColumn('id')
-        ->addColumn('status')
-        ->addColumn('m_salesorder_id')
-        ->addColumn('noso')
-        ->addColumn('nama_customer')
-        ->addColumn('rate_id')
-        ->addColumn('tujuan')
-        ->addColumn('jarak_tempuh_id')
-        ->addColumn('tipe')
-        ->addColumn('mutubeton_id')
-        ->addColumn('kode_mutu')
-        ->addColumn('harga_intax', function(DSalesorder $model) {
-            return number_format($model->harga_intax,2,",",".");
-        })
-        ->addColumn('estimasi_jarak', function(DSalesorder $model) {
-            return number_format($model->estimasi_jarak,2,",",".");
-        })
-        ->addColumn('jumlah')
-        ->addColumn('sisa')
-        ->addColumn('satuan_id')
-        ->addColumn('satuan')
-        ->addColumn('tgl_awal_formatted', function(DSalesorder $model) {
-            return Carbon::parse($model->tgl_awal)->format('d/m/Y');
-        })
-        ->addColumn('tgl_akhir_formatted', function(DSalesorder $model) {
-            return Carbon::parse($model->tgl_akhir)->format('d/m/Y');
-        })
-        ->addColumn('status_detail')
-        ->addColumn('user_id')
-        ->addColumn('created_at_formatted', function(DSalesorder $model) {
-            return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-        })
-        ->addColumn('updated_at_formatted', function(DSalesorder $model) {
-            return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
-        });
+            ->addColumn('id')
+            ->addColumn('coa_id_debet')
+            ->addColumn('kode_akun_debet')
+            ->addColumn('nama_akun_debet')
+            ->addColumn('coa_id_kredit')
+            ->addColumn('kode_akun_kredit')
+            ->addColumn('nama_akun_kredit')
+            ->addColumn('jumlah')
+            ->addColumn('keterangan')
+            ->addColumn('created_at')
+            ->addColumn('created_at_formatted', function(ManualJournal $model) {
+                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            });
     }
 
     /*
@@ -145,76 +115,60 @@ final class SalesorderFullTable extends PowerGridComponent
     public function columns(): array
     {
         return [
+
             Column::add()
-                ->title('STATUS')
-                ->field('status')
+                ->title('Kode Akun Debet')
+                ->field('kode_akun_debet')
                 ->searchable()
-                ->sortable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('NOPO')
-                ->field('noso')
+                ->makeInputText()
+                ->sortable(),
+            
+                Column::add()
+                ->title('Nama Akun Debet')
+                ->field('nama_akun_debet')
                 ->searchable()
-                ->sortable()
-                ->makeInputText(),
+                ->makeInputText()
+                ->sortable(),
 
             Column::add()
-                ->title('CUSTOMER')
-                ->field('nama_customer')
+                ->title('Kode Akun Kredit')
+                ->field('kode_akun_kredit')
                 ->searchable()
-                ->sortable()
-                ->makeInputText(),
+                ->makeInputText()
+                ->sortable(),
 
             Column::add()
-                ->title('KODE MUTU')
-                ->field('kode_mutu')
+                ->title('Kode Akun Kredit')
+                ->field('nama_akun_kredit')
                 ->searchable()
-                ->sortable()
-                ->makeInputText(),
-
+                ->makeInputText()
+                ->sortable(),
+            
             Column::add()
-                ->title('RATE')
-                ->field('tujuan')
+                ->title('Jumlah')
+                ->field('jumlah')
                 ->searchable()
-                ->sortable()
-                ->makeInputText(),
+                ->makeInputRange()
+                ->sortable(),
 
             Column::add()
-                ->title('Estimasi Jarak')
-                ->field('estimasi_jarak'),   
-
-            Column::add()
-                ->title('HARGA INTAX')
-                ->field('harga_intax'),
-
-            Column::add()
-                ->title('JUMLAH')
-                ->field('jumlah'),
-
-            Column::add()
-                ->title('SISA')
-                ->field('sisa'),
-
-            Column::add()
-                ->title('SATUAN')
-                ->field('satuan'),
-
-            Column::add()
-                ->title('TGL AWAL')
-                ->field('tgl_awal_formatted', 'tgl_awal')
+                ->title('Keterangan')
+                ->field('keterangan')
                 ->searchable()
-                ->sortable()
-                ->makeInputDatePicker(),
+                ->makeInputText()
+                ->sortable(),
 
             Column::add()
-                ->title('TGL AKHIR')
-                ->field('tgl_akhir_formatted', 'tgl_akhir')
+                ->title('Created at')
+                ->field('created_at')
+                ->hidden(),
+
+            Column::add()
+                ->title('Created at')
+                ->field('created_at_formatted')
+                ->makeInputDatePicker('created_at')
                 ->searchable()
-                ->sortable()
-                ->makeInputDatePicker(),
-        ]
-;
+        ];
     }
 
     /*
@@ -226,24 +180,28 @@ final class SalesorderFullTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid DSalesorder Action Buttons.
+     * PowerGrid ManualJournal Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    
+    /*
     public function actions(): array
     {
        return [
-            Button::add('Ticket')
-            ->caption(__('Ticket'))
-            ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-            ->openModal('penjualan.rekap-ticket-modal',[
-                'd_salesorder_id' => 'id'
-            ]),
+           Button::add('edit')
+               ->caption('Edit')
+               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
+               ->route('manual-journal.edit', ['manual-journal' => 'id']),
+
+           Button::add('destroy')
+               ->caption('Delete')
+               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+               ->route('manual-journal.destroy', ['manual-journal' => 'id'])
+               ->method('delete')
         ];
     }
-    
+    */
 
     /*
     |--------------------------------------------------------------------------
@@ -254,7 +212,7 @@ final class SalesorderFullTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid DSalesorder Action Rules.
+     * PowerGrid ManualJournal Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -266,7 +224,7 @@ final class SalesorderFullTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($d-salesorder) => $d-salesorder->id === 1)
+                ->when(fn($manual-journal) => $manual-journal->id === 1)
                 ->hide(),
         ];
     }
@@ -282,7 +240,7 @@ final class SalesorderFullTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid DSalesorder Update.
+     * PowerGrid ManualJournal Update.
      *
      * @param array<string,string> $data
      */
@@ -291,7 +249,7 @@ final class SalesorderFullTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = DSalesorder::query()->findOrFail($data['id'])
+           $updated = ManualJournal::query()
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

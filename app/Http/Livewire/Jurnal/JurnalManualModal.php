@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Jurnal;
 
 use App\Models\Journal;
 use App\Models\ManualJournal;
+use App\Models\Coa;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -77,6 +78,8 @@ class JurnalManualModal extends ModalComponent
 
     public function render()
     {
-        return view('livewire.jurnal.jurnal-manual-modal');
+        return view('livewire.jurnal.jurnal-manual-modal',[
+            'coa' => Coa::where('level',5)->get()
+        ]);
     }
 }

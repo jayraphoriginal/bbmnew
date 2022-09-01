@@ -59,12 +59,11 @@
 
 
     <body>
-        <div style="border: 2px solid; margin:auto; padding-left:1rem">
-            <h2 style="text-align:center; text-decoration:underline">Ticket Material</h2>
+        <div style="border: 2px solid; margin:auto; padding-left:1rem; margin-top:1rem;">
+            <h3 style="text-align:center;">Ticket Material</h3>
             <p style="text-align:center">No Ticket : {{ $data[0]->noticket }}</p>
-        
             <p>Pekerjaan</p>
-            <p style="font-weight:bold; margin-bottom:1.5em">{{ $data[0]->nama_customer}}</p>
+            <p style="font-weight:bold;">{{ $data[0]->nama_customer}}</p>
         </div>
         <table class="table table-sm" style="margin-top:1rem">
             <tr>

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Barang;
 
 use App\Models\Barang;
+use App\Models\Kategori;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -53,7 +54,7 @@ final class BarangTable extends PowerGridComponent
     {
         return Barang::join('satuans','barangs.satuan_id','satuans.id')
             ->leftjoin('kategoris','barangs.kategori_id','kategoris.id')
-            ->select('barangs.*','satuans.satuan');
+            ->select('barangs.*','Kategoris.kategori','satuans.satuan');
     }
 
     /*
@@ -88,7 +89,6 @@ final class BarangTable extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('nama_barang')
             ->addColumn('kategori')
-            ->addColumn('tipe')
             ->addColumn('merk')
             ->addColumn('satuan_id')
             ->addColumn('satuan');
@@ -126,13 +126,6 @@ final class BarangTable extends PowerGridComponent
             Column::add()
                 ->title('KATEGORI')
                 ->field('kategori')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('TIPE')
-                ->field('tipe')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),

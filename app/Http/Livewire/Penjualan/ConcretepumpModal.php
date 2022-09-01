@@ -2,10 +2,15 @@
 
 namespace App\Http\Livewire\Penjualan;
 
+use App\Models\Coa;
 use App\Models\Concretepump;
+use App\Models\Customer;
 use App\Models\Driver;
 use App\Models\JarakTempuh;
+use App\Models\Journal;
 use App\Models\Kendaraan;
+use App\Models\Mpajak;
+use App\Models\MSalesorder;
 use App\Models\Rate;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -86,6 +91,58 @@ class ConcretepumpModal extends ModalComponent
         try{
             $this->concretepump->status='Open';
             $this->concretepump->save();
+
+            $msalesorder = MSalesorder::find($this->m_salesorder_id);
+
+            $pajak = Mpajak::where('jenis_pajak','PPN')->first();
+            $pajakpph = Mpajak::where('jenis_pajak','PPH')->first();
+            $customer = Customer::find($msalesorder->customer_id);
+
+            $dpp = $this->concretepump->harga_sewa / (1 + ($pajak->persen / 100));
+            $ppn = $this->concretepump->harga_sewa - $dpp;
+            $pph = $dpp / (1 + ($pajakpph->persen / 100));
+
+            //Jurnal Piutang
+            $journal = new Journal();
+            $journal['tipe']='Concrete Pump';
+            $journal['trans_id']=$this->ticket->id;
+            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['coa_id']=$customer->coa_id;
+            $journal['debet']=$this->concretepump->harga_sewa;
+            $journal['kredit']=0;
+            $journal->save();
+
+            //Jurnal PPN Keluaran
+            $journal = new Journal();
+            $journal['tipe']='Concrete Pump';
+            $journal['trans_id']=$this->ticket->id;
+            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['coa_id']=$pajak->coa_id_kredit;
+            $journal['debet']=0;
+            $journal['kredit']=$ppn;
+            $journal->save();
+
+            //Jurnal PPH Keluaran
+            $journal = new Journal();
+            $journal['tipe']='Concrete Pump';
+            $journal['trans_id']=$this->ticket->id;
+            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['coa_id']=$pajak->coa_id_kredit;
+            $journal['debet']=0;
+            $journal['kredit']=$pph;
+            $journal->save();
+
+            $coapenjualan = Coa::where('kode_akun','400002')->first();
+            // Jurnal penjualan
+            $journal = new Journal();
+            $journal['tipe']='Concrete Pump';
+            $journal['trans_id']=$this->ticket->id;
+            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['coa_id']=$coapenjualan->id;
+            $journal['debet']=0;
+            $journal['kredit']=$dpp - $pph;
+            $journal->save();
+
             DB::commit();
         }
         catch(Throwable $e){

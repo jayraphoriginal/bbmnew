@@ -44,7 +44,7 @@ class TicketModal extends ModalComponent
         'ticket.driver_id'=> 'required',
         'ticket.jumlah'=> 'required',
         'ticket.jam_ticket'=> 'nullable',
-        
+        'ticket.rate_id' => 'nullable',
         'ticket.satuan_id'=> 'required',
         'ticket.loading'=> 'required',
         'ticket.tambahan_biaya'=> 'required',
@@ -59,6 +59,7 @@ class TicketModal extends ModalComponent
         $this->mutubeton_id = $mutubeton->id;
         $this->mutubeton = $mutubeton->kode_mutu;
         $satuan = Satuan::find($d_salesorder->satuan_id);
+        
 
         if ($this->editmode=='edit') {
             $this->ticket = Ticket::find($this->ticket_id);
@@ -68,12 +69,17 @@ class TicketModal extends ModalComponent
             $driver = Driver::find($this->ticket->driver_id);
             $this->ticket->driver_id = $driver->id;
             $this->driver = Driver::find($this->ticket->driver_id)->nama_driver;
+            $this->ticket->rate_id = $d_salesorder->rate_id;
         }else{
             $this->ticket = new Ticket();
-            $this->ticket->jam_ticket=date('Y-m-d\TH:i');
+            $this->ticket->jam_ticket=date('Y-m-d H:i');
             $this->ticket->satuan_id = $satuan->id;
-            
+            $this->ticket->rate_id = $d_salesorder->rate_id;
+            $this->ticket->tambahan_biaya = 0;
+            $this->ticket->lembur = 0;
         }
+        $datarate = Rate::find($this->ticket->rate_id);
+        $this->rate = $datarate->tujuan.' - '. $datarate->estimasi_jarak;
         $this->satuan = $satuan->satuan;
     }
 
@@ -94,6 +100,12 @@ class TicketModal extends ModalComponent
     public function selectdriver($id){
         $this->ticket->driver_id=$id;
         $this->driver = Driver::find($id)->nama_driver;
+    }
+
+    public function selectrate($id){
+        $this->ticket->rate_id=$id;
+        $datarate = Rate::find($id);
+        $this->rate = $datarate->tujuan.' - '. $datarate->estimasi_jarak;
     }
 
     public function save(){
@@ -148,7 +160,7 @@ class TicketModal extends ModalComponent
 
             $this->ticket->noticket = $noticket;
             $this->ticket->status = 'Open';
-
+            $this->ticket->jam_ticket = date_create($this->ticket->jam_ticket)->format('Y-m-d H:i:s');
             $this->ticket->save();
 
             $d_salesorder = DSalesorder::find($this->d_salesorder_id);
@@ -156,7 +168,7 @@ class TicketModal extends ModalComponent
             $d_salesorder->save();
 
             $mutubeton = Mutubeton::find($this->mutubeton_id);
-            $komposisis = Komposisi::where('mutubeton_id',$this->mutubeton_id)->get();
+            $komposisis = Komposisi::where('mutubeton_id',$this->mutubeton_id)->where('jumlah','>',0)->get();
             
             foreach($komposisis as $komposisi){
 
@@ -178,13 +190,12 @@ class TicketModal extends ModalComponent
                                     ->orderBy('tgl_masuk','asc')
                                     ->get();
 
-                    foreach($detailbarang as $barang){
+                    foreach($detailbarang as $dbarang){
 
                         if ($pemakaianmaterial > 0){
-                            if($pemakaianmaterial > $barang->jumlah){
+                            if($pemakaianmaterial > $dbarang->jumlah){
                                 
-                                $stok = DBarang::find($barang->id);
-                                $pemakaianmaterial = $pemakaianmaterial - $stok->jumlah;
+                                $stok = DBarang::find($dbarang->id);  
                                 $pengurangan = $stok->jumlah;
                                 $stok['jumlah']=0;
                                 $stok->save();
@@ -204,30 +215,31 @@ class TicketModal extends ModalComponent
                                 $kartustok['modal']=$stok->hpp;
                                 $kartustok->save();
 
-                                $databarang = Barang::find($barang->id);
+                                $databarang = Barang::find($komposisi->barang_id);
                                 $kategori = Kategori::find($databarang->kategori_id);
 
                                 $journal = new Journal();
                                 $journal['tipe']='Ticket';
                                 $journal['trans_id']=$this->ticket->id;
-                                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                                $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
                                 $journal['coa_id']=$kategori->coa_hpp_id;
-                                $journal['debet']=$stok->hpp*$pengurangan;
+                                $journal['debet']=round($stok->hpp*$pengurangan,4);
                                 $journal['kredit']=0;
                                 $journal->save();
 
                                 $journal = new Journal();
                                 $journal['tipe']='Ticket';
                                 $journal['trans_id']=$this->ticket->id;
-                                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                                $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
                                 $journal['coa_id']=$kategori->coa_asset_id;
                                 $journal['debet']=0;
-                                $journal['kredit']=$stok->hpp*$pengurangan;
+                                $journal['kredit']=round($stok->hpp*$pengurangan,4);
                                 $journal->save();
 
+                                $pemakaianmaterial = $pemakaianmaterial - $stok->jumlah;
                             }else{
 
-                                $stok = DBarang::find($barang->id);
+                                $stok = DBarang::find($dbarang->id);
                                 $stok['jumlah']=$stok['jumlah']-$pemakaianmaterial;
                                 $stok->save();
 
@@ -246,25 +258,25 @@ class TicketModal extends ModalComponent
                                 $kartustok['modal']=$stok->hpp;
                                 $kartustok->save();
 
-                                $databarang = Barang::find($barang->id);
+                                $databarang = Barang::find($komposisi->barang_id);
                                 $kategori = Kategori::find($databarang->kategori_id);
 
                                 $journal = new Journal();
                                 $journal['tipe']='Ticket';
                                 $journal['trans_id']=$this->ticket->id;
-                                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                                $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
                                 $journal['coa_id']=$kategori->coa_hpp_id;
-                                $journal['debet']=$stok->hpp*$jumlahstok;
+                                $journal['debet']=round($stok->hpp*$pemakaianmaterial,4);
                                 $journal['kredit']=0;
                                 $journal->save();
 
                                 $journal = new Journal();
                                 $journal['tipe']='Ticket';
                                 $journal['trans_id']=$this->ticket->id;
-                                $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+                                $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
                                 $journal['coa_id']=$kategori->coa_asset_id;
                                 $journal['debet']=0;
-                                $journal['kredit']=$stok->hpp*$jumlahstok;
+                                $journal['kredit']=round($stok->hpp*$pemakaianmaterial,4);
                                 $journal->save();
 
                                 $pemakaianmaterial = 0;
@@ -278,20 +290,21 @@ class TicketModal extends ModalComponent
                 'status_detail' => 'Finish'
             ]);
 
-            $msalesorder = MSalesorder::find($d_salesorder->m_salesorder_id);
+            $dsaledorder = DSalesorder::find($this->ticket->d_salesorder_id);
+            $msalesorder = MSalesorder::find($dsaledorder->m_salesorder_id);
             
             $pajak = Mpajak::where('jenis_pajak','PPN')->first();
             $customer = Customer::find($msalesorder->customer_id);
 
             $totalpenjualan = $d_salesorder->harga_intax * $this->ticket->jumlah;
-            $dpp = $totalpenjualan / (1 + ($pajak->persen / 100));
-            $ppn = $totalpenjualan - $dpp;
+            $dpp = round($totalpenjualan / (1 + ($pajak->persen / 100)),4);
+            $ppn = round($totalpenjualan - $dpp,4);
 
             //Jurnal Piutang
             $journal = new Journal();
-            $journal['tipe']='Ticket';
+            $journal['tipe']='Piutang';
             $journal['trans_id']=$this->ticket->id;
-            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
             $journal['coa_id']=$customer->coa_id;
             $journal['debet']=$totalpenjualan;
             $journal['kredit']=0;
@@ -299,9 +312,9 @@ class TicketModal extends ModalComponent
 
             //Jurnal PPN Keluaran
             $journal = new Journal();
-            $journal['tipe']='Ticket';
+            $journal['tipe']='PPN';
             $journal['trans_id']=$this->ticket->id;
-            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
             $journal['coa_id']=$pajak->coa_id_kredit;
             $journal['debet']=0;
             $journal['kredit']=$ppn;
@@ -310,9 +323,9 @@ class TicketModal extends ModalComponent
             $coapenjualan = Coa::where('kode_akun','400001')->first();
             // Jurnal penjualan
             $journal = new Journal();
-            $journal['tipe']='Ticket';
+            $journal['tipe']='Penjualan';
             $journal['trans_id']=$this->ticket->id;
-            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
             $journal['coa_id']=$coapenjualan->id;
             $journal['debet']=0;
             $journal['kredit']=$dpp;

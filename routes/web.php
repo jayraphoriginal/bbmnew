@@ -3,6 +3,8 @@
 use App\Http\Controllers\CreateCoaCustomerSupplier;
 use App\Http\Controllers\PrintController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BackupController;
+use App\Http\Livewire\Jurnal\JurnalManualComponent;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +60,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('pemakaianbarang', \App\Http\Livewire\PemakaianBarang\PemakaianBarangComponent::class)->name('pemakaianbarang');
     Route::get('golongan', \App\Http\Livewire\Inventaris\GolonganComponent::class)->name('golongan');
     Route::get('inventaris', \App\Http\Livewire\Inventaris\InventarisComponent::class)->name('inventaris');
-    Route::get('migrasicoa', [CreateCoaCustomerSupplier::class,'index'])->name('migrasicoa');
+    //Route::get('migrasicoa', [CreateCoaCustomerSupplier::class,'index'])->name('migrasicoa');
+    Route::get('jurnalmanual', JurnalManualComponent::class)->name('jurnalmanual');
 
     //Print
     Route::get('printso/{id}', [\App\Http\Controllers\PrintController::class,'so'])->name('printso');
@@ -69,4 +72,6 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printkwitansi/{id}', [\App\Http\Controllers\PrintController::class,'kwitansi'])->name('printkwitansi');
     Route::get('printconcretepump/{id}', [\App\Http\Controllers\PrintController::class,'concretepump'])->name('printconcretepump');
     Route::get('laporanrekapgaji/{tgl_awal}/{tgl_akhir}', [PrintController::class,'gaji'])->name('rekapgaji');
+
+    Route::get('backup', [BackupController::class,'index'])->name('backup');
 });
