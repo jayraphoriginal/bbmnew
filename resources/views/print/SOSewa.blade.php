@@ -123,29 +123,29 @@
                     <tr>
                         <td class="captioncenter">{{ $i++ }}</td>
                         <td class="captioncenter">{{ $sewa->nama_item }}</td>
-                        <td class="captionright">{{ number_format($sewa->lama,2,",",".") }}</td>
+                        <td class="captionright">{{ number_format($sewa->lama,2,".",",") }}</td>
                         <td class="captioncenter">{{ $sewa->satuan }}</td>
-                        <td class="captionright">{{ number_format($sewa->harga_intax/((100+$sewa->pajak)/100),2,",",".") }}</td>
-                        <td class="captionright">{{ number_format($sewa->lama * $sewa->harga_intax/((100+$sewa->pajak)/100),2,",",".") }}</td>
+                        <td class="captionright">{{ number_format($sewa->harga_intax/((100+$sewa->pajak)/100),2,".",",") }}</td>
+                        <td class="captionright">{{ number_format($sewa->lama * $sewa->harga_intax/((100+$sewa->pajak)/100),2,".",",") }}</td>
                     </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan=5 class="captionleft">DPP</td>
-                    <td class="captionright">{{ number_format($totaldpp,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($totaldpp,2,".",",") }}</td>
                 </tr>
                 <tr>
                     <td colspan=5 class="captionleft">Total Penyewaan</td>
-                    <td class="captionright">{{ number_format($totaldpp,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($totaldpp,2,".",",") }}</td>
                 </tr>
                 <tr>
                     <td colspan=5 class="captionleft">PPN {{ $data[0]->pajak.'%' }}</td>
-                    <td class="captionright">{{ number_format($totaldpp*($data[0]->pajak/100),2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($totaldpp*($data[0]->pajak/100),2,".",",") }}</td>
                 </tr>
                 <tr>
                     <td colspan=5 class="captionleft">Grandtotal</td>
-                    <td class="captionright">{{ number_format($total,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($total,2,".",",") }}</td>
                 </tr>
             </tfoot>
         </table>

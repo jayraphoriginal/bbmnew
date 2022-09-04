@@ -84,14 +84,14 @@
                 <td>{{ date_format(date_create($data->tanggal_ticket),'Y-m-d') }}</td>
                 <td>{{ $data->nama_customer }}</td>
                 <td>{{ $data->lokasi }}</td>
-                <td style="text-align:right;">{{ number_format($data->jarak,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($data->pemakaian_bbm,2,',','.')  }}</td>
+                <td style="text-align:right;">{{ number_format($data->jarak,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($data->pemakaian_bbm,2,'.',',')  }}</td>
                 <td style="text-align:right;">1</td>
-                <td style="text-align:right;">{{ number_format($data->pemakaian_bbm,2,',','.')  }}</td>
-                <td style="text-align:right;">{{ number_format($data->lembur,2,',','.')  }}</td>
-                <td style="text-align:right;">{{ number_format($data->gaji,2,',','.')  }}</td>
-                <td style="text-align:right;">{{ number_format($data->gaji,2,',','.')  }}</td>
-                <td style="text-align:right;">{{ number_format($data->pengisian_bbm,2,',','.') }}</td>
+                <td style="text-align:right;">{{ number_format($data->pemakaian_bbm,2,'.',',')  }}</td>
+                <td style="text-align:right;">{{ number_format($data->lembur,2,'.',',')  }}</td>
+                <td style="text-align:right;">{{ number_format($data->gaji,2,'.',',')  }}</td>
+                <td style="text-align:right;">{{ number_format($data->gaji,2,'.',',')  }}</td>
+                <td style="text-align:right;">{{ number_format($data->pengisian_bbm,2,'.',',') }}</td>
             </tr>
                 @php
                     $totalgaji = $totalgaji + $data->gaji;
@@ -117,19 +117,19 @@
                 <td colspan="6">
                     Total
                 </td>
-                <td style="text-align:right;">{{ number_format($totalrate,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totalpemakaian,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totallembur,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totalgaji,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totalgaji,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totalpengisian ,2,',','.')}}</td>
+                <td style="text-align:right;">{{ number_format($totalrate,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totalpemakaian,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totallembur,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totalgaji,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totalgaji,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totalpengisian ,2,'.',',')}}</td>
             </tr>
             <tr>
                 <td colspan="6">
-                    Total Tambahan Loading Bongkar @ 2.5 Liter X {{ number_format($totalrate,2,',','.') }} 
+                    Total Tambahan Loading Bongkar @ 2.5 Liter X {{ number_format($totalrate,2,'.',',') }} 
                 </td>
                 <td></td>
-                <td style="text-align:right;">{{ number_format($totalloading,2,',','.') }}</td>
+                <td style="text-align:right;">{{ number_format($totalloading,2,'.',',') }}</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -139,12 +139,12 @@
             <td colspan="6">
                     Total
                 </td>
-                <td style="text-align:right;">{{ number_format($totalrate,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totalpemakaian + $totalloading,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totallembur,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totalgaji,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totalgaji,2,',','.') }}</td>
-                <td style="text-align:right;">{{ number_format($totalpengisian,2,',','.') }}</td>
+                <td style="text-align:right;">{{ number_format($totalrate,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totalpemakaian + $totalloading,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totallembur,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totalgaji,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totalgaji,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totalpengisian,2,'.',',') }}</td>
             </tr>
             </table>
 
@@ -157,7 +157,7 @@
                     <td style="width:10em;">Gaji</td>
                     <td> : </td>
                     <td style="width:10em;"></td>
-                    <td style="width:10em;text-align:right;">{{ number_format($totalgaji,2,',','.') }}</td>
+                    <td style="width:10em;text-align:right;">{{ number_format($totalgaji,2,'.',',') }}</td>
                 </tr>
                 <tr>
                     <td style="width:10em;">Pengisian BBM</td>
@@ -167,7 +167,7 @@
                     <td style="width:10em;">Lembur</td>
                     <td style="width:5em;"> : </td>
                     <td style="width:10em;"></td>
-                    <td style="width:10em;text-align:right;">{{ number_format($totallembur,2,',','.') }}</td>
+                    <td style="width:10em;text-align:right;">{{ number_format($totallembur,2,'.',',') }}</td>
                 </tr>
                 <tr>
                     <td style="width:10em;"></td>
@@ -176,8 +176,8 @@
                     <td style="width:25em;"></td>
                     <td style="width:10em;">Uang BBM</td>
                     <td style="width:5em;"> : </td>
-                    <td style="width:10em;">{{ number_format($totalpengurangan,2,',','.') }} X {{ number_format($hargabbm ,2,',','.')}}</td>
-                    <td style="width:10em;text-align:right;"> {{ number_format($totalpengurangan * $hargabbm,2,',','.') }}</td>
+                    <td style="width:10em;">{{ number_format($totalpengurangan,2,'.',',') }} X {{ number_format($hargabbm ,2,'.',',')}}</td>
+                    <td style="width:10em;text-align:right;"> {{ number_format($totalpengurangan * $hargabbm,2,'.',',') }}</td>
                 </tr>
                 <tr>
                     <td style="width:10em;"></td>
@@ -197,7 +197,7 @@
                     <td></td>
                     <td style="width:5em;"></td>
                     <td style="width:10em;"></td>
-                    <td style="width:10em;text-align:right; font-size:16px; font-weight:bold;">{{ number_format(($totalpengurangan * $hargabbm) + $totallembur + $totalgaji,2,',','.')  }}</td>
+                    <td style="width:10em;text-align:right; font-size:16px; font-weight:bold;">{{ number_format(($totalpengurangan * $hargabbm) + $totallembur + $totalgaji,2,'.',',')  }}</td>
                 </tr>
             </table>
 

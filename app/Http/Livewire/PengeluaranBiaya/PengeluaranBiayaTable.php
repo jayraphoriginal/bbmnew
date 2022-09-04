@@ -93,16 +93,16 @@ final class PengeluaranBiayaTable extends PowerGridComponent
             ->addColumn('norek')
             ->addColumn('atas_nama')
             ->addColumn('persen_ppn', function (VPengeluaranBiaya $model){
-                return number_format($model->persen_ppn,2,",",".");
+                return number_format($model->persen_ppn,2,".",",");
             })
             ->addColumn('persen_pajaklain', function (VPengeluaranBiaya $model){
-                return number_format($model->persen_pajaklain,2,",",".");
+                return number_format($model->persen_pajaklain,2,".",",");
             })
             ->addColumn('ppn', function (VPengeluaranBiaya $model){
-                return number_format($model->ppn,2,",",".");
+                return number_format($model->ppn,2,".",",");
             })
             ->addColumn('total', function (VPengeluaranBiaya $model){
-                return number_format($model->total,2,",",".");
+                return number_format($model->total,2,".",",");
             })
             ->addColumn('keterangan')
             ->addColumn('created_at')

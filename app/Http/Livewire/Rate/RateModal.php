@@ -43,8 +43,7 @@ class RateModal extends ModalComponent
 
         $this->validate();
 
-        $this->rate->estimasi_jarak = str_replace('.', '', $this->rate->estimasi_jarak);
-        $this->rate->estimasi_jarak = str_replace(',', '.', $this->rate->estimasi_jarak);
+        $this->rate->estimasi_jarak = str_replace(',', '', $this->rate->estimasi_jarak);
 
 
         $this->rate->save();

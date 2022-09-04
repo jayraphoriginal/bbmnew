@@ -28,7 +28,7 @@
     </x-form-group>
 
     <x-form-group caption="Berat Jenis">
-        <x-number-text
+        <x-textbox
             wire:model="mutubeton.berat_jenis"
         />
         @error('mutubeton.berat_jenis')

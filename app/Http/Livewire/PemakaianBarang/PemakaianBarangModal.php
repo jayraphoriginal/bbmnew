@@ -63,8 +63,7 @@ class PemakaianBarangModal extends ModalComponent
 
     public function save(){
 
-        $this->pemakaian->jumlah = str_replace('.', '', $this->pemakaian->jumlah);
-        $this->pemakaian->jumlah = str_replace(',', '.', $this->pemakaian->jumlah);
+        $this->pemakaian->jumlah = str_replace(',', '', $this->pemakaian->jumlah);
 
         $this->validate();
         $total = 0;

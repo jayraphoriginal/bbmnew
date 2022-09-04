@@ -91,10 +91,10 @@ final class ProduksiTable extends PowerGridComponent
             ->addColumn('nama_barang')
             ->addColumn('jumlah')
             ->addColumn('hpp', function(MProduksi $model) { 
-                return number_format($model->hpp,2,',','.');
+                return number_format($model->hpp,2,'.',',');
             })
             ->addColumn('biaya', function(MProduksi $model) { 
-                return number_format($model->biaya,2,',','.');
+                return number_format($model->biaya,2,'.',',');
             })
             ->addColumn('driver_id')
             ->addColumn('nama_driver')

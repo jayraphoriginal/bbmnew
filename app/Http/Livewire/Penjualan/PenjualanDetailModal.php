@@ -48,11 +48,9 @@ class PenjualanDetailModal extends ModalComponent
 
     public function save(){
 
-        $this->tmp->jumlah = str_replace('.', '', $this->tmp->jumlah);
-        $this->tmp->jumlah = str_replace(',', '.', $this->tmp->jumlah);
+        $this->tmp->jumlah = str_replace(',', '', $this->tmp->jumlah);
 
-        $this->tmp->harga_intax = str_replace('.', '', $this->tmp->harga_intax);
-        $this->tmp->harga_intax = str_replace(',', '.', $this->tmp->harga_intax);
+        $this->tmp->harga_intax = str_replace(',', '', $this->tmp->harga_intax);
 
         $this->tmp->user_id = Auth::user()->id;
 

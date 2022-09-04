@@ -47,11 +47,9 @@ class PenjualanRetailModal extends ModalComponent
     public function save(){
 
         
-        $this->penjualanretail->harga = str_replace('.', '', $this->penjualanretail->harga);
-        $this->penjualanretail->harga = str_replace(',', '.', $this->penjualanretail->harga);
+        $this->penjualanretail->harga = str_replace(',', '', $this->penjualanretail->harga);
 
-        $this->penjualanretail->jumlah = str_replace('.', '', $this->penjualanretail->jumlah);
-        $this->penjualanretail->jumlah = str_replace(',', '.', $this->penjualanretail->jumlah);
+        $this->penjualanretail->jumlah = str_replace(',', '', $this->penjualanretail->jumlah);
 
         $this->penjualanretail->m_salesorder_id = $this->m_salesorder_id;
         $this->penjualanretail->status_detail = 'Open';

@@ -123,36 +123,36 @@
                     <tr>
                         <td class="captioncenter">{{ $i++ }}</td>
                         <td class="captioncenter">{{ $jual->kode_mutu }}</td>
-                        <td class="captionright">{{ number_format($jual->jumlah,2,",",".") }}</td>
-                        <td class="captionright">{{ number_format($jual->harga_intax/((100+$jual->pajak)/100),2,",",".") }}</td>
-                        <td class="captionright">{{ number_format($jual->jumlah * $jual->harga_intax/((100+$jual->pajak)/100),2,",",".") }}</td>
+                        <td class="captionright">{{ number_format($jual->jumlah,2,".",",") }}</td>
+                        <td class="captionright">{{ number_format($jual->harga_intax/((100+$jual->pajak)/100),2,".",",") }}</td>
+                        <td class="captionright">{{ number_format($jual->jumlah * $jual->harga_intax/((100+$jual->pajak)/100),2,".",",") }}</td>
                     </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan=4 class="captionleft">DPP</td>
-                    <td class="captionright">{{ number_format($totaldpp,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($totaldpp,2,".",",") }}</td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">Total Biaya Tambahan</td>
-                    <td class="captionright">{{ number_format($biayatambahan,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($biayatambahan,2,".",",") }}</td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">Concrete Pump</td>
-                    <td class="captionright">{{ number_format($concretepump,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($concretepump,2,".",",") }}</td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">Total Penjualan</td>
-                    <td class="captionright">{{ number_format($totaldpp,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($totaldpp,2,".",",") }}</td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">PPN {{ $data[0]->pajak.'%' }}</td>
-                    <td class="captionright">{{ number_format($totaldpp*($data[0]->pajak/100),2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($totaldpp*($data[0]->pajak/100),2,".",",") }}</td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">Grandtotal</td>
-                    <td class="captionright">{{ number_format($total+$concretepump+$biayatambahan,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($total+$concretepump+$biayatambahan,2,".",",") }}</td>
                 </tr>
             </tfoot>
         </table>

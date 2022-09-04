@@ -89,10 +89,10 @@ final class BahanbakarTable extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('bahan_bakar')
             ->addColumn('harga_beli',function(BahanBakar $model) {
-                return number_format($model->harga_beli,2,',','.');
+                return number_format($model->harga_beli,2,'.',',');
             })
             ->addColumn('harga_claim',function(BahanBakar $model) {
-                return number_format($model->harga_claim,2,',','.');
+                return number_format($model->harga_claim,2,'.',',');
             })
             ->addColumn('satuan_id')
             ->addColumn('satuan')

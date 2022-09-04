@@ -43,11 +43,9 @@ class BahanbakarModal extends ModalComponent
 
         $this->validate();
 
-        $this->bahanBakar->harga_beli = str_replace('.', '', $this->bahanBakar->harga_beli);
-        $this->bahanBakar->harga_beli = str_replace(',', '.', $this->bahanBakar->harga_beli);
+        $this->bahanBakar->harga_beli = str_replace(',', '', $this->bahanBakar->harga_beli);
 
-        $this->bahanBakar->harga_claim = str_replace('.', '', $this->bahanBakar->harga_claim);
-        $this->bahanBakar->harga_claim = str_replace(',', '.', $this->bahanBakar->harga_claim);
+        $this->bahanBakar->harga_claim = str_replace(',', '', $this->bahanBakar->harga_claim);
 
         $this->bahanBakar->save();
 

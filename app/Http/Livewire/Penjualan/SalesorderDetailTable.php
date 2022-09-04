@@ -52,9 +52,7 @@ final class SalesorderDetailTable extends PowerGridComponent
     * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\DSalesorder>|null
     */
     public function datasource(): ?Builder
-    {
-       //$this->m_salesorder_id=str_replace($this->m_salesorder_id,'/','');
-       
+    {  
         return VSalesOrder::where('m_salesorder_id',$this->m_salesorder_id);
     }
 
@@ -96,10 +94,10 @@ final class SalesorderDetailTable extends PowerGridComponent
             ->addColumn('mutubeton_id')
             ->addColumn('kode_mutu')
             ->addColumn('harga_intax', function(VSalesOrder $model) {
-                return number_format($model->harga_intax,2,",",".");
+                return number_format($model->harga_intax,2,".",",");
             })
             ->addColumn('estimasi_jarak', function(VSalesOrder $model) {
-                return number_format($model->estimasi_jarak,2,",",".");
+                return number_format($model->estimasi_jarak,2,".",",");
             })
             ->addColumn('jumlah')
             ->addColumn('sisa')

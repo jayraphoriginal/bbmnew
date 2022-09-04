@@ -26,10 +26,11 @@ class KomposisiModal extends ModalComponent
         'komposisi.mutubeton_id' => 'required',
         'komposisi.barang_id' => 'required',
         'komposisi.jumlah' => 'required',
-        'komposisi.satuan_id' => 'required'
+        'komposisi.satuan_id' => 'required',
+        'komposisi.tipe' => 'required'
     ];
 
-    public function mount($mutubeton_id){
+    public function mount($komposisi_id){
 
         if ($this->editmode=='edit') {
             $this->komposisi = Komposisi::find($this->komposisi_id);
@@ -37,9 +38,9 @@ class KomposisiModal extends ModalComponent
             $this->satuan = Satuan::find($this->komposisi->satuan_id)->satuan;
         }else{
             $this->komposisi = new Komposisi();
+            $this->komposisi->mutubeton_id = $this->mutubeton_id;
         }
-        $this->komposisi->mutubeton_id = $mutubeton_id;
-        $this->kode_mutu = Mutubeton::find($mutubeton_id)->kode_mutu;
+        $this->kode_mutu = Mutubeton::find($this->komposisi->mutubeton_id)->kode_mutu;
     }
 
     public function selectbarang($id){
@@ -53,8 +54,7 @@ class KomposisiModal extends ModalComponent
 
         $this->validate();
 
-        $this->komposisi->jumlah = str_replace('.', '', $this->komposisi->jumlah);
-        $this->komposisi->jumlah = str_replace(',', '.', $this->komposisi->jumlah);
+        $this->komposisi->jumlah = str_replace(',', '', $this->komposisi->jumlah);
 
         $this->komposisi->save();
 

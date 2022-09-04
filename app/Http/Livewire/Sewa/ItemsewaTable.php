@@ -88,7 +88,7 @@ final class ItemsewaTable extends PowerGridComponent
             ->addColumn('nama_item')
             ->addColumn('tipe')
             ->addColumn('harga_intax', function(Itemsewa $model) {
-                return number_format($model->harga_intax,2,",",".");
+                return number_format($model->harga_intax,2,".",",");
             })
             ->addColumn('satuan_id')
             ->addColumn('satuan')

@@ -45,8 +45,7 @@ class ProduksiDetailModal extends ModalComponent
 
     public function save(){
 
-        $this->tmp->jumlah = str_replace('.', '', $this->tmp->jumlah);
-        $this->tmp->jumlah = str_replace(',', '.', $this->tmp->jumlah);
+        $this->tmp->jumlah = str_replace(',', '', $this->tmp->jumlah);
 
         $this->tmp->user_id = Auth::user()->id;
 

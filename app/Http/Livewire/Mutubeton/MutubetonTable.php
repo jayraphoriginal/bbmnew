@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Mutubeton;
 
+use App\Models\Komposisi;
 use App\Models\Mutubeton;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
@@ -90,7 +91,7 @@ final class MutubetonTable extends PowerGridComponent
             ->addColumn('satuan_id')
             ->addColumn('satuan')
             ->addColumn('berat_jenis', function(Mutubeton $model) { 
-                return number_format($model->berat_jenis,2,',','.');
+                return number_format($model->berat_jenis,4,'.',',');
             });
     }
 

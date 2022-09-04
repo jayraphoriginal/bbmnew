@@ -87,12 +87,12 @@ class InvoiceModal extends ModalComponent
             $jumlah_ticket = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
             ->where('d_salesorders.m_salesorder_id', $this->so_id)
             ->where('tickets.status','Open')
-            ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->whereBetween(DB::raw('convert(date,tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum(DB::raw('tickets.jumlah * d_salesorders.harga_intax'));
 
             $jumlah_concrete = Concretepump::where('m_salesorder_id', $this->so_id)
             ->where('concretepumps.status','Open')
-            ->whereBetween(DB::raw('date(concretepumps.created_at)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->whereBetween(DB::raw('convert(date,concretepumps.created_at)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum('concretepumps.harga_sewa');
 
             $this->jumlah_total = $jumlah_ticket + $jumlah_concrete;
@@ -100,7 +100,7 @@ class InvoiceModal extends ModalComponent
             $tambahanbiaya = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
             ->where('d_salesorders.m_salesorder_id', $this->so_id)
             ->where('tickets.status','Open')
-            ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->whereBetween(DB::raw('convert(date,tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum('tambahan_biaya');
 
             $penjualanretail = PenjualanRetail::where('m_salesorder_id', $this->so_id)
@@ -129,12 +129,12 @@ class InvoiceModal extends ModalComponent
             $jumlah_ticket = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
             ->where('d_salesorders.m_salesorder_id', $this->so_id)
             ->where('tickets.status','Open')
-            ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->whereBetween(DB::raw('convert(date,tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum(DB::raw('tickets.jumlah * d_salesorders.harga_intax'));
 
             $jumlah_concrete = Concretepump::where('m_salesorder_id', $this->so_id)
             ->where('concretepumps.status','Open')
-            ->whereBetween(DB::raw('date(concretepumps.created_at)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->whereBetween(DB::raw('convert(date,concretepumps.created_at)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum('concretepumps.harga_sewa');
 
             $this->jumlah_total = $jumlah_ticket + $jumlah_concrete;
@@ -142,7 +142,7 @@ class InvoiceModal extends ModalComponent
             $tambahanbiaya = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
             ->where('d_salesorders.m_salesorder_id', $this->so_id)
             ->where('tickets.status','Open')
-            ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->whereBetween(DB::raw('convert(date,tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum('tambahan_biaya');
 
             $penjualanretail = PenjualanRetail::where('m_salesorder_id', $this->so_id)
@@ -161,14 +161,11 @@ class InvoiceModal extends ModalComponent
 
     public function save(){
 
-        $this->jumlah_total = str_replace('.', '', $this->jumlah_total);
-        $this->jumlah_total = str_replace(',', '.', $this->jumlah_total);
+        $this->jumlah_total = str_replace(',', '', $this->jumlah_total);
 
-        $this->jumlah_dp = str_replace('.', '', $this->jumlah_dp);
-        $this->jumlah_dp = str_replace(',', '.', $this->jumlah_dp);
+        $this->jumlah_dp = str_replace(',', '', $this->jumlah_dp);
 
-        $this->dp_sebelum = str_replace('.', '', $this->dp_sebelum);
-        $this->dp_sebelum = str_replace(',', '.', $this->dp_sebelum);
+        $this->dp_sebelum = str_replace(',', '', $this->dp_sebelum);
 
 
         $this->validate();

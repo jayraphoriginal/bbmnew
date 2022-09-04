@@ -43,8 +43,7 @@ class ItemsewaModal extends ModalComponent
 
         $this->validate();
 
-        $this->itemsewa->harga_intax = str_replace('.', '', $this->itemsewa->harga_intax);
-        $this->itemsewa->harga_intax = str_replace(',', '.', $this->itemsewa->harga_intax);
+        $this->itemsewa->harga_intax = str_replace(',', '', $this->itemsewa->harga_intax);
 
         $this->itemsewa->save();
 

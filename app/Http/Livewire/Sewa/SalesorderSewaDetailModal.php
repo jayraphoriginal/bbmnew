@@ -52,8 +52,7 @@ class SalesorderSewaDetailModal extends ModalComponent
 
     public function save(){
 
-        $this->DSalesorder->harga_intax = str_replace('.', '', $this->DSalesorder->harga_intax);
-        $this->DSalesorder->harga_intax = str_replace(',', '.', $this->DSalesorder->harga_intax);
+        $this->DSalesorder->harga_intax = str_replace(',', '', $this->DSalesorder->harga_intax);
 
         $this->DSalesorder->m_salesorder_sewa_id = $this->m_salesorder_id;
         $this->DSalesorder->status_detail = 'Open';

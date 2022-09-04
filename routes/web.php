@@ -4,6 +4,7 @@ use App\Http\Controllers\CreateCoaCustomerSupplier;
 use App\Http\Controllers\PrintController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackupController;
+use App\Http\Livewire\DashboardComponent;
 use App\Http\Livewire\Jurnal\JurnalManualComponent;
 
 /*
@@ -27,7 +28,7 @@ Route::get('/', function () {
 
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
-    Route::view('/dashboard','dashboard');
+    Route::get('dashboard', DashboardComponent::class)->name('dashboard');
     Route::get('alat', \App\Http\Livewire\Alat\AlatComponent::class)->name('alat');
     Route::get('satuan', \App\Http\Livewire\Satuan\SatuanComponent::class)->name('satuan');
     Route::get('barang', \App\Http\Livewire\Barang\BarangComponent::class)->name('barang');

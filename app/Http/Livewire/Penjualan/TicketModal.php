@@ -110,17 +110,11 @@ class TicketModal extends ModalComponent
 
     public function save(){
 
-        $this->ticket->lembur = str_replace('.', '', $this->ticket->lembur);
-        $this->ticket->lembur = str_replace(',', '.', $this->ticket->lembur);
+        $this->ticket->lembur = str_replace(',', '', $this->ticket->lembur);
 
-        $this->ticket->jumlah = str_replace('.', '', $this->ticket->jumlah);
-        $this->ticket->jumlah = str_replace(',', '.', $this->ticket->jumlah);
+        $this->ticket->jumlah = str_replace(',', '', $this->ticket->jumlah);
 
-        $this->ticket->tambahan_biaya = str_replace('.', '', $this->ticket->tambahan_biaya);
-        $this->ticket->tambahan_biaya = str_replace(',', '.', $this->ticket->tambahan_biaya);
-
-        // $this->ticket->loading = str_replace('.', '', $this->ticket->loading);
-        // $this->ticket->loading = str_replace(',', '.', $this->ticket->loading);
+        $this->ticket->tambahan_biaya = str_replace(',', '', $this->ticket->tambahan_biaya);
 
         $this->ticket->d_salesorder_id = $this->d_salesorder_id;
 

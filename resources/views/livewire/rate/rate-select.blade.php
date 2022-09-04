@@ -23,7 +23,7 @@
                     @foreach ($rate as $item)
                         <div
                             wire:click.prevent="selectdata({{ $item->id }})" @click="search = false" class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
-                            {{ $item->tujuan.' - '.$item->estimasi_jarak.' KM' }}
+                            {{ $item->tujuan.' - '.number_format($item->estimasi_jarak,2,'.',',').' KM' }}
                         </div>
                     @endforeach
                 @else

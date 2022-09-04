@@ -49,7 +49,6 @@ final class SoSewaTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         return MSalesorderSewa::join('customers','m_salesorder_sewas.customer_id','customers.id')
-        ->orderBy('m_salesorder_sewas.id','desc')
         ->select('m_salesorder_sewas.*','customers.nama_customer');
     }
 

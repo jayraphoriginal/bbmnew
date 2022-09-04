@@ -90,7 +90,7 @@ final class RekeningTable extends PowerGridComponent
             ->addColumn('atas_nama')
             ->addColumn('nama_bank')
             ->addColumn('saldo', function(Rekening $model) {
-                return number_format($model->saldo,2,',','.');
+                return number_format($model->saldo,2,'.',',');
             })
             ->addColumn('created_at_formatted', function(Rekening $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');

@@ -18,6 +18,18 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Jumlah">
+        <x-combobox
+            wire:model="komposisi.tipe">
+            <option>-- Pilih Tipe --</option>
+            <option value="mengurangi stok">Mengurangi stok</option>
+            <option value="tidak mengurangi stok">Tidak mengurangi stok</option>
+        </x-combobox>
+        @error('komposisi.tipe')
+            <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="Satuan">
         <x-textbox
             readonly

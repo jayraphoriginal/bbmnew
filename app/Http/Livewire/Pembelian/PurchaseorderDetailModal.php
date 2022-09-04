@@ -59,11 +59,9 @@ class PurchaseorderDetailModal extends ModalComponent
     public function save(){
 
         
-        $this->tmp->harga = str_replace('.', '', $this->tmp->harga);
-        $this->tmp->harga = str_replace(',', '.', $this->tmp->harga);
+        $this->tmp->harga = str_replace(',', '', $this->tmp->harga);
 
-        $this->tmp->jumlah = str_replace('.', '', $this->tmp->jumlah);
-        $this->tmp->jumlah = str_replace(',', '.', $this->tmp->jumlah);
+        $this->tmp->jumlah = str_replace(',', '', $this->tmp->jumlah);
 
         $this->tmp->status_detail = 'Open';
 

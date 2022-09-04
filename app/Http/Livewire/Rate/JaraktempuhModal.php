@@ -34,11 +34,9 @@ class JaraktempuhModal extends ModalComponent
 
         $this->validate();
 
-        $this->jarakTempuh->awal = str_replace('.', '', $this->jarakTempuh->awal);
-        $this->jarakTempuh->awal = str_replace(',', '.', $this->jarakTempuh->awal);
+        $this->jarakTempuh->awal = str_replace(',', '', $this->jarakTempuh->awal);
 
-        $this->jarakTempuh->akhir = str_replace('.', '', $this->jarakTempuh->akhir);
-        $this->jarakTempuh->akhir = str_replace(',', '.', $this->jarakTempuh->akhir);
+        $this->jarakTempuh->akhir = str_replace(',', '', $this->jarakTempuh->akhir);
 
 
         $this->jarakTempuh->save();

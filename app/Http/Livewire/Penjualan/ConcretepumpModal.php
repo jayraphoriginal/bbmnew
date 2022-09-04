@@ -79,8 +79,7 @@ class ConcretepumpModal extends ModalComponent
 
     public function save(){
 
-        $this->concretepump->harga_sewa = str_replace('.', '', $this->concretepump->harga_sewa);
-        $this->concretepump->harga_sewa = str_replace(',', '.', $this->concretepump->harga_sewa);
+        $this->concretepump->harga_sewa = str_replace(',', '', $this->concretepump->harga_sewa);
 
         $this->concretepump->m_salesorder_id = $this->m_salesorder_id;
 
@@ -95,7 +94,7 @@ class ConcretepumpModal extends ModalComponent
             $msalesorder = MSalesorder::find($this->m_salesorder_id);
 
             $pajak = Mpajak::where('jenis_pajak','PPN')->first();
-            $pajakpph = Mpajak::where('jenis_pajak','PPH')->first();
+            $pajakpph = Mpajak::where('jenis_pajak','PPH 23')->first();
             $customer = Customer::find($msalesorder->customer_id);
 
             $dpp = $this->concretepump->harga_sewa / (1 + ($pajak->persen / 100));
@@ -105,8 +104,8 @@ class ConcretepumpModal extends ModalComponent
             //Jurnal Piutang
             $journal = new Journal();
             $journal['tipe']='Concrete Pump';
-            $journal['trans_id']=$this->ticket->id;
-            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['trans_id']=$this->concretepump->id;
+            $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
             $journal['coa_id']=$customer->coa_id;
             $journal['debet']=$this->concretepump->harga_sewa;
             $journal['kredit']=0;
@@ -115,8 +114,8 @@ class ConcretepumpModal extends ModalComponent
             //Jurnal PPN Keluaran
             $journal = new Journal();
             $journal['tipe']='Concrete Pump';
-            $journal['trans_id']=$this->ticket->id;
-            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['trans_id']=$this->concretepump->id;
+            $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
             $journal['coa_id']=$pajak->coa_id_kredit;
             $journal['debet']=0;
             $journal['kredit']=$ppn;
@@ -125,8 +124,8 @@ class ConcretepumpModal extends ModalComponent
             //Jurnal PPH Keluaran
             $journal = new Journal();
             $journal['tipe']='Concrete Pump';
-            $journal['trans_id']=$this->ticket->id;
-            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['trans_id']=$this->concretepump->id;
+            $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
             $journal['coa_id']=$pajak->coa_id_kredit;
             $journal['debet']=0;
             $journal['kredit']=$pph;
@@ -136,8 +135,8 @@ class ConcretepumpModal extends ModalComponent
             // Jurnal penjualan
             $journal = new Journal();
             $journal['tipe']='Concrete Pump';
-            $journal['trans_id']=$this->ticket->id;
-            $journal['tanggal_transaksi']=$this->ticket->jam_ticket->format('Y-m-d');
+            $journal['trans_id']=$this->concretepump->id;
+            $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
             $journal['coa_id']=$coapenjualan->id;
             $journal['debet']=0;
             $journal['kredit']=$dpp - $pph;

@@ -49,7 +49,6 @@ final class SoTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         return MSalesorder::join('customers','m_salesorders.customer_id','customers.id')
-        ->orderBy('m_salesorders.id','desc')
         ->select('m_salesorders.*','customers.nama_customer');
     }
 

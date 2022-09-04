@@ -94,7 +94,7 @@ final class PurchaseorderDetailTable extends PowerGridComponent
             ->addColumn('satuan_id')
             ->addColumn('satuan')
             ->addColumn('harga', function(TmpPembelian $model) { 
-                return number_format($model->harga,2,',','.');
+                return number_format($model->harga,2,'.',',');
             })
             ->addColumn('user_id')
             ->addColumn('created_at_formatted', function(TmpPembelian $model) { 

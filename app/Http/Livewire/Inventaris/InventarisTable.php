@@ -94,7 +94,7 @@ final class InventarisTable extends PowerGridComponent
                 return Carbon::parse($model->tgl_perolehan)->format('d/m/Y');
             })
             ->addColumn('harga_perolehan', function(Inventaris $model) { 
-                return number_format($model->harga_perolehan,0,',','.');
+                return number_format($model->harga_perolehan,0,'.',',');
             })
             ->addColumn('coa_asset_id')
             ->addColumn('coa_penyusutan_id')

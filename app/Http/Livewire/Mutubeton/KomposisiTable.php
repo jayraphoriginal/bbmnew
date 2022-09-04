@@ -94,7 +94,10 @@ final class KomposisiTable extends PowerGridComponent
             ->addColumn('kode_mutu')
             ->addColumn('barang_id')
             ->addColumn('nama_barang')
-            ->addColumn('jumlah')
+            ->addColumn('tipe')
+            ->addColumn('jumlah', function(Komposisi $model) {
+                return number_format($model->jumlah,4,".",",");
+            })
             ->addColumn('satuan_id')
             ->addColumn('satuan')
             ->addColumn('created_at_formatted', function(Komposisi $model) { 
@@ -132,6 +135,11 @@ final class KomposisiTable extends PowerGridComponent
                 ->title('BARANG')
                 ->field('nama_barang')
                 ->sortable(),
+            
+            Column::add()
+                ->title('TIPE')
+                ->field('tipe')
+                ->sortable(),
 
             Column::add()
                 ->title('JUMLAH')
@@ -164,13 +172,13 @@ final class KomposisiTable extends PowerGridComponent
     public function actions(): array
     {
         return [
-            // Button::add('edit')
-            //     ->caption(__('Edit'))
-            //     ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-            //     ->openModal('mutubeton.komposisi-modal',[
-            //         'editmode' => 'edit',
-            //         'mutubeton_id' => 'id'
-            //     ]),
+            Button::add('edit')
+                ->caption(__('Edit'))
+                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->openModal('mutubeton.komposisi-modal',[
+                    'editmode' => 'edit',
+                    'komposisi_id' => 'id'
+                ]),
 
             Button::add('destroy')
                 ->caption(__('Delete'))

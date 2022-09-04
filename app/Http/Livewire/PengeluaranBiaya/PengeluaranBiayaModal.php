@@ -57,8 +57,7 @@ class PengeluaranBiayaModal extends ModalComponent
 
     public function save(){
 
-        $this->pengeluaran->total = str_replace('.', '', $this->pengeluaran->total);
-        $this->pengeluaran->total = str_replace(',', '.', $this->pengeluaran->total);
+        $this->pengeluaran->total = str_replace(',', '', $this->pengeluaran->total);
         $this->validate();
 
         $dpp =0;

@@ -53,8 +53,7 @@ class PenambahanBbmModal extends ModalComponent
 
     public function save(){
 
-        $this->penambahan->jumlah = str_replace('.', '', $this->penambahan->jumlah);
-        $this->penambahan->jumlah = str_replace(',', '.', $this->penambahan->jumlah);
+        $this->penambahan->jumlah = str_replace(',', '', $this->penambahan->jumlah);
 
         $this->validate();
 

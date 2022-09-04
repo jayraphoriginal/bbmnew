@@ -92,7 +92,7 @@ final class SalesorderSewaDetailTable extends PowerGridComponent
             ->addColumn('item_id')
             ->addColumn('nama_item')
             ->addColumn('harga_intax', function(DSalesorderSewa $model) {
-                return number_format($model->harga_intax,2,",",".");
+                return number_format($model->harga_intax,2,".",",");
             })
             ->addColumn('jumlah')
             ->addColumn('sisa')

@@ -49,11 +49,9 @@ class MutubetonModal extends ModalComponent
 
         $this->validate();
 
-        $this->mutubeton->jumlah = str_replace('.', '', $this->mutubeton->jumlah);
-        $this->mutubeton->jumlah = str_replace(',', '.', $this->mutubeton->jumlah);
+        $this->mutubeton->jumlah = str_replace(',', '', $this->mutubeton->jumlah);
 
-        $this->mutubeton->berat_jenis = str_replace('.', '', $this->mutubeton->berat_jenis);
-        $this->mutubeton->berat_jenis = str_replace(',', '.', $this->mutubeton->berat_jenis);
+        $this->mutubeton->berat_jenis = str_replace(',', '', $this->mutubeton->berat_jenis);
 
         $this->mutubeton->save();
 

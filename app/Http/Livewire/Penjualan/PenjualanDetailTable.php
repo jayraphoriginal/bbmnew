@@ -93,13 +93,13 @@ final class PenjualanDetailTable extends PowerGridComponent
         ->addColumn('jumlah')
         ->addColumn('harga_intax')
         ->addColumn('harga_intax_formatted', function(TmpPenjualan $model) { 
-            return number_format($model->harga_intax,2,',','.');
+            return number_format($model->harga_intax,2,'.',',');
         })
         ->addColumn('subtotal', function(TmpPenjualan $model) { 
             return $model->harga_intax * $model->jumlah;
         })
         ->addColumn('subtotal_formatted', function(TmpPenjualan $model) { 
-            return number_format($model->harga_intax * $model->jumlah,2,',','.');;
+            return number_format($model->harga_intax * $model->jumlah,2,'.',',');;
         })
         ->addColumn('created_at_formatted', function(TmpPenjualan $model) { 
             return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');

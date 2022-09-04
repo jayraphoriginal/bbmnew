@@ -33,8 +33,7 @@ class JurnalManualModal extends ModalComponent
 
         $this->validate();
 
-        $this->jumlah = str_replace('.', '', $this->jumlah);
-        $this->jumlah = str_replace(',', '.',$this->jumlah );
+        $this->jumlah = str_replace(',', '', $this->jumlah);
 
         DB::beginTransaction();
 

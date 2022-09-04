@@ -41,8 +41,7 @@ class InventarisModal extends ModalComponent
 
     public function save(){
 
-        $this->inventaris->harga_perolehan = str_replace('.', '', $this->inventaris->harga_perolehan);
-        $this->inventaris->harga_perolehan = str_replace(',', '.', $this->inventaris->harga_perolehan);
+        $this->inventaris->harga_perolehan = str_replace(',', '', $this->inventaris->harga_perolehan);
 
         $this->inventaris->status = 'Aktif';
         $this->validate();

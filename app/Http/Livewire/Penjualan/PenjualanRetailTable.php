@@ -91,15 +91,15 @@ final class PenjualanRetailTable extends PowerGridComponent
             ->addColumn('barang_id')
             ->addColumn('nama_barang')
             ->addColumn('jumlah', function(PenjualanRetail $model) { 
-                return number_format($model->jumlah,2,',','.');
+                return number_format($model->jumlah,2,'.',',');
             })
             ->addColumn('satuan_id')
             ->addColumn('satuan')
             ->addColumn('harga', function(PenjualanRetail $model) { 
-                return number_format($model->harga,2,',','.');
+                return number_format($model->harga,2,'.',',');
             })
             ->addColumn('subtotal', function(PenjualanRetail $model) { 
-                return number_format($model->harga*$model->jumlah,2,',','.');
+                return number_format($model->harga*$model->jumlah,2,'.',',');
             })
             ->addColumn('created_at_formatted', function(PenjualanRetail $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');

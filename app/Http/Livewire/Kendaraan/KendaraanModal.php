@@ -53,11 +53,9 @@ class KendaraanModal extends ModalComponent
 
         $this->validate();
 
-        $this->kendaraan->loading = str_replace('.', '', $this->kendaraan->loading);
-        $this->kendaraan->loading = str_replace(',', '.', $this->kendaraan->loading);
+        $this->kendaraan->loading = str_replace(',', '', $this->kendaraan->loading);
 
-        $this->kendaraan->muatan = str_replace('.', '', $this->kendaraan->muatan);
-        $this->kendaraan->muatan = str_replace(',', '.', $this->kendaraan->muatan);
+        $this->kendaraan->muatan = str_replace(',', '', $this->kendaraan->muatan);
 
         $this->kendaraan->save();
 

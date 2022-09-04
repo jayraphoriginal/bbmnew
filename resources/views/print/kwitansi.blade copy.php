@@ -90,17 +90,17 @@
                             <tr>
                                 <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
                                 <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,",",".") }}</td>
+                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
                             </tr>
                         @else
                             <tr>
                                 <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
                                 <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,",",".").' '.$jual->satuan }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,",",".") }}</td>
+                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
                             </tr>
                         @endif
 
@@ -170,17 +170,17 @@
                             <tr>
                                 <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
                                 <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,",",".") }}</td>
+                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
                             </tr>
                         @else
                             <tr>
                                 <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
                                 <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,",",".").' '.$jual->satuan }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,",",".") }}</td>
+                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
                             </tr>
                         @endif
 
@@ -250,17 +250,17 @@
                             <tr>
                                 <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
                                 <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,",",".") }}</td>
+                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
                             </tr>
                         @else
                             <tr>
                                 <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
                                 <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,",",".").' '.$jual->satuan }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,",",".") }}</td>
+                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
                             </tr>
                         @endif
 
@@ -330,17 +330,17 @@
                             <tr>
                                 <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
                                 <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,",",".") }}</td>
+                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
                             </tr>
                         @else
                             <tr>
                                 <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
                                 <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,",",".").' '.$jual->satuan }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,",",".") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,",",".") }}</td>
+                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
+                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
                             </tr>
                         @endif
 

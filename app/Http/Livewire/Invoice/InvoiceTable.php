@@ -92,13 +92,13 @@ final class InvoiceTable extends PowerGridComponent
             ->addColumn('norek')
             ->addColumn('tipe')
             ->addColumn('total', function(Invoice $model) {
-                return number_format($model->total,2,",",".");
+                return number_format($model->total,2,".",",");
             })
             ->addColumn('ppn', function(Invoice $model) {
-                return number_format($model->ppn,2,",",".");
+                return number_format($model->ppn,2,".",",");
             })
             ->addColumn('dpp', function(Invoice $model) {
-                return number_format($model->dpp,2,",",".");
+                return number_format($model->dpp,2,".",",");
             })
             ->addColumn('status')
             ->addColumn('created_at_formatted', function(Invoice $model) { 

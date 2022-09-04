@@ -68,9 +68,9 @@
                         <tr>
                             <td class="captioncenter" style="width:5%">{{ $i++ }}</td>
                             <td class="captionleft">{{ isset($po->nama_material) ? $po->nama_material : $po->nama_barang }}</td>
-                            <td class="captionright" style="width:10%">{{ number_format($po->jumlah,2,",",".") }}</td>
-                            <td class="captionright" style="width:15%">{{ number_format($po->harga/(1+($pajak->pajak/100)),2,",",".") }}</td>
-                            <td class="captionright" style="width:15%">{{ number_format($po->jumlah * $po->harga/(1+($pajak->pajak/100)),2,",",".") }}</td>
+                            <td class="captionright" style="width:10%">{{ number_format($po->jumlah,2,".",",") }}</td>
+                            <td class="captionright" style="width:15%">{{ number_format($po->harga/(1+($pajak->pajak/100)),2,".",",") }}</td>
+                            <td class="captionright" style="width:15%">{{ number_format($po->jumlah * $po->harga/(1+($pajak->pajak/100)),2,".",",") }}</td>
                             <td></td>
                         </tr>
                 @endforeach
@@ -78,17 +78,17 @@
             <tfoot>
                 <tr>
                     <td colspan=4 class="captionleft">DPP</td>
-                    <td class="captionright">{{ number_format($data[0]->dpp,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($data[0]->dpp,2,".",",") }}</td>
                     <td></td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">PPN {{ $pajak->persen.'%' }}</td>
-                    <td class="captionright">{{ number_format($data[0]->ppn,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($data[0]->ppn,2,".",",") }}</td>
                     <td></td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">Total</td>
-                    <td class="captionright">{{ number_format($data[0]->total,2,",",".") }}</td>
+                    <td class="captionright">{{ number_format($data[0]->total,2,".",",") }}</td>
                     <td></td>
                 </tr>
             </tfoot>

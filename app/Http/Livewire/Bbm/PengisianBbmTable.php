@@ -99,11 +99,11 @@ final class PengisianBbmTable extends PowerGridComponent
             ->addColumn('bahan_bakar')
             ->addColumn('jumlah')
             ->addColumn('jumlah_formatted', function(PengisianBbm $model) { 
-                return number_format($model->jumlah,2,',','.');
+                return number_format($model->jumlah,2,'.',',');
             })
             ->addColumn('harga')
             ->addColumn('harga_formatted', function(PengisianBbm $model) { 
-                return number_format($model->harga,2,',','.');
+                return number_format($model->harga,2,'.',',');
             })
             ->addColumn('created_at_formatted', function(PengisianBbm $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');

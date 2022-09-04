@@ -55,11 +55,9 @@ class ProduksiModal extends ModalComponent
 
         $this->validate();
 
-        $this->produksi->biaya = str_replace('.', '', $this->produksi->biaya);
-        $this->produksi->biaya = str_replace(',', '.', $this->produksi->biaya);
+        $this->produksi->biaya = str_replace(',', '', $this->produksi->biaya);
 
-        $this->produksi->jumlah = str_replace('.', '', $this->produksi->jumlah);
-        $this->produksi->jumlah = str_replace(',', '.', $this->produksi->jumlah);
+        $this->produksi->jumlah = str_replace(',', '', $this->produksi->jumlah);
 
         $tmp = TmpProduksi::where('user_id',Auth::user()->id)->get();
 

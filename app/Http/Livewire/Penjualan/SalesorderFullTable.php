@@ -103,10 +103,10 @@ final class SalesorderFullTable extends PowerGridComponent
         ->addColumn('mutubeton_id')
         ->addColumn('kode_mutu')
         ->addColumn('harga_intax', function(DSalesorder $model) {
-            return number_format($model->harga_intax,2,",",".");
+            return number_format($model->harga_intax,2,".",",");
         })
         ->addColumn('estimasi_jarak', function(DSalesorder $model) {
-            return number_format($model->estimasi_jarak,2,",",".");
+            return number_format($model->estimasi_jarak,2,".",",");
         })
         ->addColumn('jumlah')
         ->addColumn('sisa')
@@ -147,7 +147,7 @@ final class SalesorderFullTable extends PowerGridComponent
         return [
             Column::add()
                 ->title('STATUS')
-                ->field('status')
+                ->field('status_detail')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),
@@ -259,18 +259,17 @@ final class SalesorderFullTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
 
-    /*
+    
     public function actionRules(): array
     {
        return [
            
            //Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($d-salesorder) => $d-salesorder->id === 1)
-                ->hide(),
+            Rule::Rows('status_detail')
+                ->when(fn(DSalesorder $model) => $model->status_detail == 'Open')
+                ->setAttribute('class', 'bg-red-200'),
         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------

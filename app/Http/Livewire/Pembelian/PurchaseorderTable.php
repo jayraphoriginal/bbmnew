@@ -95,14 +95,14 @@ final class PurchaseorderTable extends PowerGridComponent
             })
             ->addColumn('nama_supplier')
             ->addColumn('dpp', function(MPurchaseorder $model) { 
-                return number_format($model->dpp,2,",",".");
+                return number_format($model->dpp,2,".",",");
             })
             ->addColumn('tipe')
             ->addColumn('ppn', function(MPurchaseorder $model) { 
-                return number_format($model->ppn,2,",",".");
+                return number_format($model->ppn,2,".",",");
             })
             ->addColumn('total', function(MPurchaseorder $model) { 
-                return number_format($model->total,2,",",".");
+                return number_format($model->total,2,".",",");
             })
             ->addColumn('pembebanan')
             ->addColumn('jenis_pembebanan')

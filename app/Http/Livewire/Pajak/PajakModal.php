@@ -40,8 +40,7 @@ class PajakModal extends ModalComponent
 
         $this->validate();
 
-        $this->mpajak->persen = str_replace('.', '', $this->mpajak->persen);
-        $this->mpajak->persen = str_replace(',', '.', $this->mpajak->persen);
+        $this->mpajak->persen = str_replace(',', '', $this->mpajak->persen);
 
         DB::beginTransaction();
         try{

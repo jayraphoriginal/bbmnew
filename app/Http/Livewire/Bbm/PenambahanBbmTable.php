@@ -98,7 +98,7 @@ final class PenambahanBbmTable extends PowerGridComponent
             ->addColumn('bahan_bakar')
             ->addColumn('jumlah')
             ->addColumn('jumlah_formatted', function(TambahanBbm $model) { 
-                return number_format($model->jumlah,2,',','.');
+                return number_format($model->jumlah,2,'.',',');
             })
             ->addColumn('keterangan')
             ->addColumn('created_at_formatted', function(TambahanBbm $model) { 

@@ -1,5 +1,5 @@
 <div class="py-4 text-gray-500 dark:text-gray-400" x-data={persediaan:false,master:false,penjualan:false,sewa:false,pembelian:false,laporan:false,finance:false,accounting:false,bbm:false}>
-    <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
+    <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="/dashboard">
         {{ config('app.name') }}
     </a>
     <ul class="mt-6">

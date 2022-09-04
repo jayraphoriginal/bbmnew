@@ -59,11 +59,9 @@ class PengisianBbmModal extends ModalComponent
 
     public function save(){
 
-        $this->pengisian->harga = str_replace('.', '', $this->pengisian->harga);
-        $this->pengisian->harga = str_replace(',', '.', $this->pengisian->harga);
+        $this->pengisian->harga = str_replace(',', '', $this->pengisian->harga);
 
-        $this->pengisian->jumlah = str_replace('.', '', $this->pengisian->jumlah);
-        $this->pengisian->jumlah = str_replace(',', '.', $this->pengisian->jumlah);
+        $this->pengisian->jumlah = str_replace(',', '', $this->pengisian->jumlah);
 
         $this->validate();
 
