@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printkwitansi/{id}', [\App\Http\Controllers\PrintController::class,'kwitansi'])->name('printkwitansi');
     Route::get('printconcretepump/{id}', [\App\Http\Controllers\PrintController::class,'concretepump'])->name('printconcretepump');
     Route::get('laporanrekapgaji/{tgl_awal}/{tgl_akhir}', [PrintController::class,'gaji'])->name('rekapgaji');
-
+    Route::get('rekapticket/{soid}', [PrintController::class,'rekapticket'])->name('rekapticket');
+    Route::get('rekapconcretepump/{soid}', [PrintController::class,'rekapconcretepump'])->name('rekapconcretepump');
     Route::get('backup', [BackupController::class,'index'])->name('backup');
 });

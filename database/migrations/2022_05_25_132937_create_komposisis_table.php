@@ -17,6 +17,7 @@ class CreateKomposisisTable extends Migration
             $table->id();
             $table->foreignId('mutubeton_id')->constrained();
             $table->foreignId('barang_id')->constrained();
+            $table->string('tipe');
             $table->float('jumlah');
             $table->foreignId('satuan_id')->constrained();
             $table->timestamps();

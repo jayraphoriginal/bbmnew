@@ -19,6 +19,7 @@ class CreateBarangsTable extends Migration
             $table->string('tipe');
             $table->string('merk');
             $table->foreignId('satuan_id')->constrained();
+            $table->integer('stok_minimum');
             $table->timestamps();
         });
     }

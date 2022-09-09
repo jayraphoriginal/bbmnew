@@ -30,6 +30,7 @@ class TimesheetModal extends ModalComponent
         'timesheet.hm_awal' => 'nullable',
         'timesheet.hm_akhir' => 'nullable',
         'timesheet.istirahat' => 'required',
+        'timesheet.volume' => 'required',
         'timesheet.keterangan' => 'nullable',
     ];
 
@@ -56,17 +57,7 @@ class TimesheetModal extends ModalComponent
     public function save(){
 
         $this->validate();
-        
-        if($this->timesheet->tipe =='include mixer'){
-
-            $concretepumps = Concretepump::find($this->timesheet->d_so_id);
-            
-            $this->timesheet->keterangan = DB::table('d_salesorders')
-            ->where('d_salesorders.m_salesorder_id',$concretepumps->m_salesorder_id)
-            ->sum('jumlah');
-            
-        }
-
+        $this->timesheet->volume = str_replace(',', '', $this->timesheet->volume);
         $this->timesheet->save();
 
         $this->closeModal();

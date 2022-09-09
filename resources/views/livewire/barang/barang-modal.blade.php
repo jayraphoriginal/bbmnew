@@ -35,6 +35,15 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Stok Minimum">
+        <x-number-text
+            wire:model="barang.stok_minimum"
+        />
+        @error('barang.stok_minimum')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-footer-modal>
         <x-secondary-button
             wire:click="$emit('closeModal')"

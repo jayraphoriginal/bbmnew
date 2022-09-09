@@ -8,6 +8,11 @@
         Tambah Concrete Pump
     </x-button>
 
+    <x-link-button
+        href="rekapconcretepump/{{ $m_salesorder_id }}">
+        Rekap Concrete Pump
+    </x-link-button>
+
     <livewire:penjualan.rekap-concretepump-table m_salesorder_id="{{ $m_salesorder_id }}"/>
 
 </div>

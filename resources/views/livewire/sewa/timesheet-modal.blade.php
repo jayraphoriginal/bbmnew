@@ -21,7 +21,7 @@
 
     @if($timesheet->tipe == 'include mixer' || $timesheet->tipe == 'Jam')
     <x-form-group caption="Jam Awal">
-        <x-timepicker
+        <x-datetime-picker
             wire:model="timesheet.jam_awal"
         />
         @error('timesheet.jam_awal')
@@ -30,7 +30,7 @@
     </x-form-group>
 
     <x-form-group caption="Jam Akhir">
-        <x-timepicker
+        <x-datetime-picker
             wire:model="timesheet.jam_akhir"
         />
         @error('timesheet.jam_akhir')
@@ -65,6 +65,15 @@
         />
         @error('timesheet.istirahat')
         <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
+    <x-form-group caption="Volume">
+        <x-number-text
+            wire:model="timesheet.volume"
+        />
+        @error('timesheet.volume')
+            <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
 

@@ -196,12 +196,22 @@ final class SalesorderTable extends PowerGridComponent
     public function actions(): array
     {
         return [
+
             Button::add('concretepump')
                 ->caption(__('Concrete Pump'))
                 ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-36')
                 ->openModal('penjualan.rekap-concretepump-modal',[
                     'm_salesorder_id' => 'id'
             ]),
+
+            Button::add('rekap')
+                ->caption(__('Ticket'))
+                ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-36')
+                ->target('_blank')
+                ->method('get')
+                ->route("rekapticket",[
+                    'soid' => 'id'
+                ]),
 
             Button::add('cetak')
                 ->caption(__('Cetak'))
@@ -211,7 +221,7 @@ final class SalesorderTable extends PowerGridComponent
                 ->route("printso",[
                     'id' => 'id'
                 ]),
-            
+
             Button::add('edit')
                 ->caption(__('Edit'))
                 ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')

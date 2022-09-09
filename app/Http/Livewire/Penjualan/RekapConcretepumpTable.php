@@ -99,6 +99,9 @@ final class RekapConcretepumpTable extends PowerGridComponent
             ->addColumn('rate_id')
             ->addColumn('tujuan')
             ->addColumn('jarak_tempuh_id')
+            ->addColumn('estimasi_jarak', function(Concretepump $model) {
+                return number_format($model->estimasi_jarak,2,'.',',');
+            })
             ->addColumn('harga_sewa', function(Concretepump $model) {
                 return number_format($model->harga_sewa,2,'.',',');
             })

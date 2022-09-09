@@ -25,6 +25,7 @@ class BarangModal extends ModalComponent
         'barang.nama_barang' => 'required',
         'barang.merk' => 'required',
         'barang.satuan_id' => 'required',
+        'barang.stok_minimum' => 'required',
         'barang.kategori_id' => 'required'
     ];
 
@@ -57,6 +58,7 @@ class BarangModal extends ModalComponent
 
         $this->validate();
 
+        $this->barang->stok_minimum = str_replace(',', '', $this->barang->stok_minimum);
         $this->barang->save();
 
         $this->closeModal();

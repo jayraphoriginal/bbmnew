@@ -22,6 +22,8 @@ use App\Models\TambahanBbm;
 use App\Models\Ticket;
 use App\Models\Timesheet;
 use App\Models\TmpGajiDriver;
+use App\Models\VConcretepump;
+use App\Models\VTicket;
 use Riskihajar\Terbilang\Facades\Terbilang;
 use PDF;
 
@@ -405,5 +407,27 @@ class PrintController extends Controller
         ));
         return $pdf->setPaper('A4','Landscape')->stream();
 
+    }
+
+    public function rekapticket($soid){
+        
+        $data = VTicket::where('so_id',$soid)
+        ->get();
+
+        $pdf = PDF::loadView('print.rekapticketmaterial', array(
+            'data' => $data,
+        ));
+        return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function rekapconcretepump($soid){
+        
+        $data = VConcretepump::where('m_salesorder_id',$soid)
+        ->get();
+
+        $pdf = PDF::loadView('print.rekapconcretepump', array(
+            'data' => $data,
+        ));
+        return $pdf->setPaper('A4','potrait')->stream();
     }
 }

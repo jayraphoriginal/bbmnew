@@ -79,7 +79,7 @@ class TicketModal extends ModalComponent
             $this->ticket->lembur = 0;
         }
         $datarate = Rate::find($this->ticket->rate_id);
-        $this->rate = $datarate->tujuan.' - '. $datarate->estimasi_jarak;
+        $this->rate = $datarate->tujuan.' - '. number_format($datarate->estimasi_jarak,2,'.',','). ' KM';
         $this->satuan = $satuan->satuan;
     }
 
@@ -105,7 +105,7 @@ class TicketModal extends ModalComponent
     public function selectrate($id){
         $this->ticket->rate_id=$id;
         $datarate = Rate::find($id);
-        $this->rate = $datarate->tujuan.' - '. $datarate->estimasi_jarak;
+        $this->rate = $datarate->tujuan.' - '. number_format($datarate->estimasi_jarak,2,'.',','). ' KM';
     }
 
     public function save(){

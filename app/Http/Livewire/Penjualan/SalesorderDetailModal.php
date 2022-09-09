@@ -43,7 +43,7 @@ class SalesorderDetailModal extends ModalComponent
             $mutubeton = Mutubeton::find($this->DSalesorder->mutubeton_id);
             $this->mutubeton = $mutubeton->kode_mutu;
             $rate = Rate::find($this->DSalesorder->rate_id);
-            $this->rate = $rate->tujuan.' - '.$rate->estimasi_jarak.' KM';
+            $this->rate = $rate->tujuan.' - '.number_format($rate->estimasi_jarak,2,'.',',').' KM';
             $this->satuan = Satuan::find($mutubeton->satuan_id)->satuan;
         }else{
             $this->DSalesorder = new DSalesorder();
