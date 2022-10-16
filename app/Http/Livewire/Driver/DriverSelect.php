@@ -34,6 +34,7 @@ class DriverSelect extends Component
         $this->emitTo('produksi.produksi-modal','selectdriver', $id);
         $this->emitTo('bbm.pengisian-bbm-modal','selectdriver', $id);
         $this->emitTo('bbm.penambahan-bbm-modal','selectdriver', $id);
+        $this->emitTo('laporan.rekap-gajiper-driver-modal','selectdriver', $id);
     }
 
     public function selectDeskripsi($id){

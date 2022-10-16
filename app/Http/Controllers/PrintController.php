@@ -484,6 +484,144 @@ class PrintController extends Controller
         return $pdf->setPaper('A4','portrait')->stream();
     }
 
+    public function gajidriver($tgl_awal,$tgl_akhir,$driver_id){
+        DB::table('tmp_gaji_drivers')->delete();
+
+        $driver = Driver::find($driver_id);
+
+        $kendaraan = Kendaraan::where('driver_id',$driver->id)->first();
+
+        if (!is_null($kendaraan)){
+
+            $tickets = VTicketHeader::select('driver_id', 'jam_ticket',
+            'loading', 'lembur', 'so_id',
+            'kendaraan_id','rate_id')
+            ->where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+            ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
+            ->where(
+                function ($query) use ($kendaraan,$driver) {
+                    $query->where('kendaraan_id',$kendaraan->id)
+                        ->orWhere('driver_id',$driver->id);
+                })
+            ->get();
+
+            foreach($tickets as $ticket){
+
+                    $rate = Rate::find($ticket->rate_id);
+                $pemakaianbbms = PemakaianBbm::where('muatan',$kendaraan->muatan)->first();
+
+                if($ticket->kendaraan_id == $kendaraan->id){
+                    $pemakaianbbm = $pemakaianbbms->pemakaian * $rate->estimasi_jarak;
+                }
+                else{
+                    $pemakaianbbm = 0;
+                }
+
+                $msalesorder = MSalesorder::find($ticket->so_id);
+                $customer = Customer::find($msalesorder->customer_id);
+
+                if($ticket->driver_id==$driver->id){
+                    $gajis = GajiRate::where('muatan',$kendaraan->muatan)
+                                    ->where('batas_bawah_jarak','<=',$rate->estimasi_jarak)
+                                    ->where('batas_atas_jarak','>=',$rate->estimasi_jarak)
+                                    ->first();
+                    //  return $rate->estimasi_jarak;
+                    if (is_null($gajis)){
+                        return $rate->estimasi_jarak;
+                    }
+                    else{
+                        $gaji = $gajis->gaji;
+                    }
+                }
+                else
+                {
+                    $gaji = 0;
+                }
+
+                $tmp = new TmpGajiDriver();
+                $tmp['tanggal_awal'] = $tgl_awal;
+                $tmp['tanggal_akhir'] = $tgl_akhir;
+                $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                $tmp['nopol'] = $kendaraan->nopol;
+                $tmp['nama_driver'] = $driver->nama_driver;
+                $tmp['tanggal_ticket'] = date_format(date_create($ticket->jam_pengiriman),'Y-m-d');
+                $tmp['nama_customer'] = $customer->nama_customer;
+                $tmp['lokasi'] = $rate->tujuan;
+                $tmp['jarak'] = $rate->estimasi_jarak;
+                $tmp['pemakaian_bbm'] = $pemakaianbbm;
+                $tmp['lembur'] = $ticket->lembur;
+                $tmp['gaji'] = $gaji;
+                $tmp['pengisian_bbm'] =0;
+                $tmp['loading'] = $ticket->loading;
+                $tmp->save();
+
+            }
+
+            $pengisianbbms = PengisianBbm::where('kendaraan_id', $kendaraan->id)
+                            ->where(DB::raw('convert(date,tanggal_pengisian)'),'>=',$tgl_awal)
+                            ->where(DB::raw('convert(date,tanggal_pengisian)'),'<=',$tgl_akhir)
+                            ->get();
+
+            foreach($pengisianbbms as $pengisianbbm){
+
+                $tmp = new TmpGajiDriver();
+                $tmp['tanggal_awal'] = $tgl_awal;
+                $tmp['tanggal_akhir'] = $tgl_akhir;
+                $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                $tmp['nopol'] = $kendaraan->nopol;
+                $tmp['nama_driver'] = $driver->nama_driver;
+                $tmp['tanggal_ticket'] = date_format(date_create($pengisianbbm->tanggal_pengisian),'Y-m-d');
+                $tmp['nama_customer'] = 'Isi BBM';
+                $tmp['lokasi'] = 'Isi BBM';
+                $tmp['jarak'] = 0;
+                $tmp['pemakaian_bbm'] = 0;
+                $tmp['lembur'] = 0;
+                $tmp['gaji'] = 0;
+                $tmp['pengisian_bbm'] = $pengisianbbm->jumlah;
+                $tmp['loading'] = 0;
+                $tmp->save();
+
+            }
+
+            $tambahanbbms = TambahanBbm::where('kendaraan_id', $kendaraan->id)
+                            ->where(DB::raw('convert(date,tanggal_penambahan)'),'>=',$tgl_awal)
+                            ->where(DB::raw('convert(date,tanggal_penambahan)'),'<=',$tgl_akhir)
+                            ->get();
+
+            foreach($tambahanbbms as $tambahanbbm){
+
+                $tmp = new TmpGajiDriver();
+                $tmp['tanggal_awal'] = $tgl_awal;
+                $tmp['tanggal_akhir'] = $tgl_akhir;
+                $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                $tmp['nopol'] = $kendaraan->nopol;
+                $tmp['nama_driver'] = $driver->nama_driver;
+                $tmp['tanggal_ticket'] = date_format(date_create($pengisianbbm->tanggal_penambahan),'Y-m-d');
+                $tmp['nama_customer'] = $tambahanbbm->keterangan;
+                $tmp['lokasi'] = '-';
+                $tmp['jarak'] = 0;
+                $tmp['pemakaian_bbm'] = $tambahanbbm->jumlah;
+                $tmp['lembur'] = 0;
+                $tmp['gaji'] = 0;
+                $tmp['pengisian_bbm'] = 0;
+                $tmp['loading'] = 0;
+                $tmp->save();
+            }
+        }
+
+        $data = TmpGajiDriver::orderBy('nama_driver','asc')->orderBy('tanggal_ticket','asc')->get();
+        $bbm = BahanBakar::orderby('id', 'desc')->first();
+
+       //return $data;
+
+        $pdf = PDF::loadView('print.gajidriver', array(
+            'data' => $data,
+            'bbm' => $bbm
+        ));
+        return $pdf->setPaper('A4','Landscape')->stream();
+
+    }
+
     // public function pajakmasukan($tgl_awal,$tgl_akhir){
         
     //     $data = ->where(DB::raw('convert(date,tanggal_transaksi)'),'>=',$tgl_awal)
