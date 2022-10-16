@@ -23,7 +23,10 @@ use App\Models\Ticket;
 use App\Models\Timesheet;
 use App\Models\TmpGajiDriver;
 use App\Models\VConcretepump;
+use App\Models\VHutang;
+use App\Models\VPembelianDetail;
 use App\Models\VTicket;
+use App\Models\VTicketHeader;
 use Riskihajar\Terbilang\Facades\Terbilang;
 use PDF;
 
@@ -47,9 +50,7 @@ class PrintController extends Controller
         $concretepump = DB::table('concretepumps')->where('m_salesorder_id',$id)
         ->sum('harga_sewa');
 
-        $biayatambahan = DB::table('tickets')
-                        ->join('d_salesorders','tickets.d_salesorder_id', 'd_salesorders.id')
-                        ->where('d_salesorders.m_salesorder_id',$id)
+        $biayatambahan = VTicketHeader::where('so_id',$id)
         ->sum('tambahan_biaya');
 
         if (count($data) > 0){
@@ -67,19 +68,7 @@ class PrintController extends Controller
 
     public function ticket($id){
 
-        $data = 
-        DB::table('tickets')
-        ->select('tickets.*', 'm_salesorders.noso', 'customers.nama_customer', 'mutubetons.kode_mutu', 
-        'kendaraans.nopol', DB::raw('drivers.nama_driver as driver'), 'rates.tujuan')
-        ->join('kendaraans','tickets.kendaraan_id','kendaraans.id')
-        ->join('drivers','tickets.driver_id','drivers.id')
-        ->join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
-        ->join('mutubetons', 'd_salesorders.mutubeton_id','mutubetons.id')
-        ->join('rates','d_salesorders.rate_id','rates.id')   
-        ->join('m_salesorders','d_salesorders.m_salesorder_id', 'm_salesorders.id')
-        ->join('customers','m_salesorders.customer_id','customers.id')     
-        ->where('tickets.id',$id)
-        ->get();
+        $data = VTicketHeader::where('id',$id)->get();
 
         // return $data;
 
@@ -283,22 +272,21 @@ class PrintController extends Controller
 
             if (!is_null($kendaraan)){
 
-                $tickets = Ticket::select('tickets.driver_id', 'tickets.jam_ticket',
-                'tickets.loading', 'tickets.lembur', 'tickets.d_salesorder_id',
-                'tickets.kendaraan_id')
+                $tickets = VTicketHeader::select('driver_id', 'jam_ticket',
+                'loading', 'lembur', 'so_id',
+                'kendaraan_id','rate_id')
                 ->where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
                 ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
                 ->where(
                     function ($query) use ($kendaraan,$driver) {
-                        $query->where('tickets.kendaraan_id',$kendaraan->id)
-                            ->orWhere('tickets.driver_id',$driver->id);
+                        $query->where('kendaraan_id',$kendaraan->id)
+                            ->orWhere('driver_id',$driver->id);
                     })
                 ->get();
 
                 foreach($tickets as $ticket){
 
-                    $dsalesorders = DSalesorder::find($ticket->d_salesorder_id);
-                    $rate = Rate::find($dsalesorders->rate_id);
+                     $rate = Rate::find($ticket->rate_id);
                     $pemakaianbbms = PemakaianBbm::where('muatan',$kendaraan->muatan)->first();
 
                     if($ticket->kendaraan_id == $kendaraan->id){
@@ -308,16 +296,21 @@ class PrintController extends Controller
                         $pemakaianbbm = 0;
                     }
 
-                    $msalesorder = MSalesorder::find($dsalesorders->m_salesorder_id);
+                    $msalesorder = MSalesorder::find($ticket->so_id);
                     $customer = Customer::find($msalesorder->customer_id);
 
                     if($ticket->driver_id==$driver->id){
                         $gajis = GajiRate::where('muatan',$kendaraan->muatan)
-                                        ->where('batas_bawah_jarak','<',$rate->estimasi_jarak)
-                                        ->where('batas_atas_jarak','>',$rate->estimasi_jarak)
+                                        ->where('batas_bawah_jarak','<=',$rate->estimasi_jarak)
+                                        ->where('batas_atas_jarak','>=',$rate->estimasi_jarak)
                                         ->first();
-                        // return $rate->estimasi_jarak;
-                        $gaji = $gajis->gaji;
+                      //  return $rate->estimasi_jarak;
+                        if (is_null($gajis)){
+                            return $rate->estimasi_jarak;
+                        }
+                        else{
+                            $gaji = $gajis->gaji;
+                        }
                     }
                     else
                     {
@@ -411,13 +404,41 @@ class PrintController extends Controller
 
     public function rekapticket($soid){
         
-        $data = VTicket::where('so_id',$soid)
+        $data = VTicketHeader::where('so_id',$soid)
         ->get();
 
         $pdf = PDF::loadView('print.rekapticketmaterial', array(
             'data' => $data,
         ));
         return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function rekaptickettanggal($tgl_awal,$tgl_akhir){
+        
+        $data = VTicketHeader::where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+        ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
+        ->get();
+
+        $pdf = PDF::loadView('print.rekaptickettanggal', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','landscape')->stream();
+    }
+
+    public function penjualanbeton($tgl_awal,$tgl_akhir){
+        
+        $data = VTicketHeader::where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+        ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
+        ->get();
+
+        $pdf = PDF::loadView('print.rekappenjualanbeton', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function rekapconcretepump($soid){
@@ -430,4 +451,96 @@ class PrintController extends Controller
         ));
         return $pdf->setPaper('A4','potrait')->stream();
     }
+
+    public function rekaphutang($tgl_awal,$tgl_akhir){
+        
+        $data = VHutang::select('V_Hutang.nama_supplier', DB::raw('0 as saldo_awal'), DB::raw('sum(V_Hutang.debet) as debet'), DB::raw('sum(V_Hutang.kredit) as kredit'))
+        ->where(DB::raw('convert(date,tanggal_transaksi)'),'>=',$tgl_awal)
+        ->where(DB::raw('convert(date,tanggal_transaksi)'),'<=',$tgl_akhir)
+        ->groupBy('V_Hutang.nama_supplier')
+        ->get();
+
+        $pdf = PDF::loadView('print.rekaphutang', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function penjualanmutubeton($tgl_awal,$tgl_akhir){
+        
+        $data = VTicketHeader::where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+        ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
+        ->select('kode_mutu', DB::raw('sum(jumlah) as jumlah'), DB::raw('sum(jumlah*harga_intax) as total'))
+        ->groupBy('kode_mutu')
+        ->get();
+
+        $pdf = PDF::loadView('print.penjualanmutubeton', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','portrait')->stream();
+    }
+
+    // public function pajakmasukan($tgl_awal,$tgl_akhir){
+        
+    //     $data = ->where(DB::raw('convert(date,tanggal_transaksi)'),'>=',$tgl_awal)
+    //     ->where(DB::raw('convert(date,tanggal_transaksi)'),'<=',$tgl_akhir)
+    //     ->get();
+
+    //     $pdf = PDF::loadView('print.pajakmasukan', array(
+    //         'data' => $data,
+    //         'tgl_awal' => $tgl_awal,
+    //         'tgl_akhir' => $tgl_akhir
+    //     ));
+    //     return $pdf->setPaper('A4','potrait')->stream();
+    // }
+
+    public function bukubesarhutang($id_supplier,$tgl_awal,$tgl_akhir){
+        
+        $data = VPembelianDetail::select('V_PembelianDetail.tgl_masuk', 'V_PembelianDetail.nama_barang',DB::raw('(V_PembelianDetail.jumlah*V_PembelianDetail.harga) as kredit'))
+        ->where('supplier_id',$id_supplier)
+        ->where(DB::raw('convert(date,tgl_masuk)'),'>=',$tgl_awal)
+        ->where(DB::raw('convert(date,tgl_masuk)'),'<=',$tgl_akhir)
+        ->get();
+
+        $pdf = PDF::loadView('print.bukubesarhutang', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','potrait')->stream();
+    }   
+
+    public function laporanpembelian($tgl_awal,$tgl_akhir){
+        $data = VPembelianDetail::where(DB::raw('convert(date,tgl_masuk)'),'>=',$tgl_awal)
+        ->where(DB::raw('convert(date,tgl_masuk)'),'<=',$tgl_akhir)
+        ->get();
+
+        $pdf = PDF::loadView('print.laporanpembelian', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','landscape')->stream();
+    }
+
+    public function laporanpembeliansupplier($tgl_awal,$tgl_akhir,$id_supplier){
+        $data = VPembelianDetail::where('supplier_id', $id_supplier)
+        ->where(DB::raw('convert(date,tgl_masuk)'),'>=',$tgl_awal)
+        ->where(DB::raw('convert(date,tgl_masuk)'),'<=',$tgl_akhir)
+        ->get();
+
+        $pdf = PDF::loadView('print.laporanpembelian', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','landscape')->stream();
+    }
+
 }

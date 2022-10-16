@@ -19,6 +19,7 @@ use App\Models\Mutubeton;
 use App\Models\Rate;
 use App\Models\Satuan;
 use App\Models\Ticket;
+use App\Models\TicketDetail;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -32,7 +33,7 @@ class TicketModal extends ModalComponent
     public Ticket $ticket;
     public $editmode, $ticket_id;
     public $rate, $kendaraan, $driver ,$satuan, $mutubeton;
-    public $d_salesorder_id, $sisa_so, $mutubeton_id;
+    public $m_salesorder_id, $sisa_so, $mutubeton_id;
 
     protected $listeners = [
         'selectkendaraan' => 'selectkendaraan',
@@ -51,33 +52,24 @@ class TicketModal extends ModalComponent
         'ticket.lembur'=> 'required',
     ];
 
-    public function mount($d_salesorder_id){
-        $this->d_salesorder_id = $d_salesorder_id;
-        $d_salesorder = DSalesorder::find($this->d_salesorder_id);
-        $this->sisa_so = $d_salesorder->sisa;
-        $mutubeton = Mutubeton::find($d_salesorder->mutubeton_id);
-        $this->mutubeton_id = $mutubeton->id;
+    public function mount($m_salesorder_id,$mutubeton_id){
+        $this->m_salesorder_id = $m_salesorder_id;
+        $this->mutubeton_id = $mutubeton_id;
+        $mutubeton = Mutubeton::find($this->mutubeton_id);
         $this->mutubeton = $mutubeton->kode_mutu;
-        $satuan = Satuan::find($d_salesorder->satuan_id);
-        
+        $satuan = Satuan::find($mutubeton->satuan_id);
+        $this->sisa_so = DSalesorder::where('m_salesorder_id', $this->m_salesorder_id)->where('mutubeton_id', $this->mutubeton_id)
+                        ->sum('sisa');
 
-        if ($this->editmode=='edit') {
-            $this->ticket = Ticket::find($this->ticket_id);
-            $kendaraan = Kendaraan::find($this->ticket->kendaraan_id);
-            $this->kendaraan = Kendaraan::find($this->ticket->kendaraan_id)->nopol;
-            $this->ticket->loading=$kendaraan->loading;
-            $driver = Driver::find($this->ticket->driver_id);
-            $this->ticket->driver_id = $driver->id;
-            $this->driver = Driver::find($this->ticket->driver_id)->nama_driver;
-            $this->ticket->rate_id = $d_salesorder->rate_id;
-        }else{
-            $this->ticket = new Ticket();
-            $this->ticket->jam_ticket=date('Y-m-d H:i');
-            $this->ticket->satuan_id = $satuan->id;
-            $this->ticket->rate_id = $d_salesorder->rate_id;
-            $this->ticket->tambahan_biaya = 0;
-            $this->ticket->lembur = 0;
-        }
+        $rate = DSalesorder::where('m_salesorder_id', $this->m_salesorder_id)->where('mutubeton_id', $this->mutubeton_id)->first();
+               
+        $this->ticket = new Ticket();
+        $this->ticket->jam_ticket=date('Y-m-d H:i');
+        $this->ticket->satuan_id = $satuan->id;
+        $this->ticket->rate_id = $rate->rate_id;
+        $this->ticket->tambahan_biaya = 0;
+        $this->ticket->lembur = 0;
+      
         $datarate = Rate::find($this->ticket->rate_id);
         $this->rate = $datarate->tujuan.' - '. number_format($datarate->estimasi_jarak,2,'.',','). ' KM';
         $this->satuan = $satuan->satuan;
@@ -115,8 +107,6 @@ class TicketModal extends ModalComponent
         $this->ticket->jumlah = str_replace(',', '', $this->ticket->jumlah);
 
         $this->ticket->tambahan_biaya = str_replace(',', '', $this->ticket->tambahan_biaya);
-
-        $this->ticket->d_salesorder_id = $this->d_salesorder_id;
 
         $this->validate();
 
@@ -157,9 +147,44 @@ class TicketModal extends ModalComponent
             $this->ticket->jam_ticket = date_create($this->ticket->jam_ticket)->format('Y-m-d H:i:s');
             $this->ticket->save();
 
-            $d_salesorder = DSalesorder::find($this->d_salesorder_id);
-            $d_salesorder['sisa'] = $d_salesorder['sisa'] - $this->ticket->jumlah;
-            $d_salesorder->save();
+            
+
+            $d_salesorders = DSalesorder::where('m_salesorder_id',$this->m_salesorder_id)
+            ->where('mutubeton_id',$this->mutubeton_id)->get();
+
+            $jumlah = $this->ticket->jumlah;
+            foreach($d_salesorders as $d_salesorder){
+                if ($jumlah>0){
+                    if($jumlah>$d_salesorder->sisa){
+                        $jumlah = $jumlah-$d_salesorder['sisa'];
+
+                        $dticket = new TicketDetail();
+                        $dticket['ticket_id']=$this->ticket->id;
+                        $dticket['d_salesorder_id']=$d_salesorder->id;
+                        $dticket['jumlah']=$d_salesorder['sisa'];
+                        $dticket->save();
+
+                        $datad_salesorder = DSalesorder::find($d_salesorder->id);
+                        $datad_salesorder['sisa']=0;
+                        $datad_salesorder->save();
+
+                    }else{
+                        $jumlah=0;
+
+                        $dticket = new TicketDetail();
+                        $dticket['ticket_id']=$this->ticket->id;
+                        $dticket['d_salesorder_id']=$d_salesorder->id;
+                        $dticket['jumlah']=$jumlah;
+                        $dticket->save();
+
+                        $datad_salesorder = DSalesorder::find($d_salesorder->id);
+                        $datad_salesorder['sisa']=$datad_salesorder['sisa']-$jumlah;
+                        $datad_salesorder->save();
+
+                    }
+                }
+            }
+            
 
             $mutubeton = Mutubeton::find($this->mutubeton_id);
             $komposisis = Komposisi::where('mutubeton_id',$this->mutubeton_id)->where('jumlah','>',0)->get();
@@ -199,6 +224,7 @@ class TicketModal extends ModalComponent
 
                                 $kartustok = new Kartustok();
                                 $kartustok['barang_id']=$komposisi->barang_id;
+                                $kartustok['tanggal'] = date_create($this->ticket->jam_ticket)->format('Y-m-d');
                                 $kartustok['tipe']='Ticket';
                                 $kartustok['trans_id']=$this->ticket->id;
                                 $kartustok['increase']=0;
@@ -241,6 +267,7 @@ class TicketModal extends ModalComponent
                                     ->sum('jumlah');
 
                                 $kartustok = new Kartustok();
+                                $kartustok['tanggal'] = date_create($this->ticket->jam_ticket)->format('Y-m-d');
                                 $kartustok['barang_id']=$komposisi->barang_id;
                                 $kartustok['tipe']='Ticket';
                                 $kartustok['trans_id']=$this->ticket->id;
@@ -284,8 +311,8 @@ class TicketModal extends ModalComponent
                 'status_detail' => 'Finish'
             ]);
 
-            $dsaledorder = DSalesorder::find($this->ticket->d_salesorder_id);
-            $msalesorder = MSalesorder::find($dsaledorder->m_salesorder_id);
+            //$dsaledorder = DSalesorder::find($this->ticket->d_salesorder_id);
+            $msalesorder = MSalesorder::find($this->m_salesorder_id);
             
             $pajak = Mpajak::where('jenis_pajak','PPN')->first();
             $customer = Customer::find($msalesorder->customer_id);

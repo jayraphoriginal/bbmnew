@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Penjualan;
 
-use App\Models\DSalesorder;
+use App\Models\VJumlahSo;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,6 +13,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use DB;
 
 final class SalesorderFullTable extends PowerGridComponent
 {
@@ -46,20 +47,10 @@ final class SalesorderFullTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\DSalesorder>|null
     */
     public function datasource(): ?Builder
     {
-        return DSalesorder::join('rates','d_salesorders.rate_id','rates.id')
-        ->join('satuans','d_salesorders.satuan_id','satuans.id')
-        ->join('mutubetons','d_salesorders.mutubeton_id','mutubetons.id')
-        ->join('m_salesorders','d_salesorders.m_salesorder_id','m_salesorders.id')
-        ->join('customers','m_salesorders.customer_id','customers.id')
-        //->where('d_salesorders.status_detail', 'open')
-        ->select('d_salesorders.*','rates.tujuan', 
-        'm_salesorders.noso', 'customers.nama_customer',
-        'rates.estimasi_jarak','satuans.satuan','mutubetons.kode_mutu');
-   
+        return VJumlahSo::select(DB::raw('ROW_NUMBER() OVER(ORDER BY tgl_so ASC) AS id'),'V_JumlahSalesorder.*');
     }
 
     /*
@@ -91,41 +82,22 @@ final class SalesorderFullTable extends PowerGridComponent
     public function addColumns(): ?PowerGridEloquent
     {
         return PowerGrid::eloquent()
-        ->addColumn('id')
-        ->addColumn('status')
+        ->addColumn('status_detail')
         ->addColumn('m_salesorder_id')
         ->addColumn('noso')
         ->addColumn('nama_customer')
-        ->addColumn('rate_id')
         ->addColumn('tujuan')
-        ->addColumn('jarak_tempuh_id')
-        ->addColumn('tipe')
         ->addColumn('mutubeton_id')
         ->addColumn('kode_mutu')
-        ->addColumn('harga_intax', function(DSalesorder $model) {
+        ->addColumn('harga_intax', function(VJumlahSo $model) {
             return number_format($model->harga_intax,2,".",",");
         })
-        ->addColumn('estimasi_jarak', function(DSalesorder $model) {
+        ->addColumn('estimasi_jarak', function(VJumlahSo $model) {
             return number_format($model->estimasi_jarak,2,".",",");
         })
         ->addColumn('jumlah')
         ->addColumn('sisa')
-        ->addColumn('satuan_id')
-        ->addColumn('satuan')
-        ->addColumn('tgl_awal_formatted', function(DSalesorder $model) {
-            return Carbon::parse($model->tgl_awal)->format('d/m/Y');
-        })
-        ->addColumn('tgl_akhir_formatted', function(DSalesorder $model) {
-            return Carbon::parse($model->tgl_akhir)->format('d/m/Y');
-        })
-        ->addColumn('status_detail')
-        ->addColumn('user_id')
-        ->addColumn('created_at_formatted', function(DSalesorder $model) {
-            return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-        })
-        ->addColumn('updated_at_formatted', function(DSalesorder $model) {
-            return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
-        });
+        ->addColumn('satuan');
     }
 
     /*
@@ -199,20 +171,6 @@ final class SalesorderFullTable extends PowerGridComponent
             Column::add()
                 ->title('SATUAN')
                 ->field('satuan'),
-
-            Column::add()
-                ->title('TGL AWAL')
-                ->field('tgl_awal_formatted', 'tgl_awal')
-                ->searchable()
-                ->sortable()
-                ->makeInputDatePicker(),
-
-            Column::add()
-                ->title('TGL AKHIR')
-                ->field('tgl_akhir_formatted', 'tgl_akhir')
-                ->searchable()
-                ->sortable()
-                ->makeInputDatePicker(),
         ]
 ;
     }
@@ -239,7 +197,8 @@ final class SalesorderFullTable extends PowerGridComponent
             ->caption(__('Ticket'))
             ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
             ->openModal('penjualan.rekap-ticket-modal',[
-                'd_salesorder_id' => 'id'
+                'm_salesorder_id' => 'm_salesorder_id',
+                'mutubeton_id' => 'mutubeton_id'
             ]),
         ];
     }
@@ -266,7 +225,7 @@ final class SalesorderFullTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::Rows('status_detail')
-                ->when(fn(DSalesorder $model) => $model->status_detail == 'Open')
+                ->when(fn(VJumlahSo $model) => $model->status_detail == 'Open')
                 ->setAttribute('class', 'bg-red-200'),
         ];
     }

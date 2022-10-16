@@ -9,13 +9,13 @@ use LivewireUI\Modal\ModalComponent;
 
 class RekapTicketModal extends ModalComponent
 {
-    public $d_salesorder_id;
+    public $m_salesorder_id, $mutubeton_id;
     public $noso;
 
-    public function mount($d_salesorder_id){
-        $this->d_salesorder_id = $d_salesorder_id;
-        $dsalesorder = DSalesorder::find($d_salesorder_id);
-        $msalesorder = MSalesorder::find($dsalesorder->m_salesorder_id);
+    public function mount($m_salesorder_id, $mutubeton_id){
+        $this->m_salesorder_id = $m_salesorder_id;
+        $this->mutubeton_id=$mutubeton_id;
+        $msalesorder = MSalesorder::find($m_salesorder_id);
         $this->noso = $msalesorder->noso;
     }
 

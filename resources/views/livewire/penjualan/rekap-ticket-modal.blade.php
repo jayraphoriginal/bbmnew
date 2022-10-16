@@ -4,11 +4,11 @@
     </x-header-modal>
 
     <x-button
-        wire:click.prevent="$emit('openModal', 'penjualan.ticket-modal',{{ json_encode(['d_salesorder_id' => $d_salesorder_id]) }})">
+        wire:click.prevent="$emit('openModal', 'penjualan.ticket-modal',{{ json_encode(['m_salesorder_id' => $m_salesorder_id, 'mutubeton_id' => $mutubeton_id]) }})">
         Tambah Ticket
     </x-button>
 
-    <livewire:penjualan.ticket-table d_salesorder_id="{{ $d_salesorder_id }}"/>
+    <livewire:penjualan.ticket-table m_salesorder_id="{{ $m_salesorder_id }}"/>
 
     <x-footer-modal>
         <x-secondary-button

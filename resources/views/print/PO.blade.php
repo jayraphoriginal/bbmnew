@@ -43,7 +43,8 @@
 
     <body>
         <h4 style="margin-top:1em; text-align:center; text-decoration:underline">PURCHASE ORDER</h4>
-        <h4 style="text-align:center">{{$data[0]->nopo}}</h4>
+        <h4 style="text-align:center">{{ $data[0]->nopo}}<h4/> 
+        <h4 style="text-align:center">{{ date_create($data[0]->tgl_masuk)->format('d-m-Y') }}</h4>
 
         <p>Kepada :</p>
         <p>{{ $data[0]->nama_supplier }}</p>

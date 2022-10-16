@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Penjualan;
 
 use App\Models\Ticket;
+use App\Models\VTicket;
+use App\Models\VTicketHeader;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,6 +15,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use DB;
 
 final class TicketTable extends PowerGridComponent
 {
@@ -21,7 +24,7 @@ final class TicketTable extends PowerGridComponent
     //Messages informing success/error data is updated.
     public bool $showUpdateMessages = true;
 
-    public $d_salesorder_id;
+    public $m_salesorder_id;
 
     /*
     |--------------------------------------------------------------------------
@@ -52,16 +55,9 @@ final class TicketTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
-        ->join('mutubetons','d_salesorders.mutubeton_id','mutubetons.id')
-        ->join('m_salesorders','d_salesorders.m_salesorder_id','m_salesorders.id')
-        ->join('customers', 'm_salesorders.customer_id','customers.id')
-        ->join('kendaraans','tickets.kendaraan_id','kendaraans.id')
-        ->join('drivers','tickets.driver_id','drivers.id')
-        ->join('satuans','tickets.satuan_id','satuans.id')
-        ->where('tickets.d_salesorder_id', $this->d_salesorder_id)
-        ->select('tickets.*','customers.nama_customer','mutubetons.kode_mutu','kendaraans.nopol',
-                'drivers.nama_driver','satuans.satuan');
+        return VTicketHeader::
+        where('V_TicketHeader.so_id', $this->m_salesorder_id)
+        ->select(DB::raw('ROW_NUMBER() OVER(ORDER BY noticket ASC) AS no'),'V_TicketHeader.*');
     }
 
     /*
@@ -92,9 +88,10 @@ final class TicketTable extends PowerGridComponent
     */
     public function addColumns(): ?PowerGridEloquent
     {
-        return PowerGrid::eloquent()
 
+        return PowerGrid::eloquent()
             ->addColumn('id')
+            ->addColumn('no')
             ->addColumn('noticket')
             ->addColumn('customer_id')
             ->addColumn('nama_customer')
@@ -106,7 +103,7 @@ final class TicketTable extends PowerGridComponent
             ->addColumn('nopol')
             ->addColumn('driver_id')
             ->addColumn('nama_driver')
-            ->addColumn('jam_pengiriman', function(Ticket $model) { 
+            ->addColumn('jam_pengiriman', function(VTicket $model) { 
                 return Carbon::parse($model->jam_ticket)->format('d/m/Y H:i:s');
             })
             ->addColumn('jumlah')
@@ -114,10 +111,10 @@ final class TicketTable extends PowerGridComponent
             ->addColumn('satuan')
             ->addColumn('loading')
             ->addColumn('tambahan_biaya')
-            ->addColumn('created_at_formatted', function(Ticket $model) { 
+            ->addColumn('created_at_formatted', function(VTicket $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(Ticket $model) { 
+            ->addColumn('updated_at_formatted', function(VTicket $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }
@@ -139,6 +136,12 @@ final class TicketTable extends PowerGridComponent
     public function columns(): array
     {
         return [
+
+            Column::add()
+            ->title('NO')
+            ->field('no')
+            ->sortable(),
+
             Column::add()
             ->title('NO TICKET')
             ->field('noticket')

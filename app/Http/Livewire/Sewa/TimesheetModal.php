@@ -57,6 +57,8 @@ class TimesheetModal extends ModalComponent
     public function save(){
 
         $this->validate();
+        $this->timesheet->jam_awal =date_create($this->timesheet->jam_awal)->format('Y-m-d H:i:s');
+        $this->timesheet->jam_akhir =date_create($this->timesheet->jam_akhir)->format('Y-m-d H:i:s');
         $this->timesheet->volume = str_replace(',', '', $this->timesheet->volume);
         $this->timesheet->save();
 

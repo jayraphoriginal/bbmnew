@@ -14,6 +14,8 @@ use App\Models\MSalesorder;
 use App\Models\MSalesorderSewa;
 use App\Models\PenjualanRetail;
 use App\Models\Ticket;
+use App\Models\VTicket;
+use App\Models\VTicketHeader;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
@@ -84,11 +86,10 @@ class InvoiceModal extends ModalComponent
             $this->jumlah_total = $jumlah_total;
         }
         else{
-            $jumlah_ticket = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
-            ->where('d_salesorders.m_salesorder_id', $this->so_id)
-            ->where('tickets.status','Open')
-            ->whereBetween(DB::raw('convert(date,tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
-            ->sum(DB::raw('tickets.jumlah * d_salesorders.harga_intax'));
+            $jumlah_ticket = VTicketHeader::where('so_id', $this->so_id)
+            ->where('status','Open')
+            ->whereBetween(DB::raw('convert(date,jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->sum(DB::raw('jumlah * harga_intax'));
 
             $jumlah_concrete = Concretepump::where('m_salesorder_id', $this->so_id)
             ->where('concretepumps.status','Open')
@@ -97,10 +98,9 @@ class InvoiceModal extends ModalComponent
 
             $this->jumlah_total = $jumlah_ticket + $jumlah_concrete;
 
-            $tambahanbiaya = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
-            ->where('d_salesorders.m_salesorder_id', $this->so_id)
-            ->where('tickets.status','Open')
-            ->whereBetween(DB::raw('convert(date,tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            $tambahanbiaya = VTicketHeader::where('so_id', $this->so_id)
+            ->where('status','Open')
+            ->whereBetween(DB::raw('convert(date,jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum('tambahan_biaya');
 
             $penjualanretail = PenjualanRetail::where('m_salesorder_id', $this->so_id)
@@ -126,11 +126,10 @@ class InvoiceModal extends ModalComponent
             $this->jumlah_total = $jumlah_total;
         }
         else{
-            $jumlah_ticket = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
-            ->where('d_salesorders.m_salesorder_id', $this->so_id)
-            ->where('tickets.status','Open')
-            ->whereBetween(DB::raw('convert(date,tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
-            ->sum(DB::raw('tickets.jumlah * d_salesorders.harga_intax'));
+            $jumlah_ticket = VTicketHeader::where('so_id', $this->so_id)
+            ->where('status','Open')
+            ->whereBetween(DB::raw('convert(date,jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->sum(DB::raw('jumlah * harga_intax'));
 
             $jumlah_concrete = Concretepump::where('m_salesorder_id', $this->so_id)
             ->where('concretepumps.status','Open')
@@ -139,10 +138,9 @@ class InvoiceModal extends ModalComponent
 
             $this->jumlah_total = $jumlah_ticket + $jumlah_concrete;
 
-            $tambahanbiaya = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
-            ->where('d_salesorders.m_salesorder_id', $this->so_id)
-            ->where('tickets.status','Open')
-            ->whereBetween(DB::raw('convert(date,tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            $tambahanbiaya = VTicketHeader::where('so_id', $this->so_id)
+            ->where('status','Open')
+            ->whereBetween(DB::raw('convert(date,jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum('tambahan_biaya');
 
             $penjualanretail = PenjualanRetail::where('m_salesorder_id', $this->so_id)
@@ -356,16 +354,14 @@ class InvoiceModal extends ModalComponent
 
             }else{
 
-                $tickets = Ticket::join('d_salesorders','tickets.d_salesorder_id','d_salesorders.id')
-                ->select('tickets.*','d_salesorders.jumlah','d_salesorders.harga_intax')
-                ->where('d_salesorders.m_salesorder_id', $this->so_id)
-                ->where('tickets.status','Open')
-                ->whereBetween(DB::raw('date(tickets.jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+                $tickets = VTicketHeader::where('so_id', $this->so_id)
+                ->where('status','Open')
+                ->whereBetween(DB::raw('convert(date,jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
                 ->get();
 
                 $concretes = Concretepump::where('m_salesorder_id', $this->so_id)
                 ->where('concretepumps.status','Open')
-                ->whereBetween(DB::raw('date(concretepumps.created_at)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+                ->whereBetween(DB::raw('convert(date,concretepumps.created_at)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
                 ->get();
 
                 foreach($tickets as $ticket){

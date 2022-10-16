@@ -154,6 +154,7 @@ class PurchaseorderModal extends ModalComponent
                                         ->sum('jumlah');
 
                     $kartustok = new Kartustok();
+                    $kartustok['tanggal'] = date_create($this->Mpo->tgl_masuk)->format('Y-m-d');
                     $kartustok['barang_id']=$tmp->barang_id;
                     $kartustok['tipe']='Pembelian';
                     $kartustok['trans_id']=$dpurchaseorder->id;

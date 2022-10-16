@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackupController;
 use App\Http\Livewire\DashboardComponent;
 use App\Http\Livewire\Jurnal\JurnalManualComponent;
+use App\Http\Livewire\Laporan\BukuBesarHutang;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,14 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printconcretepump/{id}', [\App\Http\Controllers\PrintController::class,'concretepump'])->name('printconcretepump');
     Route::get('laporanrekapgaji/{tgl_awal}/{tgl_akhir}', [PrintController::class,'gaji'])->name('rekapgaji');
     Route::get('rekapticket/{soid}', [PrintController::class,'rekapticket'])->name('rekapticket');
+    Route::get('rekaptickettanggal/{tgl_awal}/{tgl_akhir}', [PrintController::class,'rekaptickettanggal'])->name('rekaptickettanggal');
     Route::get('rekapconcretepump/{soid}', [PrintController::class,'rekapconcretepump'])->name('rekapconcretepump');
+    Route::get('laporanhutang/{tgl_awal}/{tgl_akhir}', [PrintController::class,'rekaphutang'])->name('rekaphutang');
+    Route::get('laporanpenjualanbeton/{tgl_awal}/{tgl_akhir}', [PrintController::class,'penjualanbeton'])->name('laporanpenjualanbeton');
+    Route::get('penjualanmutubeton/{tgl_awal}/{tgl_akhir}', [PrintController::class,'penjualanmutubeton'])->name('penjualanmutubeton');
+    Route::get('laporanpajakmasukan/{tgl_awal}/{tgl_akhir}', [PrintController::class,'pajakmasukan'])->name('pajakmasukan');
+    Route::get('laporanpembelian/{tgl_awal}/{tgl_akhir}', [PrintController::class,'laporanpembelian'])->name('laporanpembelian');
+    Route::get('laporanpembeliansupplier/{tgl_awal}/{tgl_akhir}/{id_supplier}', [PrintController::class,'laporanpembeliansupplier'])->name('laporanpembeliansupplier');
+    Route::get('laporanbukubesarhutang/{id_supplier}/{tgl_awal}/{tgl_akhir}', [PrintController::class,'bukubesarhutang'])->name('laporanbukubesarhutang');
     Route::get('backup', [BackupController::class,'index'])->name('backup');
 });
