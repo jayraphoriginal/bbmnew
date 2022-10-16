@@ -50,7 +50,7 @@
                     <td style="width: 45em;"></td>
                     <td>Tanggal</td>
                     <td> : </td>
-                    <td style="text-align:right;">{{ date_create($drv[0]->tanggal_awal).' - '.date_create($drv[0]->tanggal_akhir) }}</td>
+                    <td style="text-align:right;">{{ date_create($drv[0]->tanggal_awal)->format('d m Y').' - '.date_create($drv[0]->tanggal_akhir)->format('d m Y') }}</td>
                 </tr>
                 <tr>
                     <td style="width: 10em;">Nomor Polisi</td>
