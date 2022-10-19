@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateManualJournalsTable extends Migration
+class CreateTmpJurnalManualsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateManualJournalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('manual_journals', function (Blueprint $table) {
+        Schema::create('tmp_jurnal_manuals', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal');
-            $table->double('jumlah');
-            $table->string('keterangan');
+            $table->foreignId('coa_id')->constrained()->onDelete('cascade');
+            $table->double('money');
+            $table->double('money');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateManualJournalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manual_journals');
+        Schema::dropIfExists('tmp_jurnal_manuals');
     }
 }

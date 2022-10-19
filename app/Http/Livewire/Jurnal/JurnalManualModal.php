@@ -5,9 +5,10 @@ namespace App\Http\Livewire\Jurnal;
 use App\Models\Journal;
 use App\Models\ManualJournal;
 use App\Models\Coa;
+use App\Models\TmpJurnalManual;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
 use Throwable;
 
@@ -19,9 +20,7 @@ class JurnalManualModal extends ModalComponent
     public ManualJournal $jurnalmanual;
 
     protected $rules=[
-        'jurnalmanual.id_coa_debet' => 'required',
-        'jurnalmanual.id_coa_kredit' => 'required',
-        'jurnalmanual.jumlah' => 'required',
+        'jurnalmanual.tanggal' => 'required',
         'jurnalmanual.keterangan' => 'required',
     ];
 
@@ -32,47 +31,56 @@ class JurnalManualModal extends ModalComponent
     public function save(){
 
         $this->validate();
+        $debet = TmpJurnalManual::where('user_id', Auth::user()->id)->sum('debet');
+        $kredit = TmpJurnalManual::where('user_id', Auth::user()->id)->sum('kredit');
 
-        $this->jumlah = str_replace(',', '', $this->jumlah);
+        $tmpjurnal = TmpJurnalManual::where('user_id', Auth::user()->id)->get();
 
-        DB::beginTransaction();
-
-        try{
-
-            $this->jurnalmanual->save();
-            //Jurnal Debet 
-            $journal = new Journal();
-            $journal['tipe']='Jurnal Manual';
-            $journal['trans_id']=$this->jurnalmanual->id;
-            $journal['tanggal_transaksi']=$this->jurnalmanual->created_at;
-            $journal['coa_id']=$this->jurnalmanual->id_coa_debet;
-            $journal['debet']=$this->jurnalmanual->jumlah;
-            $journal['kredit']=0;
-            $journal->save();
-            
-            $journal = new Journal();
-            $journal['tipe']='Jurnal Manual';
-            $journal['trans_id']=$this->jurnalmanual->id;
-            $journal['tanggal_transaksi']=$this->jurnalmanual->created_at;
-            $journal['coa_id']=$this->jurnalmanual->id_coa_kredit;
-            $journal['debet']=0;
-            $journal['kredit']=$this->jurnalmanual->jumlah;
-            $journal->save();
-
-            DB::commit();
-
-            $this->alert('success', 'Save Success', [
+        if ($debet<>$kredit || count($tmpjurnal) <= 0){
+            $this->alert('error', 'Total debet tidak sama dengan kredit / Detail jurnal tidak ada', [
                 'position' => 'center'
             ]);
+        }else{
 
-        }
-        catch(Throwable $e){
-            DB::rollBack();
-            $this->alert('error', $e->getMessage(), [
-                'position' => 'center'
-            ]);
+            DB::beginTransaction();
+               
+            try{
+
+                $this->jurnalmanual->save();
+
+                foreach($tmpjurnal as $tmp){
+                    $journal = new Journal();
+                    $journal['tipe']='Jurnal Manual';
+                    $journal['trans_id']=$this->jurnalmanual->id;
+                    $journal['tanggal_transaksi']=$this->jurnalmanual->tanggal;
+                    $journal['coa_id']=$tmp->coa_id;
+                    $journal['debet']=$tmp->debet;
+                    $journal['kredit']=$tmp->kredit;
+                    $journal->save();
+                }
+
+                ManualJournal::where('user_id',Auth::user()->id)->delete();
+
+                DB::commit();
+
+                $this->closeModal();
+
+                $this->alert('success', 'Save Success', [
+                    'position' => 'center'
+                ]);
+
+                $this->emitTo('jurnal.jurnal-manual-table', 'pg:eventRefresh-default');
+
+            }
+            catch(Throwable $e){
+                DB::rollBack();
+                $this->alert('error', $e->getMessage(), [
+                    'position' => 'center'
+                ]);
+            }
         }
 
+        
     }
 
     public function render()
@@ -80,5 +88,10 @@ class JurnalManualModal extends ModalComponent
         return view('livewire.jurnal.jurnal-manual-modal',[
             'coa' => Coa::where('level',5)->get()
         ]);
+    }
+
+    public static function modalMaxWidth(): string
+    {
+        return '7xl';
     }
 }

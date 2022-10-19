@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Jurnal;
 
-use App\Models\ManualJournal;
-use App\Models\VJurnalManual;
+use App\Models\TmpJurnalManual;
 use App\Models\VTmpJurnalManual;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -16,7 +16,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class JurnalManualTable extends PowerGridComponent
+final class TmpJurnalManualTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -48,11 +48,11 @@ final class JurnalManualTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\ManualJournal>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\TmpJurnalManual>|null
     */
     public function datasource(): ?Builder
     {
-        return VJurnalManual::query();
+        return VTmpJurnalManual::where('user_id', Auth::user()->id);
     }
 
     /*
@@ -85,21 +85,17 @@ final class JurnalManualTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('tanggal')
-            ->addColumn('tanggal_formatted', function(VJurnalManual $model) {
-                return Carbon::parse($model->tanggal)->format('d/m/Y');
-            })
+            ->addColumn('coa_id')
             ->addColumn('kode_akun')
             ->addColumn('nama_akun')
-            ->addColumn('debet', function(VJurnalManual $model) {
+            ->addColumn('debet', function(VTmpJurnalManual $model) {
                 return number_format($model->debet,2,'.',',');
             })
-            ->addColumn('kredit', function(VJurnalManual $model) {
+            ->addColumn('kredit', function(VTmpJurnalManual $model) {
                 return number_format($model->kredit,2,'.',',');
             })
-            ->addColumn('keterangan')
             ->addColumn('created_at')
-            ->addColumn('created_at_formatted', function(VJurnalManual $model) {
+            ->addColumn('created_at_formatted', function(VTmpJurnalManual $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             });
     }
@@ -123,26 +119,19 @@ final class JurnalManualTable extends PowerGridComponent
         return [
 
             Column::add()
-                ->title('TANGGAL')
-                ->field('tanggal_formatted','tanggal')
-                ->makeInputDatePicker()
-                ->searchable()
-                ->sortable(),
-
-            Column::add()
                 ->title('KODE AKUN')
                 ->field('kode_akun')
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),
-            
+
             Column::add()
                 ->title('NAMA AKUN')
                 ->field('nama_akun')
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),
-            
+
             Column::add()
                 ->title('DEBET')
                 ->field('debet')
@@ -156,15 +145,6 @@ final class JurnalManualTable extends PowerGridComponent
                 ->searchable()
                 ->makeInputRange()
                 ->sortable(),
-
-            Column::add()
-                ->title('KETERANGAN')
-                ->field('keterangan')
-                ->searchable()
-                ->makeInputText()
-                ->sortable(),
-
-            
         ];
     }
 
@@ -177,28 +157,34 @@ final class JurnalManualTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid ManualJournal Action Buttons.
+     * PowerGrid TmpJurnalManual Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    /*
+    
     public function actions(): array
     {
        return [
-           Button::add('edit')
-               ->caption('Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('manual-journal.edit', ['manual-journal' => 'id']),
+            Button::add('edit')
+                ->caption(__('Edit'))
+                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->openModal('jurnal.jurnal-manual-detail-modal',[
+                    'editmode' => 'edit',
+                    'tmp_id' => 'id'
+                ]),
 
-           Button::add('destroy')
-               ->caption('Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('manual-journal.destroy', ['manual-journal' => 'id'])
-               ->method('delete')
+            Button::add('destroy')
+                ->caption(__('Delete'))
+                ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
+                ->openModal('delete-modal', [
+                    'data_id'                 => 'id',
+                    'TableName'               => 'tmp_jurnal_manuals',
+                    'confirmationTitle'       => 'Delete Detail Jurnal',
+                    'confirmationDescription' => 'apakah yakin ingin hapus detail jurnal?',
+                ]),
         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------
@@ -209,7 +195,7 @@ final class JurnalManualTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid ManualJournal Action Rules.
+     * PowerGrid TmpJurnalManual Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -221,7 +207,7 @@ final class JurnalManualTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($manual-journal) => $manual-journal->id === 1)
+                ->when(fn($tmp-jurnal-manual) => $tmp-jurnal-manual->id === 1)
                 ->hide(),
         ];
     }
@@ -237,7 +223,7 @@ final class JurnalManualTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid ManualJournal Update.
+     * PowerGrid TmpJurnalManual Update.
      *
      * @param array<string,string> $data
      */
@@ -246,7 +232,7 @@ final class JurnalManualTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = ManualJournal::query()
+           $updated = TmpJurnalManual::query()
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

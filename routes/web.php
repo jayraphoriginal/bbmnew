@@ -33,6 +33,7 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('dashboard', DashboardComponent::class)->name('dashboard');
     Route::get('register', [RegisteredUserController::class,'create'])->name('register');
+    Route::post('register', [RegisteredUserController::class,'store']);
     Route::get('alat', \App\Http\Livewire\Alat\AlatComponent::class)->name('alat');
     Route::get('satuan', \App\Http\Livewire\Satuan\SatuanComponent::class)->name('satuan');
     Route::get('barang', \App\Http\Livewire\Barang\BarangComponent::class)->name('barang');

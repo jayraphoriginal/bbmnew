@@ -2,43 +2,17 @@
     <x-header-modal>
         Input Jurnal Manual
     </x-header-modal>
-
-    <x-form-group caption="COA Debet">
-        <x-combobox
-            wire:model="jurnalmanual.coa_id_debet"
-        >
-            <option value="">-- Isi COA Debet --</option>
-            @foreach ($coa as $item)
-                <option value="{{ $item->id }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
-            @endforeach
-        </x-combobox>
-        @error('mutubeton.kode_mutu')
-            <x-error-form>{{ $message }}</x-error-form>
-        @enderror
-    </x-form-group>
-
-    <x-form-group caption="COA Kredit">
-        <x-combobox
-            wire:model="jurnalmanual.coa_id_kredit"
-        >
-            <option value="">-- Isi COA Kredit --</option>
-            @foreach ($coa as $item)
-                <option value="{{ $item->id }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
-            @endforeach
-        </x-combobox>
-        @error('jurnalmanual.coa_id_kredit')
-            <x-error-form>{{ $message }}</x-error-form>
-        @enderror
-    </x-form-group>
-
-    <x-form-group caption="Jumlah">
-        <x-number-text
-            wire:model="jurnalmanual.jumlah"/>
-        @error('jurnalmanual.jumlah')
-            <x-error-form>{{ $message }}</x-error-form>
-        @enderror
-    </x-form-group>
-
+    <div class="xl:flex lg:flex  xl:gap-4 lg:gap-4">
+        <div class="lg:w-1/2">
+        <x-form-group caption="Tanggal">
+            <x-datepicker
+                wire:model="jurnalmanual.tanggal"/>
+            @error('jurnalmanual.tanggal')
+                <x-error-form>{{ $message }}</x-error-form>
+            @enderror
+        </x-form-group>
+        </div>
+    </div>
     <x-form-group caption="Keterangan">
         <x-textbox
             wire:model="jurnalmanual.keterangan"/>
@@ -46,6 +20,13 @@
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
+   
+    <x-button
+    class="mt-2"
+    wire:click.prevent="$emit('openModal', 'jurnal.jurnal-manual-detail-modal')"
+    >Tambah Detail</x-button>
+
+    <livewire:jurnal.tmp-jurnal-manual-table/>
 
     <x-footer-modal>
         <x-secondary-button
