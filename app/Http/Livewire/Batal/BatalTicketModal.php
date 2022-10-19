@@ -36,7 +36,7 @@ class BatalTicketModal extends ModalComponent
 
         try{
 
-            DB::select('Exec SP_BatalTicket '.$this->ticket_id);
+            DB::update('Exec SP_BatalTicket '.$this->ticket_id);
 
             DB::commit();
             $this->closeModal();

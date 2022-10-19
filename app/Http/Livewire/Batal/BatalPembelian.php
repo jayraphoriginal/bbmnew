@@ -37,7 +37,7 @@ class BatalPembelian extends ModalComponent
 
         try{
 
-            DB::select('Exec SP_BatalPembelian '.$this->pembelian_id);
+            DB::update('Exec SP_BatalPembelian '.$this->pembelian_id);
 
             DB::commit();
             $this->closeModal();

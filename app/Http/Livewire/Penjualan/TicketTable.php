@@ -103,7 +103,7 @@ final class TicketTable extends PowerGridComponent
             ->addColumn('nopol')
             ->addColumn('driver_id')
             ->addColumn('nama_driver')
-            ->addColumn('jam_pengiriman', function(VTicket $model) { 
+            ->addColumn('jam_pengiriman', function(VTicketHeader $model) { 
                 return Carbon::parse($model->jam_ticket)->format('d/m/Y H:i:s');
             })
             ->addColumn('jumlah')
@@ -111,10 +111,10 @@ final class TicketTable extends PowerGridComponent
             ->addColumn('satuan')
             ->addColumn('loading')
             ->addColumn('tambahan_biaya')
-            ->addColumn('created_at_formatted', function(VTicket $model) { 
+            ->addColumn('created_at_formatted', function(VTicketHeader $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(VTicket $model) { 
+            ->addColumn('updated_at_formatted', function(VTicketHeader $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }

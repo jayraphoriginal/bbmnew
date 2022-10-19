@@ -19,6 +19,7 @@
             <option value="">-- Isi Tipe --</option>
             <option value="Jam">Jam</option>
             <option value="HM">HM</option>
+            <option value="None">None</option>
         </x-combobox>
         @error('itemsewa.nama_item')
             <x-error-form>{{ $message }}</x-error-form>

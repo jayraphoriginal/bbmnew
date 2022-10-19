@@ -104,6 +104,7 @@ final class PurchaseorderTable extends PowerGridComponent
             ->addColumn('total', function(MPurchaseorder $model) { 
                 return number_format($model->total,2,".",",");
             })
+            ->addColumn('status')
             ->addColumn('pembebanan')
             ->addColumn('jenis_pembebanan')
             ->addColumn('created_at_formatted', function(MPurchaseorder $model) { 
@@ -131,6 +132,13 @@ final class PurchaseorderTable extends PowerGridComponent
     public function columns(): array
     {
         return [
+            Column::add()
+                ->title('STATUS')
+                ->field('status')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+
             Column::add()
                 ->title('NOPO')
                 ->field('nopo')
@@ -253,18 +261,18 @@ final class PurchaseorderTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
 
-    /*
+    
     public function actionRules(): array
     {
-       return [
+        return [
            
-           //Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($m-purchaseorder) => $m-purchaseorder->id === 1)
-                ->hide(),
-        ];
+            //Hide button edit for ID 1
+             Rule::Rows('status')
+                 ->when(fn(MPurchaseorder $model) => $model->status == 'Cancel')
+                 ->setAttribute('class', 'bg-red-200'),
+         ];
     }
-    */
+    
 
     /*
     |--------------------------------------------------------------------------

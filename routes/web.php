@@ -7,6 +7,8 @@ use App\Http\Controllers\BackupController;
 use App\Http\Livewire\DashboardComponent;
 use App\Http\Livewire\Jurnal\JurnalManualComponent;
 use App\Http\Livewire\Laporan\BukuBesarHutang;
+use App\Http\Livewire\User\PermissionComponent;
+use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +32,7 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('dashboard', DashboardComponent::class)->name('dashboard');
+    Route::get('register', [RegisteredUserController::class,'create'])->name('register');
     Route::get('alat', \App\Http\Livewire\Alat\AlatComponent::class)->name('alat');
     Route::get('satuan', \App\Http\Livewire\Satuan\SatuanComponent::class)->name('satuan');
     Route::get('barang', \App\Http\Livewire\Barang\BarangComponent::class)->name('barang');
@@ -49,6 +52,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('salesordersewa', \App\Http\Livewire\Sewa\SalesorderSewaComponent::class)->name('salesordersewa');
     Route::get('purchaseorder', \App\Http\Livewire\Pembelian\PurchaseorderComponent::class)->name('purchaseorder');
     Route::get('ticketmaterial', \App\Http\Livewire\Penjualan\TicketComponent::class)->name('ticketmaterial');
+    Route::get('timesheet', \App\Http\Livewire\Sewa\SalesorderSewaTimesheetComponent::class)->name('timesheet');
     Route::get('penjualanretail', \App\Http\Livewire\Penjualan\PenjualanRetailComponent::class)->name('penjualanretail');
     Route::get('invoice', \App\Http\Livewire\Invoice\InvoiceComponent::class)->name('invoice');
     Route::get('coa',  \App\Http\Livewire\Coa\CoaComponent::class)->name('coa');
@@ -64,6 +68,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('inventaris', \App\Http\Livewire\Inventaris\InventarisComponent::class)->name('inventaris');
     //Route::get('migrasicoa', [CreateCoaCustomerSupplier::class,'index'])->name('migrasicoa');
     Route::get('jurnalmanual', JurnalManualComponent::class)->name('jurnalmanual');
+
+    Route::get('permission', PermissionComponent::class)->name('permission');
+
 
     //Print
     Route::get('printso/{id}', [\App\Http\Controllers\PrintController::class,'so'])->name('printso');

@@ -2,8 +2,7 @@
 
 namespace App\Http\Livewire\Sewa;
 
-use App\Models\MSalesorder;
-use App\Models\MSalesorderSewa;
+use App\Models\VSalesOrderSewa;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class SalesorderSewaTable extends PowerGridComponent
+final class SalesordersewaFullTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -44,16 +43,15 @@ final class SalesorderSewaTable extends PowerGridComponent
     | Provides data to your Table using a Model or Collection
     |
     */
-
+    
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\MSalesorder>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\VSalesOrderSewa>|null
     */
     public function datasource(): ?Builder
     {
-        return MSalesorderSewa::join('customers','m_salesorder_sewas.customer_id','customers.id')
-        ->select('m_salesorder_sewas.*','customers.nama_customer');
+        return VSalesOrderSewa::where('tipe','Jam');
     }
 
     /*
@@ -87,16 +85,36 @@ final class SalesorderSewaTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('noso')
-            ->addColumn('tgl_so_formatted', function(MSalesorderSewa $model) {
+            ->addColumn('m_salesorder_sewa_id')
+            ->addColumn('tgl_so')
+            ->addColumn('tgl_so_formatted', function(VSalesOrderSewa $model) {
                 return Carbon::parse($model->tgl_so)->format('d/m/Y');
             })
-            ->addColumn('marketing')
-            ->addColumn('pembayaran')
-            ->addColumn('jatuh_tempo_formatted', function(MSalesorderSewa $model) {
+            ->addColumn('jatuh_tempo')
+            ->addColumn('jatuh_tempo_formatted', function(VSalesOrderSewa $model) {
                 return Carbon::parse($model->jatuh_tempo)->format('d/m/Y');
             })
-            ->addColumn('customer_id')
-            ->addColumn('nama_customer');
+            ->addColumn('nama_customer')
+            ->addColumn('nama_item')
+            ->addColumn('tipe')
+            ->addColumn('harga_intax')
+            ->addColumn('harga_intax_formatted', function(VSalesOrderSewa $model) {
+                return number_format($model->harga_intax,0,'.',',');
+            })
+            ->addColumn('lama')
+            ->addColumn('satuan')
+            ->addColumn('tgl_awal')
+            ->addColumn('tgl_awal_formatted', function(VSalesOrderSewa $model) {
+                return Carbon::parse($model->tgl_awal)->format('d/m/Y');
+            })
+            ->addColumn('tgl_akhir')
+            ->addColumn('tgl_akhir_formatted', function(VSalesOrderSewa $model) {
+                return Carbon::parse($model->tgl_akhir)->format('d/m/Y');
+            })
+            ->addColumn('created_at')
+            ->addColumn('created_at_formatted', function(VSalesOrderSewa $model) {
+                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            });
     }
 
     /*
@@ -116,57 +134,77 @@ final class SalesorderSewaTable extends PowerGridComponent
     public function columns(): array
     {
         return [
+           
             Column::add()
                 ->title('NOSO')
                 ->field('noso')
-                ->sortable()
                 ->searchable()
-                ->makeInputText(),
-
+                ->makeInputText()
+                ->sortable(),
+            
             Column::add()
                 ->title('TGL SO')
-                ->field('tgl_so_formatted', 'tgl_so')
+                ->field('tgl_so_formatted')
                 ->searchable()
-                ->sortable()
-                ->makeInputDatePicker('tgl_so'),
+                ->makeInputDatePicker()
+                ->sortable(),
 
             Column::add()
                 ->title('CUSTOMER')
                 ->field('nama_customer')
                 ->searchable()
-                ->sortable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('MARKETING')
-                ->field('marketing')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('PEMBAYARAN')
-                ->field('pembayaran')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->makeInputText()
+                ->sortable(),
 
             Column::add()
                 ->title('JATUH TEMPO')
-                ->field('jatuh_tempo_formatted', 'jatuh_tempo')
+                ->field('jatuh_tempo_formatted')
                 ->searchable()
-                ->sortable()
-                ->makeInputDatePicker('jatuh_tempo'),
+                ->makeInputDatePicker()
+                ->sortable(),
 
             Column::add()
-                ->title('STATUS SO')
-                ->field('status_so')
-                ->sortable()
+                ->title('NAMA ITEM')
+                ->field('nama_item')
                 ->searchable()
-                ->makeInputText(),
+                ->makeInputText()
+                ->sortable(),
+            
+            Column::add()
+                ->title('LAMA')
+                ->field('lama')
+                ->searchable()
+                ->makeInputRange()
+                ->sortable(),
 
-        ]
-;
+            Column::add()
+                ->title('SATUAN')
+                ->field('satuan')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+            Column::add()
+                ->title('HARGA INTAX')
+                ->field('harga_intax_formatted','harga_intax')
+                ->searchable()
+                ->makeInputRange()
+                ->sortable(),
+
+            Column::add()
+                ->title('TGL AWAL')
+                ->field('tgl_awal_formatted')
+                ->searchable()
+                ->makeInputDatePicker()
+                ->sortable(),
+
+            Column::add()
+                ->title('TGL AKHIR')
+                ->field('tgl_akhir_formatted')
+                ->searchable()
+                ->makeInputDatePicker()
+                ->sortable(),
+        ];
     }
 
     /*
@@ -178,7 +216,7 @@ final class SalesorderSewaTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid MSalesorder Action Buttons.
+     * PowerGrid VSalesOrderSewa Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
@@ -187,37 +225,15 @@ final class SalesorderSewaTable extends PowerGridComponent
     public function actions(): array
     {
         return [
-
-            Button::add('cetak')
-                ->caption(__('Cetak'))
-                ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->target('_blank')
-                ->method('get')
-                ->route("printsosewa",[
-                    'id' => 'id'
-                ]),
-
-            Button::add('edit')
-                ->caption(__('Edit'))
-                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('sewa.salesorder-sewa-modal',[
-                    'editmode' => 'edit',
-                    'salesorder_id' => 'id'
-                ]),
-
-
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('delete-modal', [
-                    'data_id'                 => 'id',
-                    'TableName'               => 'm_salesorder_sewas',
-                    'confirmationTitle'       => 'Delete SO',
-                    'confirmationDescription' => 'apakah yakin ingin hapus SO?',
-                ]),
+            Button::add('Timesheet')
+            ->caption(__('Timesheet'))
+            ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->openModal('sewa.rekap-timesheet-modal',[
+                'd_salesorder_sewa_id' => 'id',
+            ]),
         ];
     }
-    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -228,7 +244,7 @@ final class SalesorderSewaTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid MSalesorder Action Rules.
+     * PowerGrid VSalesOrderSewa Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -240,7 +256,7 @@ final class SalesorderSewaTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($m-salesorder) => $m-salesorder->id === 1)
+                ->when(fn($v-sales-order-sewa) => $v-sales-order-sewa->id === 1)
                 ->hide(),
         ];
     }
@@ -256,7 +272,7 @@ final class SalesorderSewaTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid MSalesorder Update.
+     * PowerGrid VSalesOrderSewa Update.
      *
      * @param array<string,string> $data
      */
@@ -265,7 +281,7 @@ final class SalesorderSewaTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = MSalesorder::query()->findOrFail($data['id'])
+           $updated = VSalesOrderSewa::query()
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

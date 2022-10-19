@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Sewa;
 
 use App\Models\Customer;
+use App\Models\Mpajak;
 use App\Models\MSalesorderSewa;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -66,6 +67,8 @@ class SalesorderSewaModal extends ModalComponent
             }
             $this->MSalesorder->noso = $noso;    
             $this->MSalesorder->status_so = 'Open';
+            $pajak = Mpajak::where('jenis_pajak','PPN')->first();
+            $this->MSalesorder->pajak = $pajak->persen;
         }
 
         try{

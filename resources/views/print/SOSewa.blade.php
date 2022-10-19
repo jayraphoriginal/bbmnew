@@ -38,7 +38,7 @@
                 text-align:right;
             }  
         </style>
-        <title>{{ $data[0]->noso }}</title>
+        <title>SO Sewa</title>
     </head>
 
 
@@ -60,7 +60,7 @@
                 <td>bintangbetonmandala@gmail.com</td>
             </tr>
         </table>
-
+        @if (count($data) > 0)
         <p class="tglkanan">Tanggal Order : {{ date_format(date_create($data[0]->tgl_so),'d M Y') }}</p>
 
         <h2 style="margin-top:1em; text-align:center; text-decoration:underline">Sales Order</h2>
@@ -166,7 +166,7 @@
                 <td class="captioncenter">{{$data[0]->nama_customer}}</td>
             </tr>
         </table>
-
+        @endif
     </body>
 
 </html>

@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Sewa;
+namespace App\Http\Livewire\User;
 
-use App\Models\MSalesorder;
-use App\Models\MSalesorderSewa;
+use App\Models\Permission;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class SalesorderSewaTable extends PowerGridComponent
+final class PermissionTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -48,12 +47,11 @@ final class SalesorderSewaTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\MSalesorder>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\Permission>|null
     */
     public function datasource(): ?Builder
     {
-        return MSalesorderSewa::join('customers','m_salesorder_sewas.customer_id','customers.id')
-        ->select('m_salesorder_sewas.*','customers.nama_customer');
+        return Permission::query();
     }
 
     /*
@@ -86,17 +84,13 @@ final class SalesorderSewaTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('noso')
-            ->addColumn('tgl_so_formatted', function(MSalesorderSewa $model) {
-                return Carbon::parse($model->tgl_so)->format('d/m/Y');
+            ->addColumn('name')
+            ->addColumn('created_at_formatted', function(Permission $model) { 
+                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('marketing')
-            ->addColumn('pembayaran')
-            ->addColumn('jatuh_tempo_formatted', function(MSalesorderSewa $model) {
-                return Carbon::parse($model->jatuh_tempo)->format('d/m/Y');
-            })
-            ->addColumn('customer_id')
-            ->addColumn('nama_customer');
+            ->addColumn('updated_at_formatted', function(Permission $model) { 
+                return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
+            });
     }
 
     /*
@@ -116,54 +110,25 @@ final class SalesorderSewaTable extends PowerGridComponent
     public function columns(): array
     {
         return [
+
             Column::add()
-                ->title('NOSO')
-                ->field('noso')
-                ->sortable()
-                ->searchable()
+                ->title('NAME')
+                ->field('name')
                 ->makeInputText(),
 
             Column::add()
-                ->title('TGL SO')
-                ->field('tgl_so_formatted', 'tgl_so')
+                ->title('CREATED AT')
+                ->field('created_at_formatted', 'created_at')
                 ->searchable()
                 ->sortable()
-                ->makeInputDatePicker('tgl_so'),
+                ->makeInputDatePicker('created_at'),
 
             Column::add()
-                ->title('CUSTOMER')
-                ->field('nama_customer')
+                ->title('UPDATED AT')
+                ->field('updated_at_formatted', 'updated_at')
                 ->searchable()
                 ->sortable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('MARKETING')
-                ->field('marketing')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('PEMBAYARAN')
-                ->field('pembayaran')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
-
-            Column::add()
-                ->title('JATUH TEMPO')
-                ->field('jatuh_tempo_formatted', 'jatuh_tempo')
-                ->searchable()
-                ->sortable()
-                ->makeInputDatePicker('jatuh_tempo'),
-
-            Column::add()
-                ->title('STATUS SO')
-                ->field('status_so')
-                ->sortable()
-                ->searchable()
-                ->makeInputText(),
+                ->makeInputDatePicker('updated_at'),
 
         ]
 ;
@@ -178,7 +143,7 @@ final class SalesorderSewaTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid MSalesorder Action Buttons.
+     * PowerGrid Permission Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
@@ -186,38 +151,18 @@ final class SalesorderSewaTable extends PowerGridComponent
     
     public function actions(): array
     {
-        return [
-
-            Button::add('cetak')
-                ->caption(__('Cetak'))
-                ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->target('_blank')
-                ->method('get')
-                ->route("printsosewa",[
-                    'id' => 'id'
-                ]),
-
-            Button::add('edit')
-                ->caption(__('Edit'))
-                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('sewa.salesorder-sewa-modal',[
-                    'editmode' => 'edit',
-                    'salesorder_id' => 'id'
-                ]),
-
-
-            Button::add('destroy')
+       return [
+                Button::add('destroy')
                 ->caption(__('Delete'))
                 ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
                 ->openModal('delete-modal', [
                     'data_id'                 => 'id',
-                    'TableName'               => 'm_salesorder_sewas',
-                    'confirmationTitle'       => 'Delete SO',
-                    'confirmationDescription' => 'apakah yakin ingin hapus SO?',
+                    'TableName'               => 'permissions',
+                    'confirmationTitle'       => 'Delete Permission',
+                    'confirmationDescription' => 'apakah yakin ingin hapus ijin?',
                 ]),
         ];
     }
-    
 
     /*
     |--------------------------------------------------------------------------
@@ -228,7 +173,7 @@ final class SalesorderSewaTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid MSalesorder Action Rules.
+     * PowerGrid Permission Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -240,7 +185,7 @@ final class SalesorderSewaTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($m-salesorder) => $m-salesorder->id === 1)
+                ->when(fn($permission) => $permission->id === 1)
                 ->hide(),
         ];
     }
@@ -256,7 +201,7 @@ final class SalesorderSewaTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid MSalesorder Update.
+     * PowerGrid Permission Update.
      *
      * @param array<string,string> $data
      */
@@ -265,7 +210,7 @@ final class SalesorderSewaTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = MSalesorder::query()->findOrFail($data['id'])
+           $updated = Permission::query()->findOrFail($data['id'])
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

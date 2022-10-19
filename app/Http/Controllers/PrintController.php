@@ -113,7 +113,7 @@ class PrintController extends Controller
                 ->where('m_purchaseorders.id',$id)
                 ->get();
         $pajak = Mpajak::where('jenis_pajak', 'PPN')->first();
-        // return $pajak;
+         //return $data;
         $pdf = PDF::loadView('print.PO', array(
             'data' => $data, 
             'pajak' => $pajak
@@ -457,6 +457,7 @@ class PrintController extends Controller
         $data = VHutang::select('V_Hutang.nama_supplier', DB::raw('0 as saldo_awal'), DB::raw('sum(V_Hutang.debet) as debet'), DB::raw('sum(V_Hutang.kredit) as kredit'))
         ->where(DB::raw('convert(date,tanggal_transaksi)'),'>=',$tgl_awal)
         ->where(DB::raw('convert(date,tanggal_transaksi)'),'<=',$tgl_akhir)
+
         ->groupBy('V_Hutang.nama_supplier')
         ->get();
 

@@ -98,156 +98,166 @@ class PurchaseorderModal extends ModalComponent
             $this->Mpo->status= 'Open';
         }
 
-        DB::beginTransaction();
-        try{
-           
-            $total = DB::table('tmp_pembelians')
-            ->where('user_id',Auth::user()->id)
-            ->sum(DB::raw('harga * jumlah'));
+        $tmpdata = TmpPembelian::where('user_id', Auth::user()->id)->get();
 
-            $datapajak = Mpajak::where('jenis_pajak','PPN')->first();
+        if (count($tmpdata)<1){
+            DB::rollBack();
+            $this->alert('error', 'Isi Barang', [
+                'position' => 'center'
+            ]);
+        }
+        else{
+            DB::beginTransaction();
+            try{
+            
+                $tmps = TmpPembelian::where('user_id', Auth::user()->id)->get();
 
-            if ($this->Mpo->tipe == 'PPN'){
-                $dpp = $total / (1 + ($datapajak->persen / 100));
-                $pajak = $dpp * $datapajak->persen / 100;
-            }else{
-                $dpp = $total;
-                $pajak = 0;
-            }
+                $total = DB::table('tmp_pembelians')
+                ->where('user_id',Auth::user()->id)
+                ->sum(DB::raw('harga * jumlah'));
 
-            $this->Mpo->dpp = $dpp;
-            $this->Mpo->ppn = $pajak;
-            $this->Mpo->total = $total;
-            $this->Mpo->save();
+                $datapajak = Mpajak::where('jenis_pajak','PPN')->first();
 
-            $tmps = TmpPembelian::where('user_id', Auth::user()->id)->get();
+                if ($this->Mpo->tipe == 'PPN'){
+                    $dpp = $total / (1 + ($datapajak->persen / 100));
+                    $pajak = $dpp * $datapajak->persen / 100;
+                }else{
+                    $dpp = $total;
+                    $pajak = 0;
+                }
 
-            foreach($tmps as $tmp){
+                $this->Mpo->dpp = $dpp;
+                $this->Mpo->ppn = $pajak;
+                $this->Mpo->total = $total;
+                $this->Mpo->save();
 
-                $dpurchaseorder = new DPurchaseorder();
-                $dpurchaseorder['m_purchaseorder_id']=$this->Mpo->id;
-                $dpurchaseorder['barang_id']=$tmp->barang_id;
-                $dpurchaseorder['jumlah']=$tmp->jumlah;
-                $dpurchaseorder['satuan_id']=$tmp->satuan_id;
-                $dpurchaseorder['harga']=$tmp->harga;
-                $dpurchaseorder['status_detail']=$tmp->status_detail;
-                $dpurchaseorder['user_id']=Auth::user()->id;
-                $dpurchaseorder->save();
+                foreach($tmps as $tmp){
 
-                if($this->Mpo->pembebanan=='Stok'){
-                    if ($this->Mpo->tipe == 'PPN'){
-                        $dppdetail = $tmp->harga / (1 + ($datapajak->persen / 100));
-                    }else{
-                        $dppdetail = $tmp->harga;
+                    $dpurchaseorder = new DPurchaseorder();
+                    $dpurchaseorder['m_purchaseorder_id']=$this->Mpo->id;
+                    $dpurchaseorder['barang_id']=$tmp->barang_id;
+                    $dpurchaseorder['jumlah']=$tmp->jumlah;
+                    $dpurchaseorder['satuan_id']=$tmp->satuan_id;
+                    $dpurchaseorder['harga']=$tmp->harga;
+                    $dpurchaseorder['status_detail']=$tmp->status_detail;
+                    $dpurchaseorder['user_id']=Auth::user()->id;
+                    $dpurchaseorder->save();
+
+                    if($this->Mpo->pembebanan=='Stok'){
+                        if ($this->Mpo->tipe == 'PPN'){
+                            $dppdetail = $tmp->harga / (1 + ($datapajak->persen / 100));
+                        }else{
+                            $dppdetail = $tmp->harga;
+                        }
+
+                        $newdbarang = new DBarang();
+                        $newdbarang['barang_id'] = $tmp->barang_id;
+                        $newdbarang['d_purchaseorder_id'] = $dpurchaseorder->id;
+                        $newdbarang['tgl_masuk'] = $this->Mpo->tgl_masuk;
+                        $newdbarang['jumlah_masuk'] = $tmp->jumlah;
+                        $newdbarang['jumlah'] = $tmp->jumlah;
+                        $newdbarang['hpp'] = $dppdetail;
+                        $newdbarang->save();
+
+                        $jumlahstok = DBarang::where('barang_id',$dpurchaseorder->barang_id)
+                                            ->sum('jumlah');
+
+                        $kartustok = new Kartustok();
+                        $kartustok['tanggal'] = date_create($this->Mpo->tgl_masuk)->format('Y-m-d');
+                        $kartustok['barang_id']=$tmp->barang_id;
+                        $kartustok['tipe']='Pembelian';
+                        $kartustok['trans_id']=$dpurchaseorder->id;
+                        $kartustok['increase']=$tmp->jumlah;
+                        $kartustok['decrease']=0;
+                        $kartustok['harga_debet']=$dppdetail;
+                        $kartustok['harga_kredit']=0;
+                        $kartustok['qty']=$jumlahstok;
+                        $kartustok['modal']=$dppdetail;
+                        $kartustok->save();
+
+                        $barang = Barang::find($tmp->barang_id);
+                        $kategori = Kategori::find($barang->kategori_id);
+
+                        //Jurnal Persediaan
+                        $journal = new Journal();
+                        $journal['tipe']='Purchase Order';
+                        $journal['trans_id']=$this->Mpo->id;
+                        $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
+                        $journal['coa_id']=$kategori->coa_asset_id;
+                        $journal['debet']=$dppdetail*$tmp->jumlah;
+                        $journal['kredit']=0;
+                        $journal->save();
+
+                        if ($this->Mpo->tipe == 'PPN'){
+
+                            //Jurnal Pajak
+                            $journal = new Journal();
+                            $journal['tipe']='Purchase Order';
+                            $journal['trans_id']=$this->Mpo->id;
+                            $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
+                            $journal['coa_id']=$datapajak->coa_id_debet;
+                            $journal['debet']=($tmp->harga-$dppdetail)*$tmp->jumlah;
+                            $journal['kredit']=0;
+                            $journal->save();
+                        }
                     }
+                }
 
-                    $newdbarang = new DBarang();
-                    $newdbarang['barang_id'] = $tmp->barang_id;
-                    $newdbarang['d_purchaseorder_id'] = $dpurchaseorder->id;
-                    $newdbarang['tgl_masuk'] = $this->Mpo->tgl_masuk;
-                    $newdbarang['jumlah_masuk'] = $tmp->jumlah;
-                    $newdbarang['jumlah'] = $tmp->jumlah;
-                    $newdbarang['hpp'] = $dppdetail;
-                    $newdbarang->save();
+                if($this->Mpo->pembebanan=='Langsung'){
 
-                    $jumlahstok = DBarang::where('barang_id',$dpurchaseorder->barang_id)
-                                        ->sum('jumlah');
-
-                    $kartustok = new Kartustok();
-                    $kartustok['tanggal'] = date_create($this->Mpo->tgl_masuk)->format('Y-m-d');
-                    $kartustok['barang_id']=$tmp->barang_id;
-                    $kartustok['tipe']='Pembelian';
-                    $kartustok['trans_id']=$dpurchaseorder->id;
-                    $kartustok['increase']=$tmp->jumlah;
-                    $kartustok['decrease']=0;
-                    $kartustok['harga_debet']=$dppdetail;
-                    $kartustok['harga_kredit']=0;
-                    $kartustok['qty']=$jumlahstok;
-                    $kartustok['modal']=$dppdetail;
-                    $kartustok->save();
-
-                    $barang = Barang::find($tmp->barang_id);
-                    $kategori = Kategori::find($barang->kategori_id);
-
-                    //Jurnal Persediaan
                     $journal = new Journal();
                     $journal['tipe']='Purchase Order';
                     $journal['trans_id']=$this->Mpo->id;
                     $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
-                    $journal['coa_id']=$kategori->coa_asset_id;
-                    $journal['debet']=$dppdetail*$tmp->jumlah;
+                    $journal['coa_id']=$this->Mpo->jenis_pembebanan;
+                    $journal['debet']=$dpp;
                     $journal['kredit']=0;
                     $journal->save();
 
                     if ($this->Mpo->tipe == 'PPN'){
 
-                        //Jurnal Pajak
                         $journal = new Journal();
                         $journal['tipe']='Purchase Order';
                         $journal['trans_id']=$this->Mpo->id;
                         $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
                         $journal['coa_id']=$datapajak->coa_id_debet;
-                        $journal['debet']=($tmp->harga-$dppdetail)*$tmp->jumlah;
+                        $journal['debet']=$total-$dpp;
                         $journal['kredit']=0;
                         $journal->save();
                     }
                 }
-            }
 
-            if($this->Mpo->pembebanan=='Langsung'){
+                $supplier = Supplier::find($this->Mpo->supplier_id);
 
                 $journal = new Journal();
                 $journal['tipe']='Purchase Order';
                 $journal['trans_id']=$this->Mpo->id;
                 $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
-                $journal['coa_id']=$this->Mpo->jenis_pembebanan;
-                $journal['debet']=$dpp;
-                $journal['kredit']=0;
+                $journal['coa_id']=$supplier->coa_id;
+                $journal['debet']=0;
+                $journal['kredit']=$total;
                 $journal->save();
 
-                if ($this->Mpo->tipe == 'PPN'){
+                $tmps = TmpPembelian::where('user_id', Auth::user()->id)->delete();
 
-                    $journal = new Journal();
-                    $journal['tipe']='Purchase Order';
-                    $journal['trans_id']=$this->Mpo->id;
-                    $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
-                    $journal['coa_id']=$datapajak->coa_id_debet;
-                    $journal['debet']=$total-$dpp;
-                    $journal['kredit']=0;
-                    $journal->save();
-                }
+                DB::Commit();
+
+                $this->po_id = $this->Mpo->id;
+            
+                $this->closeModal();
+
+                $this->alert('success', 'Save Success', [
+                    'position' => 'center'
+                ]);
+
+                $this->emitTo('pembelian.purchaseorder-table', 'pg:eventRefresh-default');
             }
-
-            $supplier = Supplier::find($this->Mpo->supplier_id);
-
-            $journal = new Journal();
-            $journal['tipe']='Purchase Order';
-            $journal['trans_id']=$this->Mpo->id;
-            $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
-            $journal['coa_id']=$supplier->coa_id;
-            $journal['debet']=0;
-            $journal['kredit']=$total;
-            $journal->save();
-
-            $tmps = TmpPembelian::where('user_id', Auth::user()->id)->delete();
-
-            DB::Commit();
-
-            $this->po_id = $this->Mpo->id;
-        
-            $this->closeModal();
-
-            $this->alert('success', 'Save Success', [
-                'position' => 'center'
-            ]);
-
-            $this->emitTo('pembelian.purchaseorder-table', 'pg:eventRefresh-default');
-        }
-        catch(Throwable $e){
-            DB::rollBack();
-            $this->alert('error', $e->getMessage(), [
-                'position' => 'center'
-            ]);
+            catch(Throwable $e){
+                DB::rollBack();
+                $this->alert('error', $e->getMessage(), [
+                    'position' => 'center'
+                ]);
+            }
         }
     }
 
