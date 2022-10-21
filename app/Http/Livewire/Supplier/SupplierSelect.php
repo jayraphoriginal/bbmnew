@@ -34,6 +34,7 @@ class SupplierSelect extends Component
         $this->emitTo('pengeluaran-biaya.pengeluaran-biaya-modal','selectsupplier', $id);
         $this->emitTo('laporan.buku-besar-hutang','selectsupplier', $id);
         $this->emitTo('laporan.laporan-pembelian-supplier','selectsupplier', $id);
+        $this->emitTo('pembayaran.pembayaran-pembelian-modal','selectsupplier', $id);
     }
 
     public function selectDeskripsi($id){

@@ -256,7 +256,7 @@ class TicketModal extends ModalComponent
                                 $journal['kredit']=round($stok->hpp*$pengurangan,4);
                                 $journal->save();
 
-                                $pemakaianmaterial = $pemakaianmaterial - $stok->jumlah;
+                                $pemakaianmaterial = $pemakaianmaterial - $pengurangan;
                             }else{
 
                                 $stok = DBarang::find($dbarang->id);
@@ -323,7 +323,7 @@ class TicketModal extends ModalComponent
 
             //Jurnal Piutang
             $journal = new Journal();
-            $journal['tipe']='Piutang';
+            $journal['tipe']='Ticket';
             $journal['trans_id']=$this->ticket->id;
             $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
             $journal['coa_id']=$customer->coa_id;
@@ -333,7 +333,7 @@ class TicketModal extends ModalComponent
 
             //Jurnal PPN Keluaran
             $journal = new Journal();
-            $journal['tipe']='PPN';
+            $journal['tipe']='Ticket';
             $journal['trans_id']=$this->ticket->id;
             $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
             $journal['coa_id']=$pajak->coa_id_kredit;
@@ -344,7 +344,7 @@ class TicketModal extends ModalComponent
             $coapenjualan = Coa::where('kode_akun','400001')->first();
             // Jurnal penjualan
             $journal = new Journal();
-            $journal['tipe']='Penjualan';
+            $journal['tipe']='Ticket';
             $journal['trans_id']=$this->ticket->id;
             $journal['tanggal_transaksi']=date_create($this->ticket->jam_ticket)->format('Y-m-d');
             $journal['coa_id']=$coapenjualan->id;

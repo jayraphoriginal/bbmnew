@@ -24,7 +24,7 @@
         @enderror
     </x-form-group>
 
-    <x-form-group caption="Biaya">
+    <x-form-group caption="Tipe Pembayaran">
         <x-combobox
             wire:model="pengeluaran.tipe_pembayaran"
         >

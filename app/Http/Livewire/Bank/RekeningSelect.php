@@ -30,7 +30,7 @@ class RekeningSelect extends Component
         $rekening =  Rekening::find($id);
         $this->deskripsi = $rekening->norek.' - '.$rekening->atas_nama;
         $this->emitTo('invoice.invoice-modal','selectrekening', $id);
-
+        $this->emitTo('pembayaran.pembayaran-pembelian-modal','selectrekening', $id);
     }
 
     public function selectDeskripsi($id){

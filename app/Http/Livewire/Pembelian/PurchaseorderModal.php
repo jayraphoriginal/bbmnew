@@ -129,6 +129,7 @@ class PurchaseorderModal extends ModalComponent
                 $this->Mpo->dpp = $dpp;
                 $this->Mpo->ppn = $pajak;
                 $this->Mpo->total = $total;
+                $this->Mpo->sisa = $total;
                 $this->Mpo->save();
 
                 foreach($tmps as $tmp){

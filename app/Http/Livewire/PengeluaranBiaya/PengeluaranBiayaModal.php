@@ -22,7 +22,9 @@ class PengeluaranBiayaModal extends ModalComponent
     public $editmode, $pengeluaran_id;
     public $supplier;
 
-    protected $listeners = [ 'selectsupplier' => 'selectsupplier',];
+    protected $listeners = [ 
+        'selectsupplier' => 'selectsupplier',
+    ];
 
     protected $rules=[
         'pengeluaran.supplier_id' => 'nullable',
@@ -58,7 +60,7 @@ class PengeluaranBiayaModal extends ModalComponent
     public function save(){
 
         $this->pengeluaran->total = str_replace(',', '', $this->pengeluaran->total);
-        $this->validate();
+        
 
         $dpp =0;
         $nettbiaya=0;
@@ -82,11 +84,16 @@ class PengeluaranBiayaModal extends ModalComponent
             $this->pengeluaran->persen_pajaklain = 0;
             $nettbiaya = $dpp;
         }
-        
+        $this->validate();
 
         DB::beginTransaction();
         try{
 
+            if ($this->pengeluaran->tipe_pembayaran == 'Cash'){
+                $this->pengeluaran->sisa = 0;
+            }else{
+                $this->pengeluaran->sisa = $this->pengeluaran->total;
+            }
             $this->pengeluaran->save();
             $coabiaya = MBiaya::find($this->pengeluaran->m_biaya_id);
 
@@ -170,6 +177,8 @@ class PengeluaranBiayaModal extends ModalComponent
             $this->alert('success', 'Save Success', [
                 'position' => 'center'
             ]);
+
+            $this->emitTo('pengeluaran-biaya.pengeluaran-biaya-table', 'pg:eventRefresh-default');
 
         }catch(Throwable $e){
             DB::rollBack();

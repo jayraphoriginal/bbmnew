@@ -7,6 +7,7 @@ use App\Http\Controllers\BackupController;
 use App\Http\Livewire\DashboardComponent;
 use App\Http\Livewire\Jurnal\JurnalManualComponent;
 use App\Http\Livewire\Laporan\BukuBesarHutang;
+use App\Http\Livewire\Pembayaran\PembayaranPembelianComponent;
 use App\Http\Livewire\User\PermissionComponent;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 
@@ -69,7 +70,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('inventaris', \App\Http\Livewire\Inventaris\InventarisComponent::class)->name('inventaris');
     //Route::get('migrasicoa', [CreateCoaCustomerSupplier::class,'index'])->name('migrasicoa');
     Route::get('jurnalmanual', JurnalManualComponent::class)->name('jurnalmanual');
-
+    Route::get('pembayaranpembelian', PembayaranPembelianComponent::class)->name('pembayaranpembelian');
     Route::get('permission', PermissionComponent::class)->name('permission');
 
 
