@@ -160,11 +160,8 @@ class InvoiceModal extends ModalComponent
     public function save(){
 
         $this->jumlah_total = str_replace(',', '', $this->jumlah_total);
-
         $this->jumlah_dp = str_replace(',', '', $this->jumlah_dp);
-
         $this->dp_sebelum = str_replace(',', '', $this->dp_sebelum);
-
 
         $this->validate();
 
