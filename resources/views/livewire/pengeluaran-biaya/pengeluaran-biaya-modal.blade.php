@@ -3,6 +3,15 @@
         Input Pengeluaran Biaya
     </x-header-modal>
 
+    <x-form-group caption="Tanggal">
+        <x-datepicker
+            wire:model="pengeluaran.tgl_biaya"
+        />
+        @error('pengeluaran.tgl_biaya')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="Supplier">
         <livewire:supplier.supplier-select :deskripsi="$supplier"/>
         @error('pengeluaran.supplier_id')

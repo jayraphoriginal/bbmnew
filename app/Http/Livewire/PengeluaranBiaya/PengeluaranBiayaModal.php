@@ -28,6 +28,7 @@ class PengeluaranBiayaModal extends ModalComponent
 
     protected $rules=[
         'pengeluaran.supplier_id' => 'nullable',
+        'pengeluaran.tgl_biaya' => 'required',
         'pengeluaran.m_biaya_id' => 'required',
         'pengeluaran.tipe_pembayaran' => 'required',
         'pengeluaran.ppn_id' => 'required',
@@ -100,7 +101,7 @@ class PengeluaranBiayaModal extends ModalComponent
             $journal = new Journal();
             $journal['tipe']='Pengeluaran Biaya';
             $journal['trans_id']=$this->pengeluaran->id;
-            $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
+            $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
             $journal['coa_id']=$coabiaya->coa_id;
             $journal['debet']=$nettbiaya;
             $journal['kredit']=0;
@@ -110,7 +111,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
                 $journal['trans_id']=$this->pengeluaran->id;
-                $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
+                $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                 $journal['coa_id']=$datappn->coa_id_debet;
                 $journal['debet']=$this->pengeluaran->ppn ;
                 $journal['kredit']=0;
@@ -121,7 +122,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
                 $journal['trans_id']=$this->pengeluaran->id;
-                $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
+                $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                 $journal['coa_id']=$datapajak->coa_id_debet;
                 $journal['debet']=$dpp - $nettbiaya ;
                 $journal['kredit']=0;
@@ -142,7 +143,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
                 $journal['trans_id']=$this->pengeluaran->id;
-                $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
+                $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                 $journal['coa_id']=$rekening->coa_id;
                 $journal['debet']=0;
                 $journal['kredit']=$this->pengeluaran->total;
@@ -162,7 +163,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
                 $journal['trans_id']=$this->pengeluaran->id;
-                $journal['tanggal_transaksi']=$this->pengeluaran->created_at;
+                $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                 $journal['coa_id']=$supplier->coa_id;
                 $journal['debet']=0;
                 $journal['kredit']=$this->pengeluaran->total;

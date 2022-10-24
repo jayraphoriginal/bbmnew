@@ -2,7 +2,10 @@
 
 namespace App\Http\Livewire\Bbm;
 
+use App\Models\Journal;
+use App\Models\MBiaya;
 use App\Models\PengisianBbm;
+use App\Models\Supplier;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -28,7 +31,9 @@ class PengisianBbmModal extends ModalComponent
         'pengisian.driver_id' => 'required',
         'pengisian.bahan_bakar_id' => 'required',
         'pengisian.jumlah' => 'required',
-        'pengisian.harga' => 'required'
+        'pengisian.harga' => 'required',
+        'pengisian.total' => 'nullable',
+        'pengisian.sisa' => 'nullable'
     ];
 
     public function mount(){
@@ -62,10 +67,35 @@ class PengisianBbmModal extends ModalComponent
         $this->pengisian->harga = str_replace(',', '', $this->pengisian->harga);
 
         $this->pengisian->jumlah = str_replace(',', '', $this->pengisian->jumlah);
-
+        $total = $this->pengisian->harga * $this->pengisian->jumlah;
+        $this->pengisian->total = $total;
+        $this->pengisian->sisa = $total;
+        
         $this->validate();
 
         $this->pengisian->save();
+
+        $biaya = MBiaya::where('nama_biaya','Biaya Kendaraan')->first();
+
+        $journal = new Journal();
+        $journal['tipe']='Pengisian BBM';
+        $journal['trans_id']=$this->pengisian->id;
+        $journal['tanggal_transaksi']=$this->pengisian->tanggal_pengisian;
+        $journal['coa_id']=$biaya->coa_id;
+        $journal['debet']=$total;
+        $journal['kredit']=0;
+        $journal->save();
+
+        $supplier = Supplier::find($this->pengisian->supplier_id);
+
+        $journal = new Journal();
+        $journal['tipe']='Pengisian BBM';
+        $journal['trans_id']=$this->pengisian->id;
+        $journal['tanggal_transaksi']=$this->pengisian->tanggal_pengisian;
+        $journal['coa_id']=$supplier->coa_id;
+        $journal['debet']=0;
+        $journal['kredit']=$total;
+        $journal->save();
 
         $this->closeModal();
 
