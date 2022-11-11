@@ -95,6 +95,14 @@
         </div>
 
     </div>
+    <x-form-group caption="Keterangan">
+        <x-textbox
+            wire:model="Mpo.keterangan"
+        />
+        @error('Mpo.keterangan')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
 
     <x-button
     class="mt-2"

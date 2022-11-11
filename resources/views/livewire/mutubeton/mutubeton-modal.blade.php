@@ -12,6 +12,15 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Deskripsi">
+        <x-textbox
+            wire:model="mutubeton.deskripsi"
+        />
+        @error('mutubeton.deskripsi')
+            <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="Jumlah">
         <x-number-text
             wire:model="mutubeton.jumlah"/>

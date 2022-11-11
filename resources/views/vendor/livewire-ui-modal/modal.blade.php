@@ -14,10 +14,10 @@
             x-on:keydown.tab.prevent="$event.shiftKey || nextFocusable().focus()"
             x-on:keydown.shift.tab.prevent="prevFocusable().focus()"
             x-show="show"
-            class="fixed inset-0 z-20 overflow-y-auto"
+            class="fixed inset-0 z-20 overflow-y-auto dark:text-gray-300 dark:bg-gray-800"
             style="display: none;"
     >
-        <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-10 text-center sm:block sm:p-0">
+        <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-10 text-center sm:block sm:p-0 dark:text-gray-300 dark:bg-gray-800">
             <div
                     x-show="show"
                     x-on:click="closeModalOnClickAway()"
@@ -43,7 +43,7 @@
                     x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                     x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     x-bind:class="modalWidth"
-                    class="inline-block w-full p-8 align-bottom bg-white rounded-lg text-left overflow-y-auto overflow-x-hidden shadow-xl transform transition-all my-auto align-middle sm:w-full"
+                    class="inline-block w-full p-8 align-bottom bg-white rounded-lg text-left overflow-y-auto overflow-x-hidden shadow-xl transform transition-all my-auto align-middle sm:w-full dark:text-gray-300 dark:bg-gray-800"
                     id="modal-container"
             >
                 @forelse($components as $id => $component)

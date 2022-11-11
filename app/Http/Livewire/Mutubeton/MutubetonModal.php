@@ -2,11 +2,16 @@
 
 namespace App\Http\Livewire\Mutubeton;
 
+use App\Models\Barang;
+use App\Models\Komposisi;
+use App\Models\KomposisiStandar;
 use App\Models\Satuan;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use App\Models\Mutubeton;
+use Illuminate\Support\Facades\DB;
 use LivewireUI\Modal\ModalComponent;
+use Throwable;
 
 class MutubetonModal extends ModalComponent
 {
@@ -25,6 +30,7 @@ class MutubetonModal extends ModalComponent
 
     protected $rules=[
         'mutubeton.kode_mutu' => 'required',
+        'mutubeton.deskripsi' => 'required',
         'mutubeton.jumlah' => 'required',
         'mutubeton.satuan_id' => 'required',
         'mutubeton.berat_jenis' => 'required',
@@ -53,15 +59,48 @@ class MutubetonModal extends ModalComponent
 
         $this->mutubeton->berat_jenis = str_replace(',', '', $this->mutubeton->berat_jenis);
 
-        $this->mutubeton->save();
+        DB::beginTransaction();
 
-        $this->closeModal();
+        try{
 
-        $this->alert('success', 'Save Success', [
-            'position' => 'center'
-        ]);
+            $this->mutubeton->save();
 
-        $this->emitTo('mutubeton.mutubeton-table', 'pg:eventRefresh-default');
+            $jumlahkomposisi = Komposisi::where('mutubeton_id',$this->mutubeton_id)->count('*');
 
+            if ($jumlahkomposisi <=0){
+
+                $komposisistandar = KomposisiStandar::all();
+
+                foreach($komposisistandar as $komposisi){
+        
+                    $barang = Barang::find($komposisi->material_id);
+
+                    $datakomposisi = New Komposisi();
+                    $datakomposisi['mutubeton_id'] = $this->mutubeton->id;
+                    $datakomposisi['barang_id'] = $komposisi->material_id;
+                    $datakomposisi['jumlah'] = 0;
+                    $datakomposisi['satuan_id'] = $barang->satuan_id;
+                    $datakomposisi['tipe'] = $komposisi->tipe;
+                    $datakomposisi->save();
+                }
+            }
+
+            DB::commit();
+
+            $this->closeModal();
+
+            $this->alert('success', 'Save Success', [
+                'position' => 'center'
+            ]);
+
+            $this->emitTo('mutubeton.mutubeton-table', 'pg:eventRefresh-default');
+
+        }
+        catch(Throwable $e){
+            DB::rollBack();
+            $this->alert('error', $e->getMessage(), [
+                'position' => 'center'
+            ]);
+        }
     }
 }

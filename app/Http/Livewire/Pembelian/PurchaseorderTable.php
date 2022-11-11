@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Pembelian;
 
 use App\Models\MPurchaseorder;
+use App\Models\VPembelianAll;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -51,8 +52,7 @@ final class PurchaseorderTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return MPurchaseorder::join('suppliers','m_purchaseorders.supplier_id','suppliers.id')
-        ->select('m_purchaseorders.*','suppliers.nama_supplier');
+        return VPembelianAll::query();
     }
 
     /*
@@ -87,30 +87,32 @@ final class PurchaseorderTable extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('nopo')
             ->addColumn('nofaktur')
-            ->addColumn('tgl_masuk_formatted', function(MPurchaseorder $model) { 
+            ->addColumn('tgl_masuk_formatted', function(VPembelianAll $model) { 
                 return Carbon::parse($model->tgl_masuk)->format('d/m/Y');
             })
-            ->addColumn('jatuh_tempo_formatted', function(MPurchaseorder $model) { 
+            ->addColumn('jatuh_tempo_formatted', function(VPembelianAll $model) { 
                 return Carbon::parse($model->jatuh_tempo)->format('d/m/Y');
             })
             ->addColumn('nama_supplier')
-            ->addColumn('dpp', function(MPurchaseorder $model) { 
+            ->addColumn('dpp', function(VPembelianAll $model) { 
                 return number_format($model->dpp,2,".",",");
             })
             ->addColumn('tipe')
-            ->addColumn('ppn', function(MPurchaseorder $model) { 
+            ->addColumn('ppn', function(VPembelianAll $model) { 
                 return number_format($model->ppn,2,".",",");
             })
-            ->addColumn('total', function(MPurchaseorder $model) { 
+            ->addColumn('total', function(VPembelianAll $model) { 
                 return number_format($model->total,2,".",",");
             })
             ->addColumn('status')
             ->addColumn('pembebanan')
             ->addColumn('jenis_pembebanan')
-            ->addColumn('created_at_formatted', function(MPurchaseorder $model) { 
+            ->addColumn('nama_akun')
+            ->addColumn('alken')
+            ->addColumn('created_at_formatted', function(VPembelianAll $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(MPurchaseorder $model) { 
+            ->addColumn('updated_at_formatted', function(VPembelianAll $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }
@@ -190,7 +192,14 @@ final class PurchaseorderTable extends PowerGridComponent
                 ->makeInputText(),
             Column::add()
                 ->title('JENIS PEMBEBANAN')
-                ->field('jenis_pembebanan')
+                ->field('nama_akun')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('ALAT/KENDARAAN')
+                ->field('alken')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),
@@ -268,8 +277,8 @@ final class PurchaseorderTable extends PowerGridComponent
            
             //Hide button edit for ID 1
              Rule::Rows('status')
-                 ->when(fn(MPurchaseorder $model) => $model->status == 'Cancel')
-                 ->setAttribute('class', 'bg-red-200'),
+                 ->when(fn(VPembelianAll $model) => $model->status == 'Cancel')
+                 ->setAttribute('class', 'bg-red-200  dark:bg-red-800'),
          ];
     }
     

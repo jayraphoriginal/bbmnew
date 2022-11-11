@@ -39,12 +39,13 @@ class ConcretepumpModal extends ModalComponent
         'concretepump.rate_id'=> 'required',
         'concretepump.harga_sewa'=> 'required',
         'concretepump.keterangan'=> 'nullable',
+        'concretepump.tgl_sewa' => 'required'
     ];
 
     public function mount($m_salesorder_id)
     {
         $this->m_salesorder_id = $m_salesorder_id;
-
+        
         if ($this->editmode=='edit') {
             $this->concretepump = Concretepump::find($this->concretepump_id);
             $rate = Rate::find($this->concretepump->rate_id);
@@ -52,6 +53,7 @@ class ConcretepumpModal extends ModalComponent
         }else{
             $this->concretepump = new Concretepump();
         }
+        $this->concretepump->tgl_sewa = date('Y-m-d');
        
     }
 
@@ -131,7 +133,7 @@ class ConcretepumpModal extends ModalComponent
             $journal['kredit']=$pph;
             $journal->save();
 
-            $coapenjualan = Coa::where('kode_akun','400002')->first();
+            $coapenjualan = Coa::where('kode_akun','430001')->first();
             // Jurnal penjualan
             $journal = new Journal();
             $journal['tipe']='Concrete Pump';

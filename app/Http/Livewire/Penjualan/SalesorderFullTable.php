@@ -226,7 +226,7 @@ final class SalesorderFullTable extends PowerGridComponent
            //Hide button edit for ID 1
             Rule::Rows('status_detail')
                 ->when(fn(VJumlahSo $model) => $model->status_detail == 'Open')
-                ->setAttribute('class', 'bg-red-200'),
+                ->setAttribute('class', 'bg-red-200 dark:bg-red-800'),
         ];
     }
 

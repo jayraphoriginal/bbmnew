@@ -44,7 +44,8 @@ class PurchaseorderModal extends ModalComponent
         'Mpo.pembebanan'=> 'required',
         'kode_biaya' => 'nullable',
         'Mpo.jenis_pembebanan'=> 'nullable',
-        'Mpo.beban_id' => 'nullable'
+        'Mpo.beban_id' => 'nullable',
+        'Mpo.keterangan' => 'required'
     ];
 
     public function mount(){

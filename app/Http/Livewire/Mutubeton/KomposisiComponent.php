@@ -7,11 +7,13 @@ use LivewireUI\Modal\ModalComponent;
 
 class KomposisiComponent extends ModalComponent
 {
-    public $mutubeton_id, $kode_mutu;
+    public $mutubeton_id, $kode_mutu, $deskripsi;
 
     public function mount($mutubeton_id){
         $this->mutubeton_id = $mutubeton_id;
-        $this->kode_mutu = Mutubeton::find($mutubeton_id)->kode_mutu;
+        $mutubeton = Mutubeton::find($mutubeton_id);
+        $this->kode_mutu = $mutubeton->kode_mutu;
+        $this->deskripsi = $mutubeton->deskripsi;
     }
 
     public function add(){

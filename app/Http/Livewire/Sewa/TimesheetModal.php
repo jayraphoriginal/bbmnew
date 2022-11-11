@@ -60,6 +60,7 @@ class TimesheetModal extends ModalComponent
         $this->timesheet->jam_awal =date_create($this->timesheet->jam_awal)->format('Y-m-d H:i:s');
         $this->timesheet->jam_akhir =date_create($this->timesheet->jam_akhir)->format('Y-m-d H:i:s');
         $this->timesheet->volume = str_replace(',', '', $this->timesheet->volume);
+        $this->timesheet->status = 'Open';
         $this->timesheet->save();
 
         $this->closeModal();

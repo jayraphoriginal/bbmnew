@@ -1,7 +1,6 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <title>Rekap Gaji</title>
     </head>
 
@@ -9,6 +8,8 @@
         .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
             padding: 5px;
             vertical-align: middle;
+            border:1px solid;
+            margin:0;
         }
         *{
             font-size:13px;
@@ -19,8 +20,14 @@
         body{
             margin:0;
         }
+        table{
+            border-collapse: collapse;
+        }
         .page_break { 
             page-break-before: always; 
+        }
+        .text-right{
+            text-align: right;
         }
     </style>
 
@@ -63,7 +70,7 @@
                 </tr>
             </table>
 
-            <table class="table table-striped table-bordered mytable" style="margin-bottom:4em;">
+            <table class="mytable" style="margin-bottom:4em;width:100%">
                 <tr>
                     <td class="tdhead" style="text-align:center;">No</td>
                     <td class="tdhead" style="text-align:center;">Tanggal</td>
@@ -79,25 +86,29 @@
                     <td class="tdhead" style="text-align:center;">BBM</td>
                 </tr>
             @foreach($drv as $index => $data)
-            <tr>
-                <td>{{ ++$index }}</td>
-                <td>{{ date_format(date_create($data->tanggal_ticket),'Y-m-d') }}</td>
-                <td>{{ $data->nama_customer }}</td>
-                <td>{{ $data->lokasi }}</td>
-                <td style="text-align:right;">{{ number_format($data->jarak,2,'.',',') }}</td>
-                <td style="text-align:right;">{{ number_format($data->pemakaian_bbm,2,'.',',')  }}</td>
-                <td style="text-align:right;">1</td>
-                <td style="text-align:right;">{{ number_format($data->pemakaian_bbm,2,'.',',')  }}</td>
-                <td style="text-align:right;">{{ number_format($data->lembur,2,'.',',')  }}</td>
-                <td style="text-align:right;">{{ number_format($data->gaji,2,'.',',')  }}</td>
-                <td style="text-align:right;">{{ number_format($data->gaji,2,'.',',')  }}</td>
-                <td style="text-align:right;">{{ number_format($data->pengisian_bbm,2,'.',',') }}</td>
-            </tr>
+                @if($data->pengisian_bbm > 0) 
+                <tr style="background-color: #ccc;">
+                @else
+                <tr>
+                @endif
+                    <td>{{ ++$index }}</td>
+                    <td>{{ date_format(date_create($data->tanggal_ticket),'Y-m-d') }}</td>
+                    <td>{{ $data->nama_customer }}</td>
+                    <td>{{ $data->lokasi }}</td>
+                    <td style="text-align:right;">{{ number_format($data->jarak,2,'.',',') }}</td>
+                    <td style="text-align:right;">{{ number_format($data->pemakaian_bbm,2,'.',',')  }}</td>
+                    <td style="text-align:right;">{{ $data->rate  }}</td>
+                    <td style="text-align:right;">{{ number_format($data->total_liter,2,'.',',')  }}</td>
+                    <td style="text-align:right;">{{ number_format($data->lembur,2,'.',',')  }}</td>
+                    <td style="text-align:right;">{{ number_format($data->gaji,2,'.',',')  }}</td>
+                    <td style="text-align:right;">{{ number_format($data->total_gaji,2,'.',',')  }}</td>
+                    <td style="text-align:right;">{{ number_format($data->pengisian_bbm,2,'.',',') }}</td>
+                </tr>
                 @php
-                    $totalgaji = $totalgaji + $data->gaji;
-                    $totalpemakaian = $totalpemakaian + $data->pemakaian_bbm;
+                    $totalgaji = $totalgaji + $data->total_gaji;
+                    $totalpemakaian = $totalpemakaian + $data->total_liter;
                     $totalpengisian = $totalpengisian + $data->pengisian_bbm;
-                    $totalrate++;
+                    $totalrate = $totalrate + $data->rate;
                     $totalloading = $totalloading + $data->loading;
                     $totallembur = $totallembur + $data->lembur;
                 @endphp
@@ -162,7 +173,7 @@
                 <tr>
                     <td style="width:10em;">Pengisian BBM</td>
                     <td style="width:2em;"> : </td>
-                    <td style="text-align:right;">{{ $totalpengisian.' Liter' }}</td>
+                    <td style="text-align:right;">{{ number_format($totalpengisian,2,',','.').' Liter' }}</td>
                     <td style="width:25em;"></td>
                     <td style="width:10em;">Lembur</td>
                     <td style="width:5em;"> : </td>
@@ -176,13 +187,13 @@
                     <td style="width:25em;"></td>
                     <td style="width:10em;">Uang BBM</td>
                     <td style="width:5em;"> : </td>
-                    <td style="width:10em;">{{ number_format($totalpengurangan,2,'.',',') }} X {{ number_format($hargabbm ,2,'.',',')}}</td>
+                    <td style="width:10em;">{{ number_format($totalpengurangan,2,'.',',') }} X {{ number_format($hargabbm ,2,',','.')}}</td>
                     <td style="width:10em;text-align:right;"> {{ number_format($totalpengurangan * $hargabbm,2,'.',',') }}</td>
                 </tr>
                 <tr>
                     <td style="width:10em;"></td>
                     <td style="width:2em;"></td>
-                    <td style="text-align:right;">{{ $totalpengurangan.' Liter' }}</td>
+                    <td style="text-align:right;">{{ number_format($totalpengurangan,2,',','.').' Liter' }}</td>
                     <td style="width:25em;"></td>
                     <td style="width:10em;"></td>
                     <td style="width:5em;"></td>

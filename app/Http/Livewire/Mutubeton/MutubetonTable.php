@@ -87,6 +87,7 @@ final class MutubetonTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('kode_mutu')
+            ->addColumn('deskripsi')
             ->addColumn('jumlah')
             ->addColumn('satuan_id')
             ->addColumn('satuan')
@@ -116,6 +117,13 @@ final class MutubetonTable extends PowerGridComponent
             Column::add()
                 ->title('KODE MUTU')
                 ->field('kode_mutu')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('DESKRIPSI')
+                ->field('deskripsi')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),

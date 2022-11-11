@@ -52,7 +52,7 @@ final class RekapTimesheetTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VTimesheetSewa::where('id', $this->d_salesorder_sewa_id);
+        return VTimesheetSewa::where('d_so_id', $this->d_salesorder_sewa_id);
     }
 
     /*
@@ -99,14 +99,16 @@ final class RekapTimesheetTable extends PowerGridComponent
                 return Carbon::parse($model->jam_akhir)->format('H:i:s');
             })
             ->addColumn('lama', function(VTimesheetSewa $model){
-               return date_diff(date_create($model->jam_awal),date_create($model->jam_akhir))->format('%h Jam %i Menit');
+               return floor($model->lama / 60).' Jam '.($model->lama % 60).' Menit';
             })
             ->addColumn('tanggal_formatted', function(VTimesheetSewa $model) {
                 return Carbon::parse($model->tanggal)->format('d/m/Y H:i:s');
             })
             ->addColumn('hm_awal')
             ->addColumn('hm_akhir')
-            ->addColumn('istirahat')
+            ->addColumn('istirahat', function(VTimesheetSewa $model) {
+                return $model->istirahat.' Jam';
+            })
             ->addColumn('volume')
             ->addColumn('keterangan')
             ->addColumn('created_at')

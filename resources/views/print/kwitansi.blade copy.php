@@ -77,47 +77,36 @@
                         <td class="captioncenter" style="border:solid 1px;">No</td>
                         <td class="captioncenter" style="border:solid 1px;">Uraian</td>
                         <td class="captionright" style="border:solid 1px;">Satuan</td>
-                        <td class="captionright" style="border:solid 1px;">Harga</td>
-                        <td class="captionright" style="border:solid 1px;">Jumlah</td>
                     </tr>
                 </thead>
                 <tbody>
                     @php 
                         $i = 1;
                     @endphp
-                    @foreach ($data as $jual)
-                        @if (empty($jual->uraian))
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
-                            </tr>
-                        @endif
-
-                
+                    @foreach ($data as $jual)              
+                        <tr>
+                            <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++ }}</td>
+                            <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->uraian }}</td>
+                            <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
+                        </tr>
                     @endforeach
                     
                 </tbody>
             </table>
             <table style="float:right;width:40%;">
                 <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>
+                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
                 </tr>
                 <tr>
                     <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
                     <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <table style="float:left;width:40%;margin-top:8rem;">
+                <tr>
+                    <td style="height:2em;text-align:left; width:30%;background-color:#ccc;font-weight:bold;">{{ 'Rp '.number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:10rem;text-align:right">I</p>
@@ -157,8 +146,6 @@
                         <td class="captioncenter" style="border:solid 1px;">No</td>
                         <td class="captioncenter" style="border:solid 1px;">Uraian</td>
                         <td class="captionright" style="border:solid 1px;">Satuan</td>
-                        <td class="captionright" style="border:solid 1px;">Harga</td>
-                        <td class="captionright" style="border:solid 1px;">Jumlah</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -166,38 +153,29 @@
                         $i = 1;
                     @endphp
                     @foreach ($data as $jual)
-                        @if (empty($jual->uraian))
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
-                            </tr>
-                        @endif
-
-                
+                        <tr>
+                            <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++ }}</td>
+                            <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->uraian }}</td>
+                            <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
+                        </tr>
                     @endforeach
                     
                 </tbody>
             </table>
             <table style="float:right;width:40%;">
                 <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>
+                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
                 </tr>
                 <tr>
                     <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
                     <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <table style="float:left;width:40%;margin-top:8rem;">
+                <tr>
+                    <td style="height:2em;text-align:left; width:30%;background-color:#ccc;font-weight:bold;">{{ 'Rp '.number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:10rem;text-align:right">II</p>
@@ -237,8 +215,6 @@
                         <td class="captioncenter" style="border:solid 1px;">No</td>
                         <td class="captioncenter" style="border:solid 1px;">Uraian</td>
                         <td class="captionright" style="border:solid 1px;">Satuan</td>
-                        <td class="captionright" style="border:solid 1px;">Harga</td>
-                        <td class="captionright" style="border:solid 1px;">Jumlah</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -246,38 +222,29 @@
                         $i = 1;
                     @endphp
                     @foreach ($data as $jual)
-                        @if (empty($jual->uraian))
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
-                            </tr>
-                        @endif
-
-                
+                        <tr>
+                            <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++ }}</td>
+                            <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->uraian }}</td>
+                            <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
+                        </tr>
                     @endforeach
                     
                 </tbody>
             </table>
             <table style="float:right;width:40%;">
                 <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>
+                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
                 </tr>
                 <tr>
                     <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
                     <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <table style="float:left;width:40%;margin-top:8rem;">
+                <tr>
+                    <td style="height:2em;text-align:left; width:30%;background-color:#ccc;font-weight:bold;">{{ 'Rp '.number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:10rem;text-align:right">III</p>
@@ -317,8 +284,6 @@
                         <td class="captioncenter" style="border:solid 1px;">No</td>
                         <td class="captioncenter" style="border:solid 1px;">Uraian</td>
                         <td class="captionright" style="border:solid 1px;">Satuan</td>
-                        <td class="captionright" style="border:solid 1px;">Harga</td>
-                        <td class="captionright" style="border:solid 1px;">Jumlah</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -326,38 +291,29 @@
                         $i = 1;
                     @endphp
                     @foreach ($data as $jual)
-                        @if (empty($jual->uraian))
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($data[0]->total,2,".",",") }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
-                                <td class="captionright" style="width:15%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
-                            </tr>
-                        @endif
-
-                
+                        <tr>
+                            <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++ }}</td>
+                            <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->uraian }}</td>
+                            <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
+                        </tr>
                     @endforeach
                     
                 </tbody>
             </table>
             <table style="float:right;width:40%;">
                 <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>
+                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
                 </tr>
                 <tr>
                     <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
                     <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <table style="float:left;width:40%;margin-top:8rem;">
+                <tr>
+                    <td style="height:2em;text-align:left; width:30%;background-color:#ccc;font-weight:bold;">{{ 'Rp '.number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:10rem;text-align:right">IV</p>

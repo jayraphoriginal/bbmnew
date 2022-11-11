@@ -9,7 +9,7 @@ class PajakSelect extends Component
 {
 
     public $search;
-    public $mutubeton;
+    public $pajak;
     public $deskripsi;
 
     protected $listeners = ['selectdata' => 'selectDeskripsi'];
@@ -32,12 +32,12 @@ class PajakSelect extends Component
     }
 
     public function selectDeskripsi($id){
-        $this->deskripsi = Mutubeton::find($id)->kode_mutu;
+        $this->deskripsi = Mpajak::find($id)->jenis_pajak;
     }
 
     public function updatedSearch()
     {
-        $this->mutubeton = Mutubeton::where('kode_mutu', 'like', '%' . $this->search . '%')
+        $this->pajak = Mpajak::where('jenis_pajak', 'like', '%' . $this->search . '%')
             ->get();
     }
     public function render()

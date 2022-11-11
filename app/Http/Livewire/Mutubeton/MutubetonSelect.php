@@ -26,17 +26,18 @@ class MutubetonSelect extends Component
 
     public function selectdata($id)
     {
-        $this->deskripsi = Mutubeton::find($id)->kode_mutu;
+        $this->deskripsi = Mutubeton::find($id)->deskripsi;
         $this->emitTo('penjualan.salesorder-detail-modal','selectmutubeton', $id);
     }
 
     public function selectDeskripsi($id){
-        $this->deskripsi = Mutubeton::find($id)->kode_mutu;
+        $this->deskripsi = Mutubeton::find($id)->deskripsi;
     }
 
     public function updatedSearch()
     {
         $this->mutubeton = Mutubeton::where('kode_mutu', 'like', '%' . $this->search . '%')
+            ->orwhere('deskripsi', 'like', '%' . $this->search . '%')
             ->get();
     }
 

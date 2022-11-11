@@ -169,8 +169,7 @@ class TicketModal extends ModalComponent
                         $datad_salesorder->save();
 
                     }else{
-                        $jumlah=0;
-
+                        
                         $dticket = new TicketDetail();
                         $dticket['ticket_id']=$this->ticket->id;
                         $dticket['d_salesorder_id']=$d_salesorder->id;
@@ -180,14 +179,16 @@ class TicketModal extends ModalComponent
                         $datad_salesorder = DSalesorder::find($d_salesorder->id);
                         $datad_salesorder['sisa']=$datad_salesorder['sisa']-$jumlah;
                         $datad_salesorder->save();
-
+                        $jumlah=0;
                     }
                 }
             }
             
 
             $mutubeton = Mutubeton::find($this->mutubeton_id);
-            $komposisis = Komposisi::where('mutubeton_id',$this->mutubeton_id)->where('jumlah','>',0)->get();
+            $komposisis = Komposisi::where('mutubeton_id',$this->mutubeton_id)
+            ->where('jumlah','>',0)
+            ->where('tipe','mengurangi stok')->get();
             
             foreach($komposisis as $komposisi){
 

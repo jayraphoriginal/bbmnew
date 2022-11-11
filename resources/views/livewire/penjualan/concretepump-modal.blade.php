@@ -3,6 +3,15 @@
         Input Concrete Pump
     </x-header-modal>
 
+    <x-form-group caption="Tanggal Sewa">
+        <x-datepicker
+            wire:model="concretepump.tgl_sewa"
+        />
+        @error('concretepump.tgl_sewa')
+            <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="Kendaraan">
         <livewire:kendaraan.kendaraan-select :deskripsi="$kendaraan"/>
         @error('concretepump.kendaraan_id')

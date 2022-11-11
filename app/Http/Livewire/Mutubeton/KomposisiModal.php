@@ -30,7 +30,7 @@ class KomposisiModal extends ModalComponent
         'komposisi.tipe' => 'required'
     ];
 
-    public function mount($komposisi_id){
+    public function mount(){
 
         if ($this->editmode=='edit') {
             $this->komposisi = Komposisi::find($this->komposisi_id);

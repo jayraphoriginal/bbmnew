@@ -14,17 +14,23 @@ use App\Models\Customer;
 use App\Models\Driver;
 use App\Models\DSalesorder;
 use App\Models\GajiRate;
+use App\Models\Invoicedp;
 use App\Models\Kendaraan;
 use App\Models\PemakaianBbm;
 use App\Models\PengisianBbm;
 use App\Models\Rate;
+use App\Models\Supplier;
 use App\Models\TambahanBbm;
 use App\Models\Ticket;
 use App\Models\Timesheet;
 use App\Models\TmpGajiDriver;
+use App\Models\TmpPenjualanBulanan;
+use App\Models\TmpReportTicket;
 use App\Models\VConcretepump;
 use App\Models\VHutang;
 use App\Models\VPembelianDetail;
+use App\Models\VPengisianBbm;
+use App\Models\VPrintInvoice;
 use App\Models\VTicket;
 use App\Models\VTicketHeader;
 use Riskihajar\Terbilang\Facades\Terbilang;
@@ -67,10 +73,9 @@ class PrintController extends Controller
     }
 
     public function ticket($id){
-
-        $data = VTicketHeader::where('id',$id)->get();
-
-        // return $data;
+        
+        DB::update('Exec SP_ReportTicket '.$id);
+        $data = TmpReportTicket::where('id',$id)->get();
 
         $customPaper = array(0,0,609.44,396.85);
 
@@ -124,112 +129,42 @@ class PrintController extends Controller
 
     public function kwitansi($id){
 
-        $invoice = Invoice::find($id);
+        DB::update("exec SP_DetailInvoice '".$id."'");
+
+        $data = VPrintInvoice::where('id', $id)->get();
+        $dp = Invoicedp::join('invoices','invoicedps.invoicedp_id','invoices.id')->where('invoice_id',$id)->sum('total');
+
         
-        if ($invoice->tipe_so == 'Sewa'){
+        $terbilang = Terbilang::make($data[0]->total);
 
-            $data = Invoice::select('invoices.*','m_salesorder_sewas.noso', 'm_salesorder_sewas.pajak' ,'customers.nama_customer', 
-            'rekenings.norek', 'banks.nama_bank', 'rekenings.atas_nama',
-            DB::raw('itemsewas.nama_item as uraian'), 'satuans.satuan', DB::raw('d_salesorder_sewas.lama as jumlah'), 'd_salesorder_sewas.harga_intax')
-            ->join('m_salesorder_sewas','invoices.so_id', 'm_salesorder_sewas.id')
-            ->join('customers','m_salesorder_sewas.customer_id','customers.id')
-            ->join('d_invoices', 'invoices.id', 'd_invoices.invoice_id')
-            ->join('d_salesorder_sewas', 'd_invoices.trans_id', 'd_salesorder_sewas.id')
-            ->join('itemsewas', 'd_salesorder_sewas.itemsewa_id', 'itemsewas.id')
-            ->join('satuans', 'd_salesorder_sewas.satuan_id','satuans.id')
-            ->join('rekenings','invoices.rekening_id','rekenings.id')
-            ->join('banks','rekenings.bank_id','bank.id')
-            ->where('invoices.tipe_so','sewa')
-            ->where('invoices.id',$id)
-            ->get();
+        $customPaper = array(0,0,609.44,396.85);
 
-            $terbilang = Terbilang::make($data[0]->total);
-
-            
-            $customPaper = array(0,0,609.44,396.85);
-
-            $pdf = PDF::loadView('print.kwitansi', array(
-                'data' => $data,
-                'terbilang' => $terbilang,
-            ))->setPaper($customPaper);
-            return $pdf->stream();
-        }   
-        else{
-            $data = Invoice::select('invoices.*','m_salesorders.pajak', 'customers.nama_customer','v_detail_invoice.satuan', 'v_detail_invoice.tipe_detail', 
-                        'v_detail_invoice.uraian', 'v_detail_invoice.jumlah', 'v_detail_invoice.harga_intax', 'rekenings.norek', 'banks.nama_bank','rekenings.atas_nama')
-            ->join('customers','invoices.customer_id','customers.id', 'm_salesorders.pajak')
-            ->join('m_salesorders','invoices.so_id','m_salesorders.id')
-            ->join('rekenings','invoices.rekening_id','rekenings.id')
-            ->join('banks','rekenings.bank_id','banks.id')
-            ->leftjoin('v_detail_invoice','invoices.id','v_detail_invoice.invoice_id')
-            ->where('invoices.id',$id)
-            ->get();
-
-            $terbilang = Terbilang::make($data[0]->total);
-
-            $customPaper = array(0,0,609.44,396.85);
-
-            $pdf = PDF::loadView('print.kwitansi', array(
-                'data' => $data,
-                'terbilang' => $terbilang,
-            ))->setPaper($customPaper);
-            return $pdf->stream();
-        }        
+        $pdf = PDF::loadView('print.kwitansi', array(
+            'data' => $data,
+            'terbilang' => $terbilang,
+            'dp' => $dp
+        ))->setPaper($customPaper);
+        return $pdf->stream();        
     }
 
     public function invoice($id){
     
-        $invoice = Invoice::find($id);
-        
-        if ($invoice->tipe_so == 'Sewa'){
+        DB::update("exec SP_DetailInvoice '".$id."'");
 
-            $data = Invoice::select('invoices.*','m_salesorder_sewas.noso', 'm_salesorder_sewas.pajak' ,'customers.nama_customer', 
-            'rekenings.norek', 'banks.nama_bank', 'rekenings.atas_nama',
-            DB::raw('itemsewas.nama_item as uraian'), 'satuans.satuan', DB::raw('d_salesorder_sewas.lama as jumlah'), 'd_salesorder_sewas.harga_intax')
-            ->join('m_salesorder_sewas','invoices.so_id', 'm_salesorder_sewas.id')
-            ->join('customers','m_salesorder_sewas.customer_id','customers.id')
-            ->join('d_invoices', 'invoices.id', 'd_invoices.invoice_id')
-            ->join('d_salesorder_sewas', 'd_invoices.trans_id', 'd_salesorder_sewas.id')
-            ->join('itemsewas', 'd_salesorder_sewas.itemsewa_id', 'itemsewas.id')
-            ->join('satuans', 'd_salesorder_sewas.satuan_id','satuans.id')
-            ->join('rekenings','invoices.rekening_id','rekenings.id')
-            ->join('banks','rekenings.bank_id','bank.id')
-            ->where('invoices.tipe_so','sewa')
-            ->where('invoices.id',$id)
-            ->get();
+        $data = VPrintInvoice::where('id', $id)->get();
+        $dp = Invoicedp::join('invoices','invoicedps.invoicedp_id','invoices.id')->where('invoice_id',$id)->sum('total');
 
-            $terbilang = Terbilang::make($data[0]->total);
+        $terbilang = Terbilang::make($data[0]->total);
 
-            
-            $customPaper = array(0,0,609.44,396.85);
+        $customPaper = array(0,0,609.44,396.85);
 
-            $pdf = PDF::loadView('print.invoice', array(
-                'data' => $data,
-                'terbilang' => $terbilang,
-            ))->setPaper($customPaper);
-            return $pdf->stream();
-        }   
-        else{
-            $data = Invoice::select('invoices.*','m_salesorders.pajak', 'customers.nama_customer','v_detail_invoice.satuan', 'v_detail_invoice.tipe_detail', 
-                        'v_detail_invoice.uraian', 'v_detail_invoice.jumlah', 'v_detail_invoice.harga_intax', 'rekenings.norek', 'banks.nama_bank','rekenings.atas_nama')
-            ->join('customers','invoices.customer_id','customers.id', 'm_salesorders.pajak')
-            ->join('m_salesorders','invoices.so_id','m_salesorders.id')
-            ->join('rekenings','invoices.rekening_id','rekenings.id')
-            ->join('banks','rekenings.bank_id','banks.id')
-            ->leftjoin('v_detail_invoice','invoices.id','v_detail_invoice.invoice_id')
-            ->where('invoices.id',$id)
-            ->get();
+        $pdf = PDF::loadView('print.invoice', array(
+            'data' => $data,
+            'terbilang' => $terbilang,
+            'dp' => $dp
+        ))->setPaper($customPaper);
+        return $pdf->stream();
 
-            $terbilang = Terbilang::make($data[0]->total);
-
-            $customPaper = array(0,0,609.44,396.85);
-
-            $pdf = PDF::loadView('print.invoice', array(
-                'data' => $data,
-                'terbilang' => $terbilang,
-            ))->setPaper($customPaper);
-            return $pdf->stream();
-        }        
     } 
 
     public function concretepump($id){
@@ -323,7 +258,7 @@ class PrintController extends Controller
                     $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
                     $tmp['nopol'] = $kendaraan->nopol;
                     $tmp['nama_driver'] = $driver->nama_driver;
-                    $tmp['tanggal_ticket'] = date_format(date_create($ticket->jam_pengiriman),'Y-m-d');
+                    $tmp['tanggal_ticket'] = date_format(date_create($ticket->jam_ticket),'Y-m-d');
                     $tmp['nama_customer'] = $customer->nama_customer;
                     $tmp['lokasi'] = $rate->tujuan;
                     $tmp['jarak'] = $rate->estimasi_jarak;
@@ -389,7 +324,12 @@ class PrintController extends Controller
             }
         }
 
-        $data = TmpGajiDriver::orderBy('nama_driver','asc')->orderBy('tanggal_ticket','asc')->get();
+        $data = TmpGajiDriver::select('nama_driver',DB::raw('sum(loading) as loading'),'nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm',
+        DB::raw('count(*) as rate'),DB::raw('sum(pemakaian_bbm) as total_liter'),
+        DB::raw('sum(lembur) as lembur'),'gaji',DB::raw('sum(gaji) as total_gaji'),'pengisian_bbm')
+        ->orderBy('nama_driver','asc')->orderBy('tanggal_ticket','asc')
+        ->groupby('nama_driver','nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm','gaji','pengisian_bbm')
+        ->get();
         $bbm = BahanBakar::orderby('id', 'desc')->first();
 
         // return $data;
@@ -405,6 +345,7 @@ class PrintController extends Controller
     public function rekapticket($soid){
         
         $data = VTicketHeader::where('so_id',$soid)
+        ->orderBy('V_TicketHeader.jam_ticket')
         ->get();
 
         $pdf = PDF::loadView('print.rekapticketmaterial', array(
@@ -415,9 +356,13 @@ class PrintController extends Controller
 
     public function rekaptickettanggal($tgl_awal,$tgl_akhir){
         
-        $data = VTicketHeader::where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
-        ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
-        ->get();
+        DB::update("Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
+        $data = TmpReportTicket::all();
+
+        // $data = VTicketHeader::where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+        // ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
+        // ->orderBy('V_TicketHeader.jam_ticket')
+        // ->get();
 
         $pdf = PDF::loadView('print.rekaptickettanggal', array(
             'data' => $data,
@@ -429,16 +374,39 @@ class PrintController extends Controller
 
     public function penjualanbeton($tgl_awal,$tgl_akhir){
         
-        $data = VTicketHeader::where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
-        ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
-        ->get();
+        DB::update("Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
+        $data = TmpReportTicket::all();
+
+        $datacustomer = TmpReportTicket::select('nama_customer','kode_mutu','tujuan','satuan',DB::raw('sum(jumlah) as total'))
+        ->groupBy('nama_customer','kode_mutu','tujuan','satuan')->get();
+
+        DB::update("Exec SP_PenjualanPerBulan ".date('Y'));
+        $penjualanbulan = TmpPenjualanBulanan::all();
+       // return $penjualanbulan;
 
         $pdf = PDF::loadView('print.rekappenjualanbeton', array(
             'data' => $data,
+            'datacustomer' => $datacustomer,
+            'penjualanbulanan' => $penjualanbulan,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        return $pdf->setPaper('A4','landscape')->stream();
+        return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function penjualanbetoncustomer($tgl_awal,$tgl_akhir){
+        
+        DB::update("Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
+
+        $datacustomer = TmpReportTicket::select('nama_customer','kode_mutu',DB::raw('harga_intax / (1+(pajak/100)) as harga'),'tujuan','satuan',DB::raw('sum(jumlah) as total'))
+        ->groupBy('nama_customer',DB::raw('harga_intax / (1+(pajak/100))'),'kode_mutu','tujuan','satuan')->get();
+
+        $pdf = PDF::loadView('print.rekappenjualanbetoncustomer', array(
+            'datacustomer' => $datacustomer,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','potrait')->stream();
     }
 
     public function rekapconcretepump($soid){
@@ -457,8 +425,8 @@ class PrintController extends Controller
         $data = VHutang::select('V_Hutang.nama_supplier', DB::raw('0 as saldo_awal'), DB::raw('sum(V_Hutang.debet) as debet'), DB::raw('sum(V_Hutang.kredit) as kredit'))
         ->where(DB::raw('convert(date,tanggal_transaksi)'),'>=',$tgl_awal)
         ->where(DB::raw('convert(date,tanggal_transaksi)'),'<=',$tgl_akhir)
-
-        ->groupBy('V_Hutang.nama_supplier')
+        ->orderBy('V_Hutang.tanggal_transaksi')
+        ->groupBy('V_Hutang.tanggal_transaksi')
         ->get();
 
         $pdf = PDF::loadView('print.rekaphutang', array(
@@ -545,7 +513,7 @@ class PrintController extends Controller
                 $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
                 $tmp['nopol'] = $kendaraan->nopol;
                 $tmp['nama_driver'] = $driver->nama_driver;
-                $tmp['tanggal_ticket'] = date_format(date_create($ticket->jam_pengiriman),'Y-m-d');
+                $tmp['tanggal_ticket'] = date_format(date_create($ticket->jam_ticket),'Y-m-d');
                 $tmp['nama_customer'] = $customer->nama_customer;
                 $tmp['lokasi'] = $rate->tujuan;
                 $tmp['jarak'] = $rate->estimasi_jarak;
@@ -609,8 +577,12 @@ class PrintController extends Controller
                 $tmp->save();
             }
         }
-
-        $data = TmpGajiDriver::orderBy('nama_driver','asc')->orderBy('tanggal_ticket','asc')->get();
+        $data = TmpGajiDriver::select('nama_driver',DB::raw('sum(loading) as loading'),'nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm',
+        DB::raw('count(*) as rate'),DB::raw('sum(pemakaian_bbm) as total_liter'),
+        DB::raw('sum(lembur) as lembur'),'gaji',DB::raw('sum(gaji) as total_gaji'),'pengisian_bbm')
+        ->orderBy('tanggal_ticket','asc')
+        ->groupby('nama_driver','nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm','gaji','pengisian_bbm')
+        ->get();
         $bbm = BahanBakar::orderby('id', 'desc')->first();
 
        //return $data;
@@ -639,10 +611,11 @@ class PrintController extends Controller
 
     public function bukubesarhutang($id_supplier,$tgl_awal,$tgl_akhir){
         
-        $data = VPembelianDetail::select('V_PembelianDetail.tgl_masuk', 'V_PembelianDetail.nama_barang',DB::raw('(V_PembelianDetail.jumlah*V_PembelianDetail.harga) as kredit'))
+        $data = VPembelianDetail::select('V_PembelianDetail.tgl_masuk','V_PembelianDetail.jenis_beban','V_PembelianDetail.alken', 'V_PembelianDetail.nama_barang',DB::raw('(V_PembelianDetail.jumlah*V_PembelianDetail.harga) as kredit'))
         ->where('supplier_id',$id_supplier)
         ->where(DB::raw('convert(date,tgl_masuk)'),'>=',$tgl_awal)
         ->where(DB::raw('convert(date,tgl_masuk)'),'<=',$tgl_akhir)
+        ->orderBy('V_PembelianDetail.tgl_masuk')
         ->get();
 
         $pdf = PDF::loadView('print.bukubesarhutang', array(
@@ -656,6 +629,7 @@ class PrintController extends Controller
     public function laporanpembelian($tgl_awal,$tgl_akhir){
         $data = VPembelianDetail::where(DB::raw('convert(date,tgl_masuk)'),'>=',$tgl_awal)
         ->where(DB::raw('convert(date,tgl_masuk)'),'<=',$tgl_akhir)
+        ->orderBy('V_PembelianDetail.tgl_masuk')
         ->get();
 
         $pdf = PDF::loadView('print.laporanpembelian', array(
@@ -668,18 +642,38 @@ class PrintController extends Controller
     }
 
     public function laporanpembeliansupplier($tgl_awal,$tgl_akhir,$id_supplier){
+
+        $supplier = Supplier::find($id_supplier);
+
         $data = VPembelianDetail::where('supplier_id', $id_supplier)
         ->where(DB::raw('convert(date,tgl_masuk)'),'>=',$tgl_awal)
         ->where(DB::raw('convert(date,tgl_masuk)'),'<=',$tgl_akhir)
+        ->orderBy('V_PembelianDetail.tgl_masuk')
         ->get();
 
-        $pdf = PDF::loadView('print.laporanpembelian', array(
+        $pdf = PDF::loadView('print.laporanpembeliansupplier', array(
             'data' => $data,
+            'supplier' => $supplier->nama_supplier,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
 
         return $pdf->setPaper('A4','landscape')->stream();
+    }
+
+    public function laporanpengisianbbm($tgl_awal,$tgl_akhir){
+        $data = VPengisianBbm::where('tanggal_pengisian','>=',$tgl_awal)
+        ->where('tanggal_pengisian','<=',$tgl_akhir)
+        ->orderBy('V_PengisianBbm.tanggal_pengisian')
+        ->get();
+
+        $pdf = PDF::loadView('print.laporanpengisianbbm', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','potrait')->stream();
     }
 
 }

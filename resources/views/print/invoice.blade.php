@@ -68,50 +68,47 @@
             <tbody>
                 @php 
                     $i = 1;
+                    $totalall = 0;
+                    $dpp = 0;
+                    $ppn = 0;
                 @endphp
                 @foreach ($data as $jual)
-                    @if (empty($jual->uraian))
                         <tr>
                             <td class="captioncenter" style="width:5%">{{ $i++ }}</td>
-                            <td class="captionleft">{{ "Tambahan Biaya" }}</td>
-                            <td class="captionright" style="width:10%">{{ number_format(1,2,".",",") }}</td>
-                            <td class="captionright" style="width:15%">{{ number_format($data[0]->total,2,".",",") }}</td>
-                            <td class="captionright" style="width:15%">{{ number_format($data[0]->total,2,".",",") }}</td>
-                        </tr>
-                    @else
-                        <tr>
-                            <td class="captioncenter" style="width:5%">{{ $i++.$jual->tipe }}</td>
-                            <td class="captionleft">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
+                            <td class="captionleft">{{ $jual->uraian }}</td>
                             <td class="captionright" style="width:10%">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
                             <td class="captionright" style="width:15%">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
                             <td class="captionright" style="width:15%">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
                         </tr>
-                    @endif
-
-               
+                        @php 
+                            $totalall = $totalall + $jual->jumlah * $jual->harga_intax;
+                        @endphp
                 @endforeach
-                
+                @php
+                    $dpp = $totalall /(1+($jual->pajak/100));
+                    $ppn = $totalall - $dpp;
+                @endphp
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan=4 class="captionleft">DPP</td>
-                    <td class="captionright">{{ number_format($data[0]->dpp,2,".",",") }}</td>
+                    <td class="captionright">{{ number_format($dpp,2,".",",") }}</td>
                 </tr>
-                @if (empty($jual->uraian))
-                    <tr>
-                        <td colspan=4 class="captionleft">PPN {{ '0%' }}</td>
-                        <td class="captionright">{{ number_format(0,2,".",",") }}</td>
-                    </tr>
-                @else
-                    <tr>
-                        <td colspan=4 class="captionleft">PPN {{ $data[0]->pajak.'%' }}</td>
-                        <td class="captionright">{{ number_format($data[0]->ppn,2,".",",") }}</td>
-                    </tr>
+                <tr>
+                    <td colspan=4 class="captionleft">PPN {{ number_format($data[0]->pajak,0,'.'.',').'%' }}</td>
+                    <td class="captionright">{{ number_format($ppn,2,".",",") }}</td>
+                </tr>
+                @if ($dp > 0)
+                <tr>
+                    <td colspan=4 class="captionleft">DP</td>
+                    <td class="captionright">{{ number_format($dp,2,".",",") }}</td>
+                </tr>
                 @endif
                 <tr>
                     <td colspan=4 class="captionleft">Total</td>
                     <td class="captionright">{{ number_format($data[0]->total,2,".",",") }}</td>
                 </tr>
+                
                 <tr>
                     <td colspan="5" style="font-size:16px; font-weight: bold;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
@@ -133,7 +130,7 @@
         </table>
         <table style="float:right;width:45%">
             <tr>
-                <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>
+                <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
             </tr>
             <tr>
                 <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>

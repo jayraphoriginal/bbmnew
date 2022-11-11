@@ -7,6 +7,7 @@ use App\Http\Controllers\BackupController;
 use App\Http\Livewire\DashboardComponent;
 use App\Http\Livewire\Jurnal\JurnalManualComponent;
 use App\Http\Livewire\Laporan\BukuBesarHutang;
+use App\Http\Livewire\Laporan\LaporanComponent;
 use App\Http\Livewire\Pembayaran\PembayaranPembelianComponent;
 use App\Http\Livewire\User\PermissionComponent;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
@@ -82,6 +83,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printinvoice/{id}', [\App\Http\Controllers\PrintController::class,'invoice'])->name('printinvoice');
     Route::get('printkwitansi/{id}', [\App\Http\Controllers\PrintController::class,'kwitansi'])->name('printkwitansi');
     Route::get('printconcretepump/{id}', [\App\Http\Controllers\PrintController::class,'concretepump'])->name('printconcretepump');
+    
+    Route::get('laporan', LaporanComponent::class)->name('laporan');
     Route::get('laporanrekapgaji/{tgl_awal}/{tgl_akhir}', [PrintController::class,'gaji'])->name('rekapgaji');
     Route::get('laporanrekapgajidriver/{tgl_awal}/{tgl_akhir}/{driver_id}', [PrintController::class,'gajidriver'])->name('rekapgajidriver');
     
@@ -90,10 +93,12 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('rekapconcretepump/{soid}', [PrintController::class,'rekapconcretepump'])->name('rekapconcretepump');
     Route::get('laporanhutang/{tgl_awal}/{tgl_akhir}', [PrintController::class,'rekaphutang'])->name('rekaphutang');
     Route::get('laporanpenjualanbeton/{tgl_awal}/{tgl_akhir}', [PrintController::class,'penjualanbeton'])->name('laporanpenjualanbeton');
+    Route::get('laporanpenjualanbetoncustomer/{tgl_awal}/{tgl_akhir}', [PrintController::class,'penjualanbetoncustomer'])->name('laporanpenjualanbetoncustomer');
     Route::get('penjualanmutubeton/{tgl_awal}/{tgl_akhir}', [PrintController::class,'penjualanmutubeton'])->name('penjualanmutubeton');
     Route::get('laporanpajakmasukan/{tgl_awal}/{tgl_akhir}', [PrintController::class,'pajakmasukan'])->name('pajakmasukan');
     Route::get('laporanpembelian/{tgl_awal}/{tgl_akhir}', [PrintController::class,'laporanpembelian'])->name('laporanpembelian');
     Route::get('laporanpembeliansupplier/{tgl_awal}/{tgl_akhir}/{id_supplier}', [PrintController::class,'laporanpembeliansupplier'])->name('laporanpembeliansupplier');
     Route::get('laporanbukubesarhutang/{id_supplier}/{tgl_awal}/{tgl_akhir}', [PrintController::class,'bukubesarhutang'])->name('laporanbukubesarhutang');
+    Route::get('laporanpengisianbbm/{tgl_awal}/{tgl_akhir}', [PrintController::class,'laporanpengisianbbm'])->name('laporanpengisianbbm');
     Route::get('backup', [BackupController::class,'index'])->name('backup');
 });

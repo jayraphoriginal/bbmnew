@@ -37,7 +37,7 @@
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
-    @else
+    @elseif ($timesheet->tipe == 'HM')
 
         <x-form-group caption="HM Awal">
             <x-number-text

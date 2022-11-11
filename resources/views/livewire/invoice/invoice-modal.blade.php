@@ -3,6 +3,15 @@
         Input Invoice SO {{ $noso }}
     </x-header-modal>
 
+    <x-form-group caption="Tanggal Cetak">
+        <x-datepicker
+            wire:model="tgl_cetak"
+        />
+        @error('tgl_cetak')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="Customer">
         <x-textbox
             readonly
@@ -59,20 +68,26 @@
 
     <x-form-group caption="Rekening">
         <livewire:bank.rekening-select :deskripsi="$rekening"/>
-        @error('invoice.rekening_id')
+        @error('rekening_id')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
 
     <x-form-group caption="Tanda Tangan">
-        <x-combobox wire:model="invoice.tanda_tangan">
+        <x-combobox wire:model="tanda_tangan">
             <option value="">-- Isi Tanda Tangan --</option>
             <option value="Sony Suherman">Sony Suherman</option>
             <option value="Tedy Suherman">Tedy Suherman</option>
         </x-combobox>
-        @error('invoice.tanda_tangan')
+        @error('tanda_tangan')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
+    </x-form-group>
+
+    <x-form-group caption="Keterangan">
+        <x-textbox
+            wire:model="keterangan"
+        />
     </x-form-group>
 
     <x-footer-modal>

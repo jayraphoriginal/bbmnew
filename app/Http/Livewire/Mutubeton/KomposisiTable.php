@@ -57,7 +57,7 @@ final class KomposisiTable extends PowerGridComponent
         ->join('barangs','komposisis.barang_id','barangs.id')
         ->join('satuans','komposisis.satuan_id','satuans.id')
         ->where('mutubeton_id',$this->mutubeton_id)
-        ->select('komposisis.*','mutubetons.kode_mutu','barangs.nama_barang','satuans.satuan');
+        ->select('komposisis.*','mutubetons.kode_mutu','mutubetons.deskripsi','barangs.nama_barang','satuans.satuan');
     }
 
     /*
@@ -92,6 +92,7 @@ final class KomposisiTable extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('mutubeton_id')
             ->addColumn('kode_mutu')
+            ->addColumn('deskripsi')
             ->addColumn('barang_id')
             ->addColumn('nama_barang')
             ->addColumn('tipe')
@@ -129,6 +130,11 @@ final class KomposisiTable extends PowerGridComponent
             Column::add()
                 ->title('MUTUBETON')
                 ->field('kode_mutu')
+                ->sortable(),
+
+            Column::add()
+                ->title('DESKRIPSI')
+                ->field('deskripsi')
                 ->sortable(),
 
             Column::add()

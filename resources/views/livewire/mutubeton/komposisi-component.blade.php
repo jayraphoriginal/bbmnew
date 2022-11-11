@@ -1,5 +1,5 @@
 <div class="w-full">
-    <x-container title="Komposisi {{ $kode_mutu }}">
+    <x-container title="Komposisi {{ $deskripsi }}">
         <x-button
             wire:click="add">
             Tambah Komposisi

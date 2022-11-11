@@ -41,7 +41,7 @@ class SalesorderDetailModal extends ModalComponent
         if ($this->editmode=='edit') {
             $this->DSalesorder = DSalesorder::find($this->dsalesorder_id);
             $mutubeton = Mutubeton::find($this->DSalesorder->mutubeton_id);
-            $this->mutubeton = $mutubeton->kode_mutu;
+            $this->mutubeton = $mutubeton->deskripsi;
             $rate = Rate::find($this->DSalesorder->rate_id);
             $this->rate = $rate->tujuan.' - '.number_format($rate->estimasi_jarak,2,'.',',').' KM';
             $this->satuan = Satuan::find($mutubeton->satuan_id)->satuan;

@@ -56,7 +56,7 @@
                 </tr>
             </table>
 
-            <table style="width:80%">
+            <table style="width:80%;height:50%">
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
@@ -67,51 +67,38 @@
                     <td>:</td>
                     <td style="background-color:#ccc;font-weight:bold;font-size:16px;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
-            </table>
-
-            <p style="margin-top:20px;">Untuk Pembayaran : </p>
-
-            <table style="border:solid 1px; margin-top:1.5em; margin-bottom:1em;width:100%">
-                <thead>
-                    <tr>
-                        <td class="captioncenter" style="border:solid 1px;">No</td>
-                        <td class="captioncenter" style="border:solid 1px;">Uraian</td>
-                        <td class="captionright" style="border:solid 1px;">Satuan</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php 
-                        $i = 1;
-                    @endphp
-                    @foreach ($data as $jual)
-                        @if (empty($jual->uraian))
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
-                               </tr>
-                        @else
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
-                            </tr>
-                        @endif
-
-                
-                    @endforeach
-                    
-                </tbody>
+                <tr>
+                    <td style="padding-top: 18px;">Untuk Pembayaran</td>
+                    <td style="padding-top: 18px;">:</td>
+                    <td style="padding-top: 18px;">
+                        @foreach($data as $jual)
+                            <div>
+                                @if( substr($jual->uraian,0,2) == 'DP' )
+                                    {{ $jual->uraian }}
+                                @else
+                                    {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                @endif
+                            </div>
+                        @endforeach
+                            <div>{{ $data[0]->keterangan }}</div>
+                    </td>
+                </tr>
             </table>
             <table style="float:right;width:40%;">
                 <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>
+                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
                 </tr>
                 <tr>
                     <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
                     <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <table style="float:left;width:40%;margin-top:8rem;">
+                <tr>
+                    <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;">{{ number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:10rem;text-align:right">I</p>
@@ -130,7 +117,7 @@
                 </tr>
             </table>
 
-            <table style="width:80%">
+            <table style="width:80%;height:50%">
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
@@ -141,51 +128,39 @@
                     <td>:</td>
                     <td style="background-color:#ccc;font-weight:bold;font-size:16px;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
+                <tr>
+                    <td style="padding-top: 18px;">Untuk Pembayaran</td>
+                    <td style="padding-top: 18px;">:</td>
+                    <td style="padding-top: 18px;">
+                        @foreach($data as $jual)
+                            <div>
+                                @if( substr($jual->uraian,0,2) == 'DP' )
+                                    {{ $jual->uraian }}
+                                @else
+                                    {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                @endif
+                            </div>
+                        @endforeach
+                            <div>{{ $data[0]->keterangan }}</div>
+                    </td>
+                </tr>
             </table>
 
-            <p style="margin-top:20px;">Untuk Pembayaran : </p>
-
-            <table style="border:solid 1px; margin-top:1.5em; margin-bottom:1em;width:100%">
-                <thead>
-                    <tr>
-                        <td class="captioncenter" style="border:solid 1px;">No</td>
-                        <td class="captioncenter" style="border:solid 1px;">Uraian</td>
-                        <td class="captionright" style="border:solid 1px;">Satuan</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php 
-                        $i = 1;
-                    @endphp
-                    @foreach ($data as $jual)
-                        @if (empty($jual->uraian))
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
-                            </tr>
-                        @endif
-
-                
-                    @endforeach
-                    
-                </tbody>
-            </table>
             <table style="float:right;width:40%;">
                 <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>
+                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
                 </tr>
                 <tr>
                     <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
                     <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <table style="float:left;width:40%;margin-top:8rem;">
+                <tr>
+                    <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;">{{ number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:10rem;text-align:right">II</p>
@@ -204,7 +179,7 @@
                 </tr>
             </table>
 
-            <table style="width:80%">
+            <table style="width:80%;height:50%">
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
@@ -215,51 +190,38 @@
                     <td>:</td>
                     <td style="background-color:#ccc;font-weight:bold;font-size:16px;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
-            </table>
-
-            <p style="margin-top:20px;">Untuk Pembayaran : </p>
-
-            <table style="border:solid 1px; margin-top:1.5em; margin-bottom:1em;width:100%">
-                <thead>
-                    <tr>
-                        <td class="captioncenter" style="border:solid 1px;">No</td>
-                        <td class="captioncenter" style="border:solid 1px;">Uraian</td>
-                        <td class="captionright" style="border:solid 1px;">Satuan</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php 
-                        $i = 1;
-                    @endphp
-                    @foreach ($data as $jual)
-                        @if (empty($jual->uraian))
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
-                            </tr>
-                        @endif
-
-                
-                    @endforeach
-                    
-                </tbody>
+                <tr>
+                    <td style="padding-top: 18px;">Untuk Pembayaran</td>
+                    <td style="padding-top: 18px;">:</td>
+                    <td style="padding-top: 18px;">
+                        @foreach($data as $jual)
+                            <div>
+                                @if( substr($jual->uraian,0,2) == 'DP' )
+                                    {{ $jual->uraian }}
+                                @else
+                                    {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                @endif
+                            </div>
+                        @endforeach
+                            <div>{{ $data[0]->keterangan }}</div>
+                    </td>
+                </tr>
             </table>
             <table style="float:right;width:40%;">
                 <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>
+                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
                 </tr>
                 <tr>
                     <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
                     <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <table style="float:left;width:40%;margin-top:8rem;">
+                <tr>
+                    <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;">{{ number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:10rem;text-align:right">III</p>
@@ -278,7 +240,7 @@
                 </tr>
             </table>
 
-            <table style="width:80%">
+            <table style="width:80%;height:50%">
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
@@ -289,51 +251,38 @@
                     <td>:</td>
                     <td style="background-color:#ccc;font-weight:bold;font-size:16px;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
-            </table>
-
-            <p style="margin-top:20px;">Untuk Pembayaran : </p>
-
-            <table style="border:solid 1px; margin-top:1.5em; margin-bottom:1em;width:100%">
-                <thead>
-                    <tr>
-                        <td class="captioncenter" style="border:solid 1px;">No</td>
-                        <td class="captioncenter" style="border:solid 1px;">Uraian</td>
-                        <td class="captionright" style="border:solid 1px;">Satuan</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php 
-                        $i = 1;
-                    @endphp
-                    @foreach ($data as $jual)
-                        @if (empty($jual->uraian))
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px; padding:3px;">{{ $i++ }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ "Tambahan Biaya" }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format(1,2,".",",") }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td class="captioncenter" style="width:5%;border:solid 1px;padding:3px;">{{ $i++.$jual->tipe }}</td>
-                                <td class="captionleft"  style="border:solid 1px;padding:3px;">{{ $jual->tipe == 'DP' ? "DP ".$jual->uraian : $jual->uraian }}</td>
-                                <td class="captionright" style="width:10%;border:solid 1px;padding:3px;">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
-                            </tr>
-                        @endif
-
-                
-                    @endforeach
-                    
-                </tbody>
+                <tr>
+                    <td style="padding-top: 18px;">Untuk Pembayaran</td>
+                    <td style="padding-top: 18px;">:</td>
+                    <td style="padding-top: 18px;">
+                        @foreach($data as $jual)
+                            <div>
+                                @if( substr($jual->uraian,0,2) == 'DP' )
+                                    {{ $jual->uraian }}
+                                @else
+                                    {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                @endif
+                            </div>
+                        @endforeach
+                            <div>{{ $data[0]->keterangan }}</div>
+                    </td>
+                </tr>
             </table>
             <table style="float:right;width:40%;">
                 <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(now(), 'd M Y') }}</td>
+                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
                 </tr>
                 <tr>
                     <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
                     <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <table style="float:left;width:40%;margin-top:8rem;">
+                <tr>
+                    <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;">{{ number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:10rem;text-align:right">IV</p>
