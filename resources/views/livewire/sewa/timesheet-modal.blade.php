@@ -77,6 +77,15 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Total Biaya Overtime">
+        <x-number-text
+            wire:model="timesheet.biaya_overtime"
+        />
+        @error('timesheet.biaya_overtime')
+            <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="Keterangan">
         <x-textbox
             wire:model="timesheet.keterangan"

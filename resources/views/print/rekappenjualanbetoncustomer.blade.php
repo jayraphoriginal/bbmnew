@@ -43,8 +43,8 @@
                 <td class="tdhead">Customer</td>
                 <td class="tdhead">Kode Mutu</td>
                 <td class="tdhead text-right">Jumlah</td>
-                <td class="tdhead">Harga</td>
-                <td class="tdhead">Total Harga</td>
+                <td class="tdhead text-right">Harga</td>
+                <td class="tdhead text-right">Total Harga</td>
                 <td class="tdhead">Lokasi</td>
             </tr>
             
@@ -58,8 +58,8 @@
                 <td>{{ $item->nama_customer }}</td>
                 <td>{{ $item->kode_mutu }}</td>
                 <td class="text-right">{{ number_format($item->total,1,',','.').' '.$item->satuan }}</td>
-                <td>{{ number_format($item->harga,2,',','.') }}</td>
-                <td>{{ number_format($item->harga*$item->total,2,',','.') }}</td>
+                <td class="text-right">{{ number_format($item->harga,2,',','.') }}</td>
+                <td class="text-right">{{ number_format($item->harga*$item->total,2,',','.') }}</td>
                 <td>{{ $item->tujuan}}</td>
             </tr>
                 @php
@@ -71,7 +71,7 @@
                 <td colspan="3" style="font-weight:bold">Total</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($total,1,',','.').' '.$datacustomer[0]->satuan }}</td>
                 <td></td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalpenjualan,2,',','.') }}</td>
                 <td></td>
             </tr>
         </table>

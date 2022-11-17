@@ -100,5 +100,6 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('laporanpembeliansupplier/{tgl_awal}/{tgl_akhir}/{id_supplier}', [PrintController::class,'laporanpembeliansupplier'])->name('laporanpembeliansupplier');
     Route::get('laporanbukubesarhutang/{id_supplier}/{tgl_awal}/{tgl_akhir}', [PrintController::class,'bukubesarhutang'])->name('laporanbukubesarhutang');
     Route::get('laporanpengisianbbm/{tgl_awal}/{tgl_akhir}', [PrintController::class,'laporanpengisianbbm'])->name('laporanpengisianbbm');
+    Route::get('laporankomposisi', [PrintController::class,'laporankomposisi'])->name('laporankomposisi');
     Route::get('backup', [BackupController::class,'index'])->name('backup');
 });

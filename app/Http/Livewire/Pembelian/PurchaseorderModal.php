@@ -45,7 +45,8 @@ class PurchaseorderModal extends ModalComponent
         'kode_biaya' => 'nullable',
         'Mpo.jenis_pembebanan'=> 'nullable',
         'Mpo.beban_id' => 'nullable',
-        'Mpo.keterangan' => 'required'
+        'Mpo.keterangan' => 'required',
+        'Mpo.pajak' => 'nullable'
     ];
 
     public function mount(){
@@ -119,9 +120,11 @@ class PurchaseorderModal extends ModalComponent
 
                 $datapajak = Mpajak::where('jenis_pajak','PPN')->first();
 
+                $persenpajak = 0;
                 if ($this->Mpo->tipe == 'PPN'){
                     $dpp = $total / (1 + ($datapajak->persen / 100));
                     $pajak = $dpp * $datapajak->persen / 100;
+                    $persenpajak = $datapajak->persen;
                 }else{
                     $dpp = $total;
                     $pajak = 0;
@@ -131,6 +134,7 @@ class PurchaseorderModal extends ModalComponent
                 $this->Mpo->ppn = $pajak;
                 $this->Mpo->total = $total;
                 $this->Mpo->sisa = $total;
+                $this->Mpo->pajak= $persenpajak;
                 $this->Mpo->save();
 
                 foreach($tmps as $tmp){

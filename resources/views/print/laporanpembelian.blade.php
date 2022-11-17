@@ -56,6 +56,8 @@
                 <td class="tdhead">Nama Barang</td>
                 <td class="tdhead">Jumlah</td>
                 <td class="tdhead">Harga</td>
+                <td class="tdhead">DPP</td>
+                <td class="tdhead">PPN</td>
                 <td class="tdhead">Subtotal</td>
             </tr>
             
@@ -73,6 +75,8 @@
                 <td>{{ $item->nama_barang }}</td>
                 <td class="text-right">{{ number_format($item->jumlah,2,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->harga,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->harga/(1+ ($item->pajak/100)),2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->harga - ($item->harga/(1+ ($item->pajak/100))),2,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->jumlah*$item->harga,2,'.',',') }}</td>
             </tr>
                 @php
@@ -80,7 +84,7 @@
                 @endphp
             @endforeach 
             <tr>
-                <td colspan="9" style="font-weight:bold">Total</td>
+                <td colspan="11" style="font-weight:bold">Total</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
             </tr>
         </table>

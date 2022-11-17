@@ -32,6 +32,7 @@ class TimesheetModal extends ModalComponent
         'timesheet.istirahat' => 'required',
         'timesheet.volume' => 'required',
         'timesheet.keterangan' => 'nullable',
+        'timesheet.biaya_overtime' => 'required'
     ];
 
     public function mount($tipe, $d_so_id){
@@ -48,6 +49,7 @@ class TimesheetModal extends ModalComponent
             $this->timesheet->tipe = $this->tipe;
         }
         $this->timesheet->d_so_id = $d_so_id;
+        $this->timesheet->biaya_overtime = 0;
     }
 
     public function selectdriver($id){
@@ -55,6 +57,8 @@ class TimesheetModal extends ModalComponent
     }
 
     public function save(){
+
+        $this->timesheet->biaya_overtime = str_replace(',', '', $this->timesheet->biaya_overtime);
 
         $this->validate();
         $this->timesheet->jam_awal =date_create($this->timesheet->jam_awal)->format('Y-m-d H:i:s');

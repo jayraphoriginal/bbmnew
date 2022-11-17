@@ -476,7 +476,7 @@ class PrintController extends Controller
 
             foreach($tickets as $ticket){
 
-                    $rate = Rate::find($ticket->rate_id);
+                $rate = Rate::find($ticket->rate_id);
                 $pemakaianbbms = PemakaianBbm::where('muatan',$kendaraan->muatan)->first();
 
                 if($ticket->kendaraan_id == $kendaraan->id){
@@ -565,7 +565,7 @@ class PrintController extends Controller
                 $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
                 $tmp['nopol'] = $kendaraan->nopol;
                 $tmp['nama_driver'] = $driver->nama_driver;
-                $tmp['tanggal_ticket'] = date_format(date_create($pengisianbbm->tanggal_penambahan),'Y-m-d');
+                $tmp['tanggal_ticket'] = date_format(date_create($tambahanbbm->tanggal_penambahan),'Y-m-d');
                 $tmp['nama_customer'] = $tambahanbbm->keterangan;
                 $tmp['lokasi'] = '-';
                 $tmp['jarak'] = 0;
@@ -671,6 +671,20 @@ class PrintController extends Controller
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function laporankomposisi(){
+        DB::update('exec SP_pivotkomposisi');
+
+        $data = DB::table('tmppivot')->get();
+
+        return $data;
+
+        $pdf = PDF::loadView('print.laporankomposisi', array(
+            'data' => $data,
         ));
 
         return $pdf->setPaper('A4','potrait')->stream();
