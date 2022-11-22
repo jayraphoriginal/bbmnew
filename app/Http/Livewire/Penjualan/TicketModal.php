@@ -20,6 +20,7 @@ use App\Models\Rate;
 use App\Models\Satuan;
 use App\Models\Ticket;
 use App\Models\TicketDetail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -53,6 +54,12 @@ class TicketModal extends ModalComponent
     ];
 
     public function mount($m_salesorder_id,$mutubeton_id){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Ticket')){
+            return abort(401);
+        }
+
         $this->m_salesorder_id = $m_salesorder_id;
         $this->mutubeton_id = $mutubeton_id;
         $mutubeton = Mutubeton::find($this->mutubeton_id);

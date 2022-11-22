@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Barang;
 
 use App\Models\BahanBakar;
 use App\Models\Satuan;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -25,7 +26,10 @@ class BahanbakarModal extends ModalComponent
     ];
 
     public function mount(){
-
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Bahan Bakar')){
+            return abort(401);
+        }
         if ($this->editmode=='edit') {
             $this->bahanBakar = BahanBakar::find($this->bahanbakar_id);
             $this->satuan = Satuan::find($this->bahanBakar->satuan_id)->satuan;

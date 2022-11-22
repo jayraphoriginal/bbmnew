@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Batal;
 use App\Models\VTicket;
 use Throwable;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -16,6 +17,13 @@ class BatalTicketModal extends ModalComponent
     protected $listeners = [
         'selectticket' => 'selectticket',
     ];
+
+    public function mount(){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Pembatalan Ticket')){
+            return abort(401);
+        }
+    }
 
     public function selectticket($id){
         $this->ticket_id=$id;

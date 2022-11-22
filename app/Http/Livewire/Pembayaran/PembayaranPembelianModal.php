@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Pembayaran;
 use App\Models\Bank;
 use App\Models\Rekening;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -103,6 +104,10 @@ class PembayaranPembelianModal extends ModalComponent
 
     public function render()
     {
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Pembayaran Pembelian')){
+            return abort(401);
+        }
         return view('livewire.pembayaran.pembayaran-pembelian-modal');
     }
 }

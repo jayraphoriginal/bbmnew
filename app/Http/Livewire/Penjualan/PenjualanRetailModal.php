@@ -34,6 +34,10 @@ class PenjualanRetailModal extends ModalComponent
     ];
 
     public function mount($m_salesorder_id){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Penjualan Retail')){
+            return abort(401);
+        }
         $this->m_salesorder_id = $m_salesorder_id;
         $this->penjualanretail = new PenjualanRetail();
     }

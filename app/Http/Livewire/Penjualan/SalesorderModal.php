@@ -8,6 +8,7 @@ use App\Models\Kendaraan;
 use App\Models\Mpajak;
 use App\Models\MSalesorder;
 use Brick\Math\BigInteger;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
@@ -35,6 +36,11 @@ class SalesorderModal extends ModalComponent
     ];
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('PO Customer')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->MSalesorder = MSalesorder::find($this->salesorder_id);

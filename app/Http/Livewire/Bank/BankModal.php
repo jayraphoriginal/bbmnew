@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Bank;
 
 use App\Models\Bank;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -22,6 +23,10 @@ class BankModal extends ModalComponent
     }
 
     public function mount(){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Bank')){
+            return abort(401);
+        }
         if ($this->editmode=='edit') {
             $this->bank = Bank::find($this->bank_id);
         }else{

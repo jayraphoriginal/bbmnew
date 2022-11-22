@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Customer;
 
 use App\Models\Coa;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -32,6 +33,11 @@ class CustomerModal extends ModalComponent
     ];
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Customer')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->customer = Customer::find($this->customer_id);

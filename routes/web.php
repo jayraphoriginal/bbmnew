@@ -4,13 +4,16 @@ use App\Http\Controllers\CreateCoaCustomerSupplier;
 use App\Http\Controllers\PrintController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackupController;
+use App\Http\Controllers\GiveAllPermissionController;
 use App\Http\Livewire\DashboardComponent;
 use App\Http\Livewire\Jurnal\JurnalManualComponent;
 use App\Http\Livewire\Laporan\BukuBesarHutang;
 use App\Http\Livewire\Laporan\LaporanComponent;
 use App\Http\Livewire\Pembayaran\PembayaranPembelianComponent;
 use App\Http\Livewire\User\PermissionComponent;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
+use Spatie\Permission\Contracts\Permission;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +25,7 @@ use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get('/', function () {
     return redirect('/dashboard');

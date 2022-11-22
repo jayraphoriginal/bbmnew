@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Bbm;
 
 use App\Models\TambahanBbm;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -30,6 +31,11 @@ class PenambahanBbmModal extends ModalComponent
     ];
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Tambahan BBM')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->penambahan = TambahanBbm::find($this->penambahan_id);

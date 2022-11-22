@@ -8,6 +8,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class TimesheetModal extends ModalComponent
 {
@@ -76,6 +77,10 @@ class TimesheetModal extends ModalComponent
 
     public function render()
     {
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Timesheet')){
+            return abort(401);
+        }
         return view('livewire.sewa.timesheet-modal');
     }
 }

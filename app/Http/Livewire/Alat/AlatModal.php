@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Alat;
 
 use App\Models\Alat;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
@@ -22,6 +23,12 @@ class AlatModal extends ModalComponent
     }
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Alat')){
+            return abort(401);
+        }
+
         if ($this->editmode=='edit') {
             $this->alat = Alat::find($this->alat_id);
         }else{

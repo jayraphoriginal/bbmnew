@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Sewa;
 
 use App\Models\Itemsewa;
 use App\Models\Satuan;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -26,6 +27,10 @@ class ItemsewaModal extends ModalComponent
 
     public function mount(){
 
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Item Sewa')){
+            return abort(401);
+        }
         if ($this->editmode=='edit') {
             $this->itemsewa = Itemsewa::find($this->itemsewa_id);
             $this->satuan = Satuan::find($this->itemsewa->satuan_id)->satuan;

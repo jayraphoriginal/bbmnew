@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Sewa;
 use App\Models\Customer;
 use App\Models\Mpajak;
 use App\Models\MSalesorderSewa;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
@@ -29,6 +30,11 @@ class SalesorderSewaModal extends ModalComponent
     ];
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Sales Order Sewa')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->MSalesorder = MSalesorderSewa::find($this->salesorder_id);

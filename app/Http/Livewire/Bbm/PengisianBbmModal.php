@@ -6,6 +6,7 @@ use App\Models\Journal;
 use App\Models\MBiaya;
 use App\Models\PengisianBbm;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -37,6 +38,11 @@ class PengisianBbmModal extends ModalComponent
     ];
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Pengisian BBM')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->pengisian = PengisianBbm::find($this->pengisian_id);

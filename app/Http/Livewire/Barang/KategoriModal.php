@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Barang;
 
 use App\Models\Coa;
 use App\Models\Kategori;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
@@ -26,6 +27,10 @@ class KategoriModal extends ModalComponent
     }
 
     public function mount(){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Kategori')){
+            return abort(401);
+        }
         if ($this->editmode=='edit') {
             $this->kategori = Kategori::find($this->kategori_id);
         }else{

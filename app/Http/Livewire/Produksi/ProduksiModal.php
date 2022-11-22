@@ -37,6 +37,10 @@ class ProduksiModal extends ModalComponent
     ];
 
     public function mount(){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Produksi')){
+            return abort(401);
+        }
         $this->produksi = new MProduksi();
     }
 

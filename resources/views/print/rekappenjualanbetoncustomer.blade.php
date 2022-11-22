@@ -37,7 +37,7 @@
         @if (count($datacustomer) > 0)
         <h3 style="font-size:14px;font-weight:bold;">Pendapatan Penjualan Beton Per Periode Customer</h3>
         <h3 style="margin-bottom: 1rem;font-size:14px;">Periode : {{ date_format(date_create($tgl_awal),'d/M/Y').' - '.date_format(date_create($tgl_akhir),'d/M/Y') }}</h3>
-        <table class="mytable">
+        <table class="mytable" style="width:100%">
             <tr>
                 <td class="tdhead">No</td>
                 <td class="tdhead">Customer</td>

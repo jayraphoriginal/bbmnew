@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Kendaraan;
 
 use App\Models\Kendaraan;
 use App\Models\Driver;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -35,7 +36,10 @@ class KendaraanModal extends ModalComponent
     ];
 
     public function mount(){
-
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Kendaraan')){
+            return abort(401);
+        }
         if ($this->editmode=='edit') {
             $this->kendaraan = Kendaraan::find($this->kendaraan_id);
             $this->driver = Driver::find($this->kendaraan->driver_id)->nama_driver;

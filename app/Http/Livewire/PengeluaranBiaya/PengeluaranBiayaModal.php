@@ -9,6 +9,7 @@ use App\Models\Mpajak;
 use App\Models\PengeluaranBiaya;
 use App\Models\Rekening;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
@@ -46,6 +47,11 @@ class PengeluaranBiayaModal extends ModalComponent
     }
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Pengeluaran Biaya')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->pengeluaran = PengeluaranBiaya::find($this->pengeluaran_id);

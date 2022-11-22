@@ -38,6 +38,11 @@ class PenjualanModal extends ModalComponent
 
     public function mount(){
 
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Penjualan Barang')){
+            return abort(401);
+        }
+
         if ($this->editmode=='edit') {
             $this->MPenjualan = MPenjualan::find($this->penjualan_id);
             $this->customer = Customer::find($this->MPenjualan->customer_id)->nama_customer;

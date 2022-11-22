@@ -6,6 +6,7 @@ use App\Models\Barang;
 use App\Models\Komposisi;
 use App\Models\Mutubeton;
 use App\Models\Satuan;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -31,6 +32,11 @@ class KomposisiModal extends ModalComponent
     ];
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Komposisi')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->komposisi = Komposisi::find($this->komposisi_id);

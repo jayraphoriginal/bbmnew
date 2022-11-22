@@ -12,6 +12,7 @@ use App\Models\Kendaraan;
 use App\Models\Mpajak;
 use App\Models\MSalesorder;
 use App\Models\Rate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -44,6 +45,11 @@ class ConcretepumpModal extends ModalComponent
 
     public function mount($m_salesorder_id)
     {
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Concrete Pump')){
+            return abort(401);
+        }
+
         $this->m_salesorder_id = $m_salesorder_id;
         
         if ($this->editmode=='edit') {

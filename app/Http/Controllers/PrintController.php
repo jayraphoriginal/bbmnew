@@ -33,6 +33,7 @@ use App\Models\VPengisianBbm;
 use App\Models\VPrintInvoice;
 use App\Models\VTicket;
 use App\Models\VTicketHeader;
+use Illuminate\Support\Facades\Auth;
 use Riskihajar\Terbilang\Facades\Terbilang;
 use PDF;
 
@@ -41,6 +42,11 @@ class PrintController extends Controller
     public function so($id){
 
         //return $id;
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('PO Customer')){
+            return abort(401);
+        }
 
         $data = DB::table('m_salesorders')
                 ->select('m_salesorders.*', 'd_salesorders.*', 'customers.nama_customer', 'customers.alamat', 
@@ -74,6 +80,11 @@ class PrintController extends Controller
 
     public function ticket($id){
         
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Ticket')){
+            return abort(401);
+        }
+
         DB::update('Exec SP_ReportTicket '.$id);
         $data = TmpReportTicket::where('id',$id)->get();
 
@@ -86,6 +97,11 @@ class PrintController extends Controller
     }
 
     public function sosewa($id){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Sales Order Sewa')){
+            return abort(401);
+        }
 
         $data = DB::table('m_salesorder_sewas')
                 ->select('m_salesorder_sewas.*', 'd_salesorder_sewas.*', 'customers.nama_customer', 'customers.alamat', 
@@ -109,6 +125,11 @@ class PrintController extends Controller
 
     public function po($id){
 
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Purchase Order')){
+            return abort(401);
+        }
+
         $data = DB::table('m_purchaseorders')
                 ->select('m_purchaseorders.*', 'suppliers.nama_supplier', 'suppliers.alamat' ,'d_purchaseorders.*', 'barangs.nama_barang','satuans.satuan')
                 ->join('suppliers','m_purchaseorders.supplier_id','suppliers.id')        
@@ -129,6 +150,11 @@ class PrintController extends Controller
 
     public function kwitansi($id){
 
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Invoice')){
+            return abort(401);
+        }
+
         DB::update("exec SP_DetailInvoice '".$id."'");
 
         $data = VPrintInvoice::where('id', $id)->get();
@@ -148,6 +174,11 @@ class PrintController extends Controller
     }
 
     public function invoice($id){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Invoice')){
+            return abort(401);
+        }
     
         DB::update("exec SP_DetailInvoice '".$id."'");
 
@@ -168,6 +199,11 @@ class PrintController extends Controller
     } 
 
     public function concretepump($id){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Concrete Pump')){
+            return abort(401);
+        }
     
         $header = Concretepump::select('concretepumps.*','customers.nama_customer','kendaraans.nopol','drivers.nama_driver','rates.tujuan')
                 ->join('m_salesorders','concretepumps.m_salesorder_id','m_salesorders.id')

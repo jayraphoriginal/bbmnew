@@ -6,6 +6,7 @@ use App\Models\VPembelian;
 use App\Models\VPembelianDetail;
 use Livewire\Component;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 use Throwable;
@@ -19,6 +20,13 @@ class BatalPembelian extends ModalComponent
     protected $listeners = [
         'selectpembelian' => 'selectpembelian',
     ];
+
+    public function mount(){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Pembatalan Pembelian')){
+            return abort(401);
+        }
+    }
 
     public function selectpembelian($id){
         $this->pembelian_id=$id;

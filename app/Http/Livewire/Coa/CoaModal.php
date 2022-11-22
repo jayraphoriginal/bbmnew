@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Coa;
 
 use App\Models\Coa;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
@@ -24,6 +25,11 @@ class CoaModal extends ModalComponent
     ];
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('COA')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->coa = Coa::find($this->coa_id);

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Driver;
 
 use App\Models\Driver;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
@@ -11,8 +12,13 @@ class DriverModal extends ModalComponent
 {
     public function render()
     {
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Driver')){
+            return abort(401);
+        }
         return view('livewire.driver.driver-modal');
     }
+
     use LivewireAlert;
 
     public Driver $driver;

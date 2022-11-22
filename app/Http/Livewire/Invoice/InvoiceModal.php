@@ -15,6 +15,7 @@ use App\Models\VSalesOrder;
 use App\Models\VSalesOrderSewa;
 use App\Models\VTicketHeader;
 use App\Models\VTimesheetSewa;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
@@ -46,6 +47,12 @@ class InvoiceModal extends ModalComponent
     }
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Invoice')){
+            return abort(401);
+        }
+
         $this->tgl_cetak = date('Y-m-d');
         if ($this->tipe_so=='Ready Mix'){
             $msalesorder = MSalesorder::find($this->so_id);

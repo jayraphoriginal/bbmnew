@@ -9,6 +9,7 @@ use App\Models\Kartustok;
 use App\Models\Kategori;
 use App\Models\MBiaya;
 use App\Models\PemakaianBarang;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -51,6 +52,11 @@ class PemakaianBarangModal extends ModalComponent
     }
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Pemakaian Barang')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->pemakaian = PemakaianBarang::find($this->pemakaian_id);

@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Rate;
 
 use App\Models\JarakTempuh;
 use App\Models\Rate;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -28,6 +29,12 @@ class RateModal extends ModalComponent
     }
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Rate')){
+            return abort(401);
+        }
+
         if ($this->editmode=='edit') {
             $this->rate = Rate::find($this->rate_id);
         }else{

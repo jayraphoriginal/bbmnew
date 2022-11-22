@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Supplier;
 
 use App\Models\Coa;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -31,6 +32,11 @@ class SupplierModal extends ModalComponent
     ];
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Supplier')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->supplier = Supplier::find($this->supplier_id);

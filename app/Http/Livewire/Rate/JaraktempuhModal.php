@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Rate;
 
 use App\Models\JarakTempuh;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -23,6 +24,10 @@ class JaraktempuhModal extends ModalComponent
     }
 
     public function mount(){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Jarak Tempuh')){
+            return abort(401);
+        }
         if ($this->editmode=='edit') {
             $this->jarakTempuh = JarakTempuh::find($this->jaraktempuh_id);
         }else{

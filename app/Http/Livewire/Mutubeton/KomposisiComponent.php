@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Mutubeton;
 
 use App\Models\Mutubeton;
+use Illuminate\Support\Facades\Auth;
 use LivewireUI\Modal\ModalComponent;
 
 class KomposisiComponent extends ModalComponent
@@ -22,6 +23,10 @@ class KomposisiComponent extends ModalComponent
 
     public function render()
     {
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Komposisi')){
+            return abort(401);
+        }
         return view('livewire.mutubeton.komposisi-component');
     }
 

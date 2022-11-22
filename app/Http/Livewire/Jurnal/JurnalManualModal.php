@@ -25,6 +25,10 @@ class JurnalManualModal extends ModalComponent
     ];
 
     public function mount(){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Jurnal Manual')){
+            return abort(401);
+        }
         $this->jurnalmanual = new ManualJournal();
     }
 

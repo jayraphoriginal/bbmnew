@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Laporan;
 
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
 
@@ -21,6 +22,10 @@ class BukuBesarHutang extends ModalComponent
 
     public function render()
     {
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Buku Besar Hutang')){
+            return abort(401);
+        }
         return view('livewire.laporan.buku-besar-hutang');
     }
 }

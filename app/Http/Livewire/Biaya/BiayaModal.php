@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Biaya;
 use App\Models\Coa;
 use App\Models\MBiaya;
 use App\Models\Rekening;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -27,6 +28,11 @@ class BiayaModal extends ModalComponent{
 
     public function mount(){
 
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Biaya')){
+            return abort(401);
+        }
+        
         if ($this->editmode=='edit') {
             $this->biaya = MBiaya::find($this->biaya_id);
         }else{

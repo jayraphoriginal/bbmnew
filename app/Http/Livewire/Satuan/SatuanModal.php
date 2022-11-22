@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Satuan;
 
 use App\Models\Satuan;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -21,6 +22,10 @@ class SatuanModal extends ModalComponent
     }
 
     public function mount(){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Satuan')){
+            return abort(401);
+        }
         if ($this->editmode=='edit') {
             $this->satuan = Satuan::find($this->satuan_id);
         }else{

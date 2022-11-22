@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Inventaris;
 use App\Models\Coa;
 use App\Models\Golongan;
 use App\Models\Inventaris;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -32,6 +33,12 @@ class InventarisModal extends ModalComponent
     }
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Inventaris')){
+            return abort(401);
+        }
+
         if ($this->editmode=='edit') {
             $this->inventaris = Inventaris::find($this->inventaris_id);
         }else{

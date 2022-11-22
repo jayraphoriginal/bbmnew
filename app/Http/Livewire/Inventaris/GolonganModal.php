@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Inventaris;
 
 use App\Models\Golongan;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use LivewireUI\Modal\ModalComponent;
 
@@ -22,6 +23,12 @@ class GolonganModal extends ModalComponent
     }
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Golongan Inventaris')){
+            return abort(401);
+        }
+
         if ($this->editmode=='edit') {
             $this->golongan = Golongan::find($this->golongan_id);
         }else{

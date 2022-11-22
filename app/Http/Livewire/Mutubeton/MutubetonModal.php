@@ -9,6 +9,7 @@ use App\Models\Satuan;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use App\Models\Mutubeton;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use LivewireUI\Modal\ModalComponent;
 use Throwable;
@@ -37,6 +38,11 @@ class MutubetonModal extends ModalComponent
     ];
 
     public function mount(){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Mutubeton')){
+            return abort(401);
+        }
 
         if ($this->editmode=='edit') {
             $this->mutubeton = Mutubeton::find($this->mutubeton_id);

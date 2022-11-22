@@ -50,7 +50,10 @@ class PurchaseorderModal extends ModalComponent
     ];
 
     public function mount(){
-
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Purchase Order')){
+            return abort(401);
+        }
         if ($this->editmode=='edit') {
             $this->Mpo = MPurchaseorder::find($this->po_id);
             $this->supplier = Supplier::find($this->Mpo->supplier_id)->nama_supplier;
