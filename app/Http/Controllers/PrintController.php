@@ -231,6 +231,12 @@ class PrintController extends Controller
     } 
 
     public function gaji($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Gaji Driver')){
+            return abort(401);
+        }
+
         DB::table('tmp_gaji_drivers')->delete();
 
         $drivers = Driver::all();
@@ -379,6 +385,11 @@ class PrintController extends Controller
     }
 
     public function rekapticket($soid){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Ticket')){
+            return abort(401);
+        }
         
         $data = VTicketHeader::where('so_id',$soid)
         ->orderBy('V_TicketHeader.jam_ticket')
@@ -391,6 +402,11 @@ class PrintController extends Controller
     }
 
     public function rekaptickettanggal($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Rekap Ticket')){
+            return abort(401);
+        }
         
         DB::update("Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
         $data = TmpReportTicket::all();
@@ -409,6 +425,11 @@ class PrintController extends Controller
     }
 
     public function penjualanbeton($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Penjualan Beton')){
+            return abort(401);
+        }
         
         DB::update("Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
         $data = TmpReportTicket::all();
@@ -431,6 +452,11 @@ class PrintController extends Controller
     }
 
     public function penjualanbetoncustomer($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Penjualan Beton Per Customer')){
+            return abort(401);
+        }
         
         DB::update("Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
 
@@ -446,6 +472,11 @@ class PrintController extends Controller
     }
 
     public function rekapconcretepump($soid){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Concrete Pump')){
+            return abort(401);
+        }
         
         $data = VConcretepump::where('m_salesorder_id',$soid)
         ->get();
@@ -474,6 +505,11 @@ class PrintController extends Controller
     }
 
     public function penjualanmutubeton($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Penjualan per Mutubeton')){
+            return abort(401);
+        }
         
         $data = VTicketHeader::where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
@@ -490,6 +526,12 @@ class PrintController extends Controller
     }
 
     public function gajidriver($tgl_awal,$tgl_akhir,$driver_id){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Gaji per Driver')){
+            return abort(401);
+        }
+
         DB::table('tmp_gaji_drivers')->delete();
 
         $driver = Driver::find($driver_id);
@@ -663,6 +705,12 @@ class PrintController extends Controller
     }   
 
     public function laporanpembelian($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Pembelian')){
+            return abort(401);
+        }
+
         $data = VPembelianDetail::where(DB::raw('convert(date,tgl_masuk)'),'>=',$tgl_awal)
         ->where(DB::raw('convert(date,tgl_masuk)'),'<=',$tgl_akhir)
         ->orderBy('V_PembelianDetail.tgl_masuk')
@@ -678,6 +726,11 @@ class PrintController extends Controller
     }
 
     public function laporanpembeliansupplier($tgl_awal,$tgl_akhir,$id_supplier){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Pembelian per Supplier')){
+            return abort(401);
+        }
 
         $supplier = Supplier::find($id_supplier);
 
@@ -698,6 +751,12 @@ class PrintController extends Controller
     }
 
     public function laporanpengisianbbm($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Pengisian BBM')){
+            return abort(401);
+        }
+
         $data = VPengisianBbm::where('tanggal_pengisian','>=',$tgl_awal)
         ->where('tanggal_pengisian','<=',$tgl_akhir)
         ->orderBy('V_PengisianBbm.tanggal_pengisian')
