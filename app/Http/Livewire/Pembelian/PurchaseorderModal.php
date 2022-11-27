@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Pembelian;
 
 use App\Models\Alat;
 use App\Models\Barang;
+use App\Models\BebanPurchaseorder;
 use App\Models\Coa;
 use App\Models\DBarang;
 use App\Models\DPurchaseorder;
@@ -27,7 +28,7 @@ class PurchaseorderModal extends ModalComponent
     public MPurchaseorder $Mpo;
     public $editmode, $po_id;
     public $supplier, $kendaraan, $alat;
-    public $kode_biaya;
+    public $beban_id, $jenis_pembebanan, $coa_id;
 
     protected $listeners = [
         'selectsupplier' => 'selectsupplier',
@@ -42,9 +43,6 @@ class PurchaseorderModal extends ModalComponent
         'Mpo.jatuh_tempo'=> 'required',
         'Mpo.supplier_id'=> 'required',
         'Mpo.pembebanan'=> 'required',
-        'kode_biaya' => 'nullable',
-        'Mpo.jenis_pembebanan'=> 'nullable',
-        'Mpo.beban_id' => 'nullable',
         'Mpo.keterangan' => 'required',
         'Mpo.pajak' => 'nullable'
     ];
@@ -60,27 +58,29 @@ class PurchaseorderModal extends ModalComponent
         }else{
             $this->Mpo = new MPurchaseorder();
         }
-
     }
 
     public function selectsupplier($id){
         $this->Mpo->supplier_id=$id;
     }
     public function selectkendaraan($id){
-        $this->Mpo->beban_id=$id;
+        $this->beban_id=$id;
     }
     public function selectalat($id){
-        $this->Mpo->beban_id=$id;
+        $this->beban_id=$id;
     }
 
     public function save(){
 
         $this->validate();
 
-        if(!is_null($this->kode_biaya)){
-            $this->Mpo->jenis_pembebanan = Coa::where('kode_akun',$this->kode_biaya)->first()->id;
+        if ($this->Mpo->pembebanan == 'Langsung'){
+            $this->validate(
+                ['coa_id' => 'required',
+                'jenis_pembebanan'=> 'required',
+                'beban_id' => 'required',
+                ]);
         }
-
         if ($this->editmode!='edit') {
             $nomorterakhir = DB::table('m_purchaseorders')
                 ->orderBy('id', 'DESC')->get();
@@ -214,11 +214,18 @@ class PurchaseorderModal extends ModalComponent
 
                 if($this->Mpo->pembebanan=='Langsung'){
 
+                    $beban_purchase = new BebanPurchaseorder();
+                    $beban_purchase['m_purchaseorder_id'] = $this->Mpo->id;
+                    $beban_purchase['jenis_pembebanan'] = $this->jenis_pembebanan;
+                    $beban_purchase['biaya_id'] = $this->coa_id;
+                    $beban_purchase['beban_id'] = $this->beban_id;
+                    $beban_purchase->save();
+
                     $journal = new Journal();
                     $journal['tipe']='Purchase Order';
                     $journal['trans_id']=$this->Mpo->id;
                     $journal['tanggal_transaksi']=$this->Mpo->tgl_masuk;
-                    $journal['coa_id']=$this->Mpo->jenis_pembebanan;
+                    $journal['coa_id']=$this->coa_id;
                     $journal['debet']=$dpp;
                     $journal['kredit']=0;
                     $journal->save();

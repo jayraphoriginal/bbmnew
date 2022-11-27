@@ -191,6 +191,9 @@
             @can('Register')
                 <x-menu-item route="register">Register</x-menu-item>
             @endcan
+            @can('Access')
+                <x-menu-item route="access">Access User</x-menu-item>
+            @endcan
         </div>
         
         <li class="relative px-2 py-3">

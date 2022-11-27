@@ -319,7 +319,6 @@ class TicketModal extends ModalComponent
                 'status_detail' => 'Finish'
             ]);
 
-            //$dsaledorder = DSalesorder::find($this->ticket->d_salesorder_id);
             $msalesorder = MSalesorder::find($this->m_salesorder_id);
             
             $pajak = Mpajak::where('jenis_pajak','PPN')->first();
@@ -329,6 +328,7 @@ class TicketModal extends ModalComponent
             $dpp = round($totalpenjualan / (1 + ($pajak->persen / 100)),4);
             $ppn = round($totalpenjualan - $dpp,4);
 
+            /*
             //Jurnal Piutang
             $journal = new Journal();
             $journal['tipe']='Ticket';
@@ -359,7 +359,7 @@ class TicketModal extends ModalComponent
             $journal['debet']=0;
             $journal['kredit']=$dpp;
             $journal->save();
-
+            */
             DB::commit();
         }
         catch(Throwable $e){

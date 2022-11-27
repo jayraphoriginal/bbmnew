@@ -21,9 +21,7 @@
     <x-footer-modal>
         <x-secondary-button
             wire:click="$emit('closeModal')"
-        >Cancel</x-secondary-button>
-        <x-button
-            wire:click="save">Save</x-button>
+        >Tutup</x-secondary-button>
     </x-footer-modal>
 
 </div>

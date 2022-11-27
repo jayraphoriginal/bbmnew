@@ -2,16 +2,12 @@
 
 namespace App\Http\Livewire\Invoice;
 
-use App\Models\Coa;
 use App\Models\Concretepump;
 use App\Models\Customer;
-use App\Models\DInvoice;
-use App\Models\DSalesorderSewa;
 use App\Models\Invoice;
 use App\Models\MSalesorder;
 use App\Models\MSalesorderSewa;
 use App\Models\PenjualanRetail;
-use App\Models\VSalesOrder;
 use App\Models\VSalesOrderSewa;
 use App\Models\VTicketHeader;
 use App\Models\VTimesheetSewa;
@@ -133,6 +129,7 @@ class InvoiceModal extends ModalComponent
             $this->jumlah_total = $mobdemob + $totalsewa;
         }
         else{
+            
             $jumlah_ticket = VTicketHeader::where('so_id', $this->so_id)
             ->where('status','Open')
             ->whereBetween(DB::raw('convert(date,jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
@@ -158,7 +155,7 @@ class InvoiceModal extends ModalComponent
 
         }
         if ($this->jumlah_total + $this->jumlah_penjualan_retail > 0) {
-            $this->dp = "";
+            $this->dp = "Reg";
         }else{
             $this->dp = "DP";
         }
@@ -228,7 +225,8 @@ class InvoiceModal extends ModalComponent
                 $this->tanda_tangan."','".
                 date_create($this->tgl_awal)->format('Y-m-d')."','".
                 date_create($this->tgl_akhir)->format('Y-m-d')."','".
-                $this->keterangan."'");                
+                $this->keterangan."'");
+
             }
             if ($this->jumlah_penjualan_retail>0){
 
@@ -250,6 +248,7 @@ class InvoiceModal extends ModalComponent
                     }
                 }
 
+                
                 DB::update("exec SP_Invoice_Retail '".$noinvoice."', '".
                 date_create($this->tgl_cetak)->format('Y-m-d')."','".
                 $this->tipe_so."',".

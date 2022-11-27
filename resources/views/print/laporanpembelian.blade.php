@@ -45,7 +45,7 @@
             </tr>
         </table>
         @if (count($data) > 0)
-        <table class="table table-striped table-bordered mytable">
+        <table class="mytable">
             <tr>
                 <td class="tdhead">No</td>
                 <td class="tdhead">NoPO</td>

@@ -5,6 +5,7 @@ use App\Http\Controllers\PrintController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\GiveAllPermissionController;
+use App\Http\Livewire\AccessComponent;
 use App\Http\Livewire\DashboardComponent;
 use App\Http\Livewire\Jurnal\JurnalManualComponent;
 use App\Http\Livewire\Laporan\BukuBesarHutang;
@@ -39,6 +40,7 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('dashboard', DashboardComponent::class)->name('dashboard');
     Route::get('register', [RegisteredUserController::class,'create'])->name('register');
+    Route::get('access', AccessComponent::class)->name('access');
     Route::post('register', [RegisteredUserController::class,'store']);
     Route::get('alat', \App\Http\Livewire\Alat\AlatComponent::class)->name('alat');
     Route::get('satuan', \App\Http\Livewire\Satuan\SatuanComponent::class)->name('satuan');
@@ -87,7 +89,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printinvoice/{id}', [\App\Http\Controllers\PrintController::class,'invoice'])->name('printinvoice');
     Route::get('printkwitansi/{id}', [\App\Http\Controllers\PrintController::class,'kwitansi'])->name('printkwitansi');
     Route::get('printconcretepump/{id}', [\App\Http\Controllers\PrintController::class,'concretepump'])->name('printconcretepump');
-    
+    Route::get('printbuktikas/{id}', [\App\Http\Controllers\PrintController::class,'buktikas'])->name('printbuktikas');
     Route::get('laporan', LaporanComponent::class)->name('laporan');
     Route::get('laporanrekapgaji/{tgl_awal}/{tgl_akhir}', [PrintController::class,'gaji'])->name('rekapgaji');
     Route::get('laporanrekapgajidriver/{tgl_awal}/{tgl_akhir}/{driver_id}', [PrintController::class,'gajidriver'])->name('rekapgajidriver');

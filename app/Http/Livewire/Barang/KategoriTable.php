@@ -52,7 +52,7 @@ final class KategoriTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         return Kategori::join('coas as a','kategoris.coa_asset_id','a.id')
-        ->join('coas as b','kategoris.coa_hpp_id','b.id')
+        ->leftjoin('coas as b','kategoris.coa_hpp_id','b.id')
         ->select('kategoris.*','a.nama_akun as nama_akun_asset','b.nama_akun as nama_akun_hpp');
     }
 

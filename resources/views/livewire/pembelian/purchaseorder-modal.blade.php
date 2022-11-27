@@ -63,34 +63,50 @@
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
-            <x-form-group caption="Jenis Biaya">
-                <x-combobox
-                    wire:model="kode_biaya"
-                >
-                    <option value="">-- Isi COA Biaya --</option>
-                    @foreach ($coa as $item)
-                        <option value="{{ $item->kode_akun }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
-                    @endforeach
-                </x-combobox>
-                @error('kode_biaya')
-                <x-error-form>{{ $message }}</x-error-form>
-                @enderror
-            </x-form-group>
-            
-            @if($this->kode_biaya =='601002')
-            <x-form-group caption="Kendaraan">
-                    <livewire:kendaraan.kendaraan-select :deskripsi="$kendaraan"/>
-                    @error('Mpo.beban_id')
+            @if($Mpo->pembebanan == 'Langsung')
+                <x-form-group caption="COA Biaya">
+                    <x-combobox
+                        wire:model="coa_id"
+                    >
+                        <option value="">-- Isi COA Biaya --</option>
+                        @foreach ($coa as $item)
+                            <option value="{{ $item->kode_akun }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
+                        @endforeach
+                    </x-combobox>
+                    @error('coa_id')
                     <x-error-form>{{ $message }}</x-error-form>
                     @enderror
-            </x-form-group>
-            @elseif($this->kode_biaya =='601001')
-            <x-form-group caption="Alat">
-                    <livewire:alat.alat-select :deskripsi="$alat"/>
-                    @error('Mpo.beban_id')
-                    <x-error-form>{{ $message }}</x-error-form>
-                    @enderror
-            </x-form-group>
+                </x-form-group>
+
+                <x-form-group caption="Jenis Pembebanan">
+                    <x-combobox 
+                        wire:model="jenis_pembebanan"
+                        >
+                        <option value="-"> - </option>
+                        <option value="Beban Alat">Beban Alat</option>
+                        <option value="Beban Kendaraan">Beban Kendaraan</option>
+                        
+                        @error('jenis_pembebanan')
+                        <x-error-form>{{ $message }}</x-error-form>
+                        @enderror
+                    </x-combobox>
+                </x-form-group>
+                
+                @if($jenis_pembebanan =='Beban Kendaraan')
+                    <x-form-group caption="Kendaraan">
+                        <livewire:kendaraan.kendaraan-select :deskripsi="$kendaraan"/>
+                        @error('beban_id')
+                        <x-error-form>{{ $message }}</x-error-form>
+                        @enderror
+                    </x-form-group>
+                @elseif($jenis_pembebanan =='Beban Alat')
+                    <x-form-group caption="Alat">
+                            <livewire:alat.alat-select :deskripsi="$alat"/>
+                            @error('beban_id')
+                            <x-error-form>{{ $message }}</x-error-form>
+                            @enderror
+                    </x-form-group>
+                @endif
             @endif
         </div>
 

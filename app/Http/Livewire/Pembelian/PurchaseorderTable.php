@@ -189,17 +189,22 @@ final class PurchaseorderTable extends PowerGridComponent
                 ->field('pembebanan')
                 ->searchable()
                 ->sortable()
-                ->makeInputText(),
+                ->makeInputText(), 
             Column::add()
                 ->title('JENIS PEMBEBANAN')
-                ->field('nama_akun')
+                ->field('jenis_pembebanan')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),
-
             Column::add()
                 ->title('ALAT/KENDARAAN')
                 ->field('alken')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+            Column::add()
+                ->title('BIAYA')
+                ->field('nama_akun')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),

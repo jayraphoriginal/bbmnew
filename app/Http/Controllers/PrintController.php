@@ -28,6 +28,7 @@ use App\Models\TmpPenjualanBulanan;
 use App\Models\TmpReportTicket;
 use App\Models\VConcretepump;
 use App\Models\VHutang;
+use App\Models\VPembayaran;
 use App\Models\VPembelianDetail;
 use App\Models\VPengisianBbm;
 use App\Models\VPrintInvoice;
@@ -783,6 +784,26 @@ class PrintController extends Controller
         ));
 
         return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function buktikas($id){
+        
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Pembayaran Pembelian')){
+            return abort(401);
+        }
+
+        $data = VPembayaran::find($id);
+
+        $terbilang = Terbilang::make($data->jumlah);
+       
+        $customPaper = array(0,0,391.1811,277.795);
+
+        $pdf = PDF::loadView('print.buktikas', array(
+            'data' => $data,
+            'terbilang' => $terbilang
+        ))->setPaper($customPaper);
+        return $pdf->stream();
     }
 
 }
