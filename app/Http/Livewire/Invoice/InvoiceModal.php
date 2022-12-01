@@ -132,7 +132,8 @@ class InvoiceModal extends ModalComponent
             
             $jumlah_ticket = VTicketHeader::where('so_id', $this->so_id)
             ->where('status','Open')
-            ->whereBetween(DB::raw('convert(date,jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+            ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($this->tgl_awal)->format('Y-m-d'))
+            ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($this->tgl_akhir)->format('Y-m-d'))
             ->sum(DB::raw('jumlah * harga_intax'));
 
             $jumlah_concrete = Concretepump::where('m_salesorder_id', $this->so_id)

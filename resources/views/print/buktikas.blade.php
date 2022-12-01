@@ -27,7 +27,7 @@
 
     <body style="padding:2em">
         <h3 style="text-align:center; font-size:16px">BUKTI KAS</h3>
-        <p style="float:right">D/C No.{{ $data->nopembayaran }}</p>
+        <p style="float:right">D/C No.</p>
         <p style="font-style:italic;margin-bottom:5px;">Sudah Diterima Dari :</p>
         <hr style="margin-bottom:8px;">
         <div style="display:inline-block;margin-right:8px;">
@@ -45,13 +45,13 @@
         <div style="float:right;display:inline-block">TGL {{ date_create($data->tgl_bayar)->format('d F Y')}}</div>
         <div style="margin-left:10em">BANK {{ $data->tipe== 'transfer' ? $data->nama_bank.' '.$data->norek : ''}}</div>
         <p>Rp. {{ number_format($data->jumlah,2,',','.') }}</p>
-        <table style="margin-top:5px;margin-bottom:6em;">
+        <table style="margin-top:5px;margin-bottom:6em;width:100%">
             <tr>
-                <td style="height:40px;">Terbilang</td>
+                <td style="height:40px;width:20%">Terbilang</td>
                 <td>{{ ucwords($terbilang).' Rupiah' }}</td>
             </tr>
             <tr>
-                <td>Untuk Keperluan </td>
+                <td style="height:40px;width:20%">Untuk Keperluan </td>
                 <td>{{ $data->keterangan }}</td>
             </tr>
         </table>

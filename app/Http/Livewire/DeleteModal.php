@@ -70,6 +70,11 @@ class DeleteModal extends ModalComponent
             'position' => 'center'
         ]);
 
+        if($this->TableName == 'tmp_pengeluaran_biayas')
+        {
+            $this->emitTo('pengeluaran-biaya.pengeluaran-biaya-modal', 'caritotal');
+        }
+
         $this->closeModalWithEvents([
             'pg:eventRefresh-default',
         ]);

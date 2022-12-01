@@ -53,6 +53,7 @@
 
             <x-form-group caption="Pemakaian">
                 <x-combobox
+                    wire:change="selectpembebanan"
                     wire:model="Mpo.pembebanan"
                 >
                     <option value="">-- Isi Pemakaian --</option>
@@ -109,7 +110,6 @@
                 @endif
             @endif
         </div>
-
     </div>
     <x-form-group caption="Keterangan">
         <x-textbox

@@ -7,8 +7,10 @@ use App\Models\Journal;
 use App\Models\MBiaya;
 use App\Models\Mpajak;
 use App\Models\PengeluaranBiaya;
+use App\Models\PengeluaranBiayaDetail;
 use App\Models\Rekening;
 use App\Models\Supplier;
+use App\Models\TmpPengeluaranBiaya;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -25,12 +27,12 @@ class PengeluaranBiayaModal extends ModalComponent
 
     protected $listeners = [ 
         'selectsupplier' => 'selectsupplier',
+        'caritotal' => 'caritotal'
     ];
 
     protected $rules=[
         'pengeluaran.supplier_id' => 'nullable',
         'pengeluaran.tgl_biaya' => 'required',
-        'pengeluaran.m_biaya_id' => 'required',
         'pengeluaran.tipe_pembayaran' => 'required',
         'pengeluaran.ppn_id' => 'required',
         'pengeluaran.pajaklain_id' => 'required',
@@ -38,8 +40,7 @@ class PengeluaranBiayaModal extends ModalComponent
         'pengeluaran.persen_ppn' => 'required',
         'pengeluaran.persen_pajaklain' => 'required',
         'pengeluaran.ppn' => 'required',
-        'pengeluaran.total' => 'required',
-        'pengeluaran.keterangan' => 'nullable',
+        'pengeluaran.total' => 'required|numeric|min:1',
     ];
 
     public function selectsupplier($id){
@@ -61,16 +62,18 @@ class PengeluaranBiayaModal extends ModalComponent
         }else{
             $this->pengeluaran = new PengeluaranBiaya();
         }
+        $this->pengeluaran->total=0;
 
+    }
+
+    public function caritotal(){
+        $this->pengeluaran->total = TmpPengeluaranBiaya::where('user_id',Auth::user()->id)->sum('jumlah');
     }
 
     public function save(){
 
-        $this->pengeluaran->total = str_replace(',', '', $this->pengeluaran->total);
-        
+        $this->pengeluaran->total = str_replace(',', '', $this->pengeluaran->total);    
 
-        $dpp =0;
-        $nettbiaya=0;
         if ($this->pengeluaran->ppn_id!=0){
             $datappn = Mpajak::find($this->pengeluaran->ppn_id);
             $this->pengeluaran->persen_ppn = $datappn->persen;
@@ -91,61 +94,100 @@ class PengeluaranBiayaModal extends ModalComponent
             $this->pengeluaran->persen_pajaklain = 0;
             $nettbiaya = $dpp;
         }
+
         $this->validate();
+
+        if ($this->pengeluaran->tipe_pembayaran == 'cash' || $this->pengeluaran->tipe_pembayaran == 'transfer'){
+            $this->validate([
+                'pengeluaran.rekening_id' => 'required',
+            ]);
+        }else{
+            $this->validate([
+                'pengeluaran.supplier_id' => 'required',
+            ]);
+        }
 
         DB::beginTransaction();
         try{
 
-            if ($this->pengeluaran->tipe_pembayaran == 'Cash'){
+            if ($this->pengeluaran->tipe_pembayaran == 'cash' || $this->pengeluaran->tipe_pembayaran == 'transfer'){
                 $this->pengeluaran->sisa = 0;
             }else{
                 $this->pengeluaran->sisa = $this->pengeluaran->total;
             }
             $this->pengeluaran->save();
-            $coabiaya = MBiaya::find($this->pengeluaran->m_biaya_id);
 
-            $journal = new Journal();
-            $journal['tipe']='Pengeluaran Biaya';
-            $journal['trans_id']=$this->pengeluaran->id;
-            $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
-            $journal['coa_id']=$coabiaya->coa_id;
-            $journal['debet']=$nettbiaya;
-            $journal['kredit']=0;
-            $journal->save();
+            $tmps = TmpPengeluaranBiaya::where('user_id',Auth::user()->id)->get();
 
-            if ($this->pengeluaran->ppn_id!=0){
-                $journal = new Journal();
-                $journal['tipe']='Pengeluaran Biaya';
-                $journal['trans_id']=$this->pengeluaran->id;
-                $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
-                $journal['coa_id']=$datappn->coa_id_debet;
-                $journal['debet']=$this->pengeluaran->ppn ;
-                $journal['kredit']=0;
-                $journal->save();
-            }
-
-            if ($this->pengeluaran->pajaklain_id!=0){
-                $journal = new Journal();
-                $journal['tipe']='Pengeluaran Biaya';
-                $journal['trans_id']=$this->pengeluaran->id;
-                $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
-                $journal['coa_id']=$datapajak->coa_id_debet;
-                $journal['debet']=$dpp - $nettbiaya ;
-                $journal['kredit']=0;
-                $journal->save();
-            }
-
-            if ($this->pengeluaran->tipe_pembayaran == 'Cash'){
-
-                if (is_null($this->pengeluaran->rekening_id)){
-                    DB::rollBack();
-                    $this->alert('error', 'Isi Rekening', [
-                        'position' => 'center'
-                    ]);
-                    exit;
+            foreach($tmps as $tmp){
+                $dpp =0;
+                $nettbiaya=0;
+                $ppn = 0;
+                if ($this->pengeluaran->ppn_id!=0){
+                    $datappn = Mpajak::find($this->pengeluaran->ppn_id);
+                    $dpp = $tmp->jumlah / (1 + $datappn->persen);
+                    $ppn = $tmp->jumlah - $dpp;
+                }else{
+                    $dpp = $tmp->jumlah;
+                    $ppn = $tmp->jumlah - $dpp;
                 }
 
+                if ($this->pengeluaran->pajaklain_id!=0){
+                    $datapajak = Mpajak::find($this->pengeluaran->pajaklain_id);
+                    $nettbiaya = $dpp / (1 + $datapajak->persen);
+                }
+                else{
+                    $this->pengeluaran->persen_pajaklain = 0;
+                    $nettbiaya = $dpp;
+                }
+
+                $pengeluaran_detail = new PengeluaranBiayaDetail();
+                $pengeluaran_detail['pengeluaran_biaya_id'] = $this->pengeluaran->id;
+                $pengeluaran_detail['jenis_pembebanan'] = $tmp->jenis_pembebanan;
+                $pengeluaran_detail['m_biaya_id'] = $tmp->m_biaya_id;
+                $pengeluaran_detail['beban_id'] = $tmp->beban_id;
+                $pengeluaran_detail['jumlah'] = $tmp->jumlah;
+                $pengeluaran_detail['keterangan'] = $tmp->keterangan;
+                $pengeluaran_detail->save();
+
+                $coabiaya = MBiaya::find($tmp->m_biaya_id);
+
+                $journal = new Journal();
+                $journal['tipe']='Pengeluaran Biaya';
+                $journal['trans_id']=$this->pengeluaran->id;
+                $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
+                $journal['coa_id']=$coabiaya->coa_id;
+                $journal['debet']=$nettbiaya;
+                $journal['kredit']=0;
+                $journal->save();
+
+                if ($this->pengeluaran->ppn_id!=0){
+                    $journal = new Journal();
+                    $journal['tipe']='Pengeluaran Biaya';
+                    $journal['trans_id']=$this->pengeluaran->id;
+                    $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
+                    $journal['coa_id']=$datappn->coa_id_debet;
+                    $journal['debet']=$ppn ;
+                    $journal['kredit']=0;
+                    $journal->save();
+                }
+    
+                if ($this->pengeluaran->pajaklain_id!=0){
+                    $journal = new Journal();
+                    $journal['tipe']='Pengeluaran Biaya';
+                    $journal['trans_id']=$this->pengeluaran->id;
+                    $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
+                    $journal['coa_id']=$datapajak->coa_id_debet;
+                    $journal['debet']=$dpp - $nettbiaya ;
+                    $journal['kredit']=0;
+                    $journal->save();
+                }
+            }
+
+            if ($this->pengeluaran->tipe_pembayaran == 'cash' || $this->pengeluaran->tipe_pembayaran == 'transfer'){
+
                 $rekening = Rekening::find($this->pengeluaran->rekening_id);
+
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
                 $journal['trans_id']=$this->pengeluaran->id;
@@ -157,15 +199,8 @@ class PengeluaranBiayaModal extends ModalComponent
 
             }else{
 
-                if (is_null($this->pengeluaran->supplier_id)){
-                    DB::rollBack();
-                    $this->alert('error', 'Isi Supplier', [
-                        'position' => 'center'
-                    ]);
-                    exit;
-                }
-
                 $supplier = Supplier::find($this->pengeluaran->supplier_id);
+
                 $journal = new Journal();
                 $journal['tipe']='Pengeluaran Biaya';
                 $journal['trans_id']=$this->pengeluaran->id;
@@ -174,8 +209,9 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal['debet']=0;
                 $journal['kredit']=$this->pengeluaran->total;
                 $journal->save();
-
             }
+
+            DB::table('tmp_pengeluaran_biayas')->where('user_id',Auth::user()->id)->delete();
 
             DB::Commit();
 
@@ -198,10 +234,14 @@ class PengeluaranBiayaModal extends ModalComponent
     public function render()
     {
         return view('livewire.pengeluaran-biaya.pengeluaran-biaya-modal',[
-            'biaya' => MBiaya::all(),
             'pajakppn' => Mpajak::where('jenis_pajak','PPN')->get(),
             'pajakpph' => Mpajak::where('jenis_pajak','<>','PPN')->get(),
             'rekening' => Rekening::all()
         ]);
+    }
+
+    public static function modalMaxWidth(): string
+    {
+        return '7xl';
     }
 }

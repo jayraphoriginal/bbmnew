@@ -70,6 +70,10 @@ class PurchaseorderModal extends ModalComponent
         $this->beban_id=$id;
     }
 
+    public function selectpembebanan(){
+        $this->jenis_pembebanan = '-';
+    }
+
     public function save(){
 
         $this->validate();

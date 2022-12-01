@@ -53,7 +53,8 @@ final class InvoiceTable extends PowerGridComponent
     {
         return Invoice::join('customers','invoices.customer_id','customers.id')
         ->join('rekenings','invoices.rekening_id','rekenings.id')
-        ->select('invoices.*','customers.nama_customer','rekenings.norek');
+        ->join('m_salesorders','invoices.so_id','m_salesorders.id')
+        ->select('invoices.*','customers.nama_customer','rekenings.norek','m_salesorders.noso');
     }
 
     /*
@@ -87,6 +88,7 @@ final class InvoiceTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('noinvoice')
+            ->addColumn('noso')
             ->addColumn('tipe_so')
             ->addColumn('nama_customer')
             ->addColumn('norek')
@@ -130,6 +132,13 @@ final class InvoiceTable extends PowerGridComponent
             Column::add()
             ->title('NO INVOICE')
             ->field('noinvoice')
+            ->searchable()
+            ->sortable()
+            ->makeInputText(),
+
+            Column::add()
+            ->title('NO SO')
+            ->field('noso')
             ->searchable()
             ->sortable()
             ->makeInputText(),
@@ -230,6 +239,13 @@ final class InvoiceTable extends PowerGridComponent
             ->route("printkwitansi",[
                 'id' => 'id'
             ]),
+
+            Button::add('bayar')
+            ->caption(__('Bayar'))
+            ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->openModal('penerimaan.penerimaan-modal',[
+                'invoice_id' => 'id'
+            ]),
         //    Button::add('edit')
         //        ->caption('Edit')
         //        ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
@@ -258,18 +274,16 @@ final class InvoiceTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
 
-    /*
+    
     public function actionRules(): array
     {
        return [
-           
-           //Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($invoice) => $invoice->id === 1)
+            Rule::button('bayar')
+                ->when(fn(Invoice $model) => $model->sisa_invoice <= 0)
                 ->hide(),
         ];
     }
-    */
+
 
     /*
     |--------------------------------------------------------------------------

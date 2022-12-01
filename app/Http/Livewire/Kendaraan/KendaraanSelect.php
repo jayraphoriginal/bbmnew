@@ -32,6 +32,7 @@ class KendaraanSelect extends Component
         $this->emitTo('penjualan.concretepump-modal','selectkendaraan', $id);
         $this->emitTo('bbm.pengisian-bbm-modal','selectkendaraan', $id);
         $this->emitTo('bbm.penambahan-bbm-modal','selectkendaraan', $id);
+        $this->emitTo('pengeluaran-biaya.pengeluaran-biaya-detail-modal','selectkendaraan', $id);
     }
 
     public function selectDeskripsi($id){

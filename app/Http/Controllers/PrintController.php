@@ -30,6 +30,8 @@ use App\Models\VConcretepump;
 use App\Models\VHutang;
 use App\Models\VPembayaran;
 use App\Models\VPembelianDetail;
+use App\Models\VPengeluaranBiaya;
+use App\Models\VPengeluaranBiayaDetail;
 use App\Models\VPengisianBbm;
 use App\Models\VPrintInvoice;
 use App\Models\VTicket;
@@ -800,6 +802,26 @@ class PrintController extends Controller
         $customPaper = array(0,0,391.1811,277.795);
 
         $pdf = PDF::loadView('print.buktikas', array(
+            'data' => $data,
+            'terbilang' => $terbilang
+        ))->setPaper($customPaper);
+        return $pdf->stream();
+    }
+
+    public function buktikasbiaya($id){
+        
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Pembayaran Pembelian')){
+            return abort(401);
+        }
+
+        $data = VPengeluaranBiayaDetail::where('id',$id)->get();
+
+        $terbilang = Terbilang::make($data[0]->total);
+       
+        $customPaper = array(0,0,391.1811,277.795);
+
+        $pdf = PDF::loadView('print.buktikasbiaya', array(
             'data' => $data,
             'terbilang' => $terbilang
         ))->setPaper($customPaper);

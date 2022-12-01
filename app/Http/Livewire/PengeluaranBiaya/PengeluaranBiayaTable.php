@@ -85,7 +85,6 @@ final class PengeluaranBiayaTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('nama_supplier')
-            ->addColumn('nama_biaya')
             ->addColumn('tipe_pembayaran')
             ->addColumn('jenis_ppn')
             ->addColumn('pajaklain')
@@ -104,7 +103,6 @@ final class PengeluaranBiayaTable extends PowerGridComponent
             ->addColumn('total', function (VPengeluaranBiaya $model){
                 return number_format($model->total,2,".",",");
             })
-            ->addColumn('keterangan')
             ->addColumn('created_at')
             ->addColumn('created_at_formatted', function(VPengeluaranBiaya $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
@@ -137,13 +135,6 @@ final class PengeluaranBiayaTable extends PowerGridComponent
             Column::add()
                 ->title('SUPPLIER')
                 ->field('nama_supplier')
-                ->searchable()
-                ->makeInputText()
-                ->sortable(),
-
-                Column::add()
-                ->title('BIAYA')
-                ->field('nama_biaya')
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),
@@ -217,13 +208,6 @@ final class PengeluaranBiayaTable extends PowerGridComponent
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),
-
-                Column::add()
-                ->title('KETERANGAN')
-                ->field('keterangan')
-                ->searchable()
-                ->makeInputText()
-                ->sortable(),
         ];
     }
 
@@ -241,23 +225,19 @@ final class PengeluaranBiayaTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    /*
     public function actions(): array
     {
        return [
-           Button::add('edit')
-               ->caption('Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('v-pengeluaran-biaya.edit', ['v-pengeluaran-biaya' => 'id']),
-
-           Button::add('destroy')
-               ->caption('Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('v-pengeluaran-biaya.destroy', ['v-pengeluaran-biaya' => 'id'])
-               ->method('delete')
+            Button::add('buktikasbiaya')
+            ->caption(__('BuktiKas'))
+            ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->target('_blank')
+            ->method('get')
+            ->route("printbuktikasbiaya",[
+                'id' => 'id'
+            ]),
         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------

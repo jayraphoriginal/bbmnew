@@ -28,6 +28,7 @@ class AlatSelect extends Component
     {
         $this->deskripsi = Alat::find($id)->nama_alat;
         $this->emitTo('pembelian.purchaseorder-modal','selectalat', $id);
+        $this->emitTo('pengeluaran-biaya.pengeluaran-biaya-detail-modal','selectalat', $id);
     }
 
     public function selectDeskripsi($id){

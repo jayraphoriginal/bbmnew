@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Sewa;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class ItemsewaComponent extends Component

@@ -29,6 +29,7 @@ class BankSelect extends Component
     {
         $this->deskripsi = Bank::find($id)->nama_bank;
         $this->emitTo('bank.rekening-modal','selectbank', $id);
+        $this->emitTo('penerimaan.penerimaan-modal','selectbankasal', $id);
 
     }
 
