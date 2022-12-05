@@ -34,9 +34,9 @@
     <body>
         
         @php
-            $drivers = $data->groupBy('nama_driver');
-            $drivers->toArray();
-            $jumlah = count($drivers);
+            $kendaraans = $data->groupBy('nopol');
+            $kendaraans->toArray();
+            $jumlah = count($kendaraans);
             $urut = 1;
             $totalgaji = 0;
             $totalpengisian = 0;
@@ -46,13 +46,13 @@
             $totalloading=0;
         @endphp        
         
-        @foreach ($drivers as $driver => $drv )
+        @foreach ($kendaraans as $kendaraan => $drv )
         <h3 style="margin-bottom: 3rem;text-align:center">REKAP GAJI</h3>
             <table style="margin-bottom: 3rem;">
                 <tr>
                     <td style="width: 10em;">Nama</td>
                     <td> : </td>
-                    <td>{{ $driver }}</td>
+                    <td>{{ $drv[0]->nama_driver }}</td>
                     <td style="width: 45em;"></td>
                     <td>Tanggal</td>
                     <td> : </td>
@@ -61,7 +61,7 @@
                 <tr>
                     <td style="width: 10em;">Nomor Polisi</td>
                     <td> : </td>
-                    <td>{{ $drv[0]->nopol }}</td>
+                    <td>{{ $kendaraan }}</td>
                     <td style="width: 45em;"></td>
                     <td>Periode</td>
                     <td> : </td>

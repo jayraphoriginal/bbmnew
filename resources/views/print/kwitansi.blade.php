@@ -41,7 +41,7 @@
                 page-break-before: always; 
             }
         </style>
-        <title>{{ $data[0]->noinvoice }}</title>
+        <title>{{ $data[0]->nokwitansi }}</title>
     </head>
 
     <body>
@@ -52,7 +52,7 @@
         <div style="float:right;width:85%">
             <table style="float:right">
                 <tr>
-                    <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->noinvoice }}</td>
+                    <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
@@ -113,7 +113,7 @@
         <div style="float:right;width:85%">
             <table style="float:right">
                 <tr>
-                    <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->noinvoice }}</td>
+                    <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
@@ -175,7 +175,7 @@
         <div style="float:right;width:85%">
             <table style="float:right">
                 <tr>
-                    <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->noinvoice }}</td>
+                    <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
@@ -236,7 +236,7 @@
         <div style="float:right;width:85%">
             <table style="float:right">
                 <tr>
-                    <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->noinvoice }}</td>
+                    <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 

@@ -171,6 +171,8 @@ class InvoiceModal extends ModalComponent
 
     public function save(){
 
+        $bulan = ['','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+
         $this->jumlah_total = str_replace(',', '', $this->jumlah_total);
         $this->jumlah_dp = str_replace(',', '', $this->jumlah_dp);
         $this->dp_sebelum = str_replace(',', '', $this->dp_sebelum);
@@ -191,20 +193,21 @@ class InvoiceModal extends ModalComponent
             if ($this->jumlah_total > 0 || $this->jumlah_dp > 0){
 
                 $nomorterakhir = DB::table('invoices')->orderBy('id', 'DESC')
-                ->where('tipe','<>','Retail')->get();
+                ->where('tipe','<>','Retail')->first();
 
-                if (count($nomorterakhir) == 0){
-                    $noinvoice = '0001/IV/'.date('m').'/'.date('Y');               
+                if (is_null($nomorterakhir)){
+                    $noinvoice = '0001/INV/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
+                    $nokwitansi = '0001/KWT/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
                 }else{
                     if (
-                        substr($nomorterakhir[0]->noinvoice, 8, 2) == date('m')
-                        &&
-                        substr($nomorterakhir[0]->noinvoice, 11, 4) == date('Y')
+                        date_create($nomorterakhir->tgl_cetak)->format('Y') == date('Y')
                     ) {
-                        $noakhir = intval(substr($nomorterakhir[0]->noinvoice, 0, 4)) + 1;
-                        $noinvoice = substr('0000' . $noakhir, -4) . '/IV/' . date('m') . '/' . date('Y');
+                        $noakhir = intval(substr($nomorterakhir->noinvoice, 0, 4)) + 1;
+                        $noinvoice = substr('0000' . $noakhir, -4).'/INV/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
+                        $nokwitansi = substr('0000' . $noakhir, -4).'/KWT/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
                     } else {
-                        $noinvoice = '0001/IV/' . date('m') . '/' . date('Y');
+                        $noinvoice = '0001/INV/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
+                        $nokwitansi = '0001/KWT/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
                     }
                 }
 
@@ -216,6 +219,7 @@ class InvoiceModal extends ModalComponent
                 }
 
                 DB::update("exec SP_Invoice '".$noinvoice."', '".
+                $nokwitansi."', '".
                 date_create($this->tgl_cetak)->format('Y-m-d')."','".
                 $this->tipe_so."',".
                 $this->so_id.",".
@@ -232,25 +236,27 @@ class InvoiceModal extends ModalComponent
             if ($this->jumlah_penjualan_retail>0){
 
                 $nomorterakhir = DB::table('invoices')->orderBy('id', 'DESC')
-                ->where('tipe','Retail')->get();
+                ->where('tipe','Retail')->first();
 
-                if (count($nomorterakhir) == 0){
-                    $noinvoice = '0001/IVR/'.date('m').'/'.date('Y');               
+                if (is_null($nomorterakhir)){
+                    $noinvoice = '0001/INVR/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
+                    $nokwitansi = '0001/KWTR/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
                 }else{
                     if (
-                        substr($nomorterakhir[0]->noinvoice, 9, 2) == date('m')
-                        &&
-                        substr($nomorterakhir[0]->noinvoice, 12, 4) == date('Y')
+                        date_create($nomorterakhir->tgl_cetak)->format('Y') == date('Y')
                     ) {
                         $noakhir = intval(substr($nomorterakhir[0]->noinvoice, 0, 4)) + 1;
-                        $noinvoice = substr('0000' . $noakhir, -4) . '/IVR/' . date('m') . '/' . date('Y');
+                        $noinvoice = substr('0000' . $noakhir, -4).'/INV/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
+                        $nokwitansi = substr('0000' . $noakhir, -4).'/KWT/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
                     } else {
-                        $noinvoice = '0001/IVR/' . date('m') . '/' . date('Y');
+                        $noinvoice = '0001/INVR/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
+                        $nokwitansi = '0001/KWTR/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
                     }
                 }
 
                 
                 DB::update("exec SP_Invoice_Retail '".$noinvoice."', '".
+                $nokwitansi."', '".
                 date_create($this->tgl_cetak)->format('Y-m-d')."','".
                 $this->tipe_so."',".
                 $this->so_id.",".

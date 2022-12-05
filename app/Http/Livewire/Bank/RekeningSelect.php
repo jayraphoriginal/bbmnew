@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Bank;
 
+use App\Models\Bank;
 use App\Models\Rekening;
 use Livewire\Component;
 
@@ -28,7 +29,8 @@ class RekeningSelect extends Component
     public function selectdata($id)
     {
         $rekening =  Rekening::find($id);
-        $this->deskripsi = $rekening->norek.' - '.$rekening->atas_nama;
+        $bank = Bank::find($rekening->bank_id);
+        $this->deskripsi = $bank->nama_bank.' - '.$rekening->norek.' - '.$rekening->atas_nama;
         $this->emitTo('invoice.invoice-modal','selectrekening', $id);
         $this->emitTo('pembayaran.pembayaran-pembelian-modal','selectrekening', $id);
         $this->emitTo('penerimaan.penerimaan-modal','selectrekening', $id);
@@ -36,15 +38,18 @@ class RekeningSelect extends Component
 
     public function selectDeskripsi($id){
         $rekening =  Rekening::find($id);
-        $this->deskripsi = $rekening->norek.' - '.$rekening->atas_nama;
+        $bank = Bank::find($rekening->bank_id);
+        $this->deskripsi = $bank->nama_bank.' - '.$rekening->norek.' - '.$rekening->atas_nama;
     }
 
     public function updatedSearch()
     {
         if ($this->search == ''){
-            $this->rekening = Rekening::all();
+            $this->rekening = Rekening::join('banks','rekenings.bank_id','banks.id')->get();
         }else{
-            $this->rekening = Rekening::where('norek', 'like', '%' . $this->search . '%')
+            $this->rekening = Rekening::join('banks','rekenings.bank_id','banks.id')
+                ->orwhere('nama_bank', 'like', '%' . $this->search . '%')
+                ->orwhere('norek', 'like', '%' . $this->search . '%')
                 ->orwhere('atas_nama', 'like', '%' . $this->search . '%')
                 ->get();
         }
