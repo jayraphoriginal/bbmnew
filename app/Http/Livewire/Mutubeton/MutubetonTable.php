@@ -93,7 +93,9 @@ final class MutubetonTable extends PowerGridComponent
             ->addColumn('satuan')
             ->addColumn('berat_jenis', function(Mutubeton $model) { 
                 return number_format($model->berat_jenis,4,'.',',');
-            });
+            })
+            ->addColumn('status');
+
     }
 
     /*
@@ -149,7 +151,12 @@ final class MutubetonTable extends PowerGridComponent
                 ->searchable()
                 ->makeInputText(),
 
-
+            Column::add()
+                ->title('STATUS')
+                ->field('status')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
         ]
 ;
     }

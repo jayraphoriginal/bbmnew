@@ -41,6 +41,7 @@ class PengeluaranBiayaModal extends ModalComponent
         'pengeluaran.persen_pajaklain' => 'required',
         'pengeluaran.ppn' => 'required',
         'pengeluaran.total' => 'required|numeric|min:1',
+        'pengeluaran.ket' => 'nullable|max:50'
     ];
 
     public function selectsupplier($id){

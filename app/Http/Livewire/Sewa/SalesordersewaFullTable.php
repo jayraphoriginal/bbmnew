@@ -95,6 +95,7 @@ final class SalesordersewaFullTable extends PowerGridComponent
                 return Carbon::parse($model->jatuh_tempo)->format('d/m/Y');
             })
             ->addColumn('nama_customer')
+            ->addColumn('sub_company')
             ->addColumn('nama_item')
             ->addColumn('tipe')
             ->addColumn('harga_intax')
@@ -152,6 +153,13 @@ final class SalesordersewaFullTable extends PowerGridComponent
             Column::add()
                 ->title('CUSTOMER')
                 ->field('nama_customer')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
+            Column::add()
+                ->title('SUB COMPANY')
+                ->field('sub_company')
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),
@@ -232,6 +240,7 @@ final class SalesordersewaFullTable extends PowerGridComponent
                 'd_salesorder_sewa_id' => 'id',
             ]),
         ];
+
     }
 
 

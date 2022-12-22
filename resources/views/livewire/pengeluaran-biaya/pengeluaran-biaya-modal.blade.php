@@ -34,6 +34,14 @@
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
+            <x-form-group caption="Keterangan">
+                <x-textbox
+                    wire:model="pengeluaran.ket"
+                />
+                @error('pengeluaran.ket')
+                    <x-error-form>{{ $message }}</x-error-form>
+                @enderror
+            </x-form-group>
         </div>
         <div class="lg:w-1/2">
             <x-form-group caption="PPN">

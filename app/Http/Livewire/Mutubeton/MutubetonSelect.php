@@ -36,9 +36,12 @@ class MutubetonSelect extends Component
 
     public function updatedSearch()
     {
-        $this->mutubeton = Mutubeton::where('kode_mutu', 'like', '%' . $this->search . '%')
-            ->orwhere('deskripsi', 'like', '%' . $this->search . '%')
-            ->get();
+        $this->mutubeton = Mutubeton::where('status','aktif')
+                        ->where(function($q) {
+                            $q->where('kode_mutu', 'like', '%' . $this->search . '%')
+                            ->orwhere('deskripsi', 'like', '%' . $this->search . '%');
+                        })
+                        ->get();
     }
 
     public function render()

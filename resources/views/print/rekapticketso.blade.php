@@ -1,7 +1,6 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <title>Rekap Ticket Material</title>
     </head>
 
@@ -9,6 +8,8 @@
         .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
             padding: 5px;
             vertical-align: middle;
+            border:1px solid;
+            margin:0;
         }
         *{
             font-size:13px;
@@ -22,6 +23,9 @@
         .page_break { 
             page-break-before: always; 
         }
+        table{
+            border-collapse: collapse;
+        }
         .tdhead{
             font-weight: bold;
         }
@@ -29,12 +33,12 @@
 
     <body>
         
-        <h4 style="text-align:center">Rekap Penjualan Ready Mix</h4>
+        <h4 style="text-align:center;font-size:14px">Rekap Penjualan Ready Mix</h4>
         @if (count($data) > 0)
         <h5 style="margin-bottom: 3rem;text-align:center">Periode : {{ date_format(date_create($data[0]->tgl_awal),'d/M/Y').' - '.date_format(date_create($data[0]->tgl_akhir),'d/M/Y') }}</h5>
-        <table class="table table-striped table-bordered mytable">
+        <table class="mytable" style="width:100%">
             <tr>
-                <td class="tdhead">No</td>
+                <td class="tdhead" style="text-align:center">No</td>
                 <td class="tdhead">Tanggal</td>
                 <td class="tdhead">Nopol</td>
                 <td class="tdhead">Kode Mutu</td>
@@ -48,11 +52,11 @@
             @endphp
             @foreach($data as $index => $item)
             <tr>
-                <td>{{ ++$index }}</td>
+                <td style="text-align:center">{{ ++$index }}</td>
                 <td>{{ date_format(date_create($item->jam_pengiriman),'d-m-Y') }}</td>
                 <td>{{ $item->nopol }}</td>
                 <td>{{ $item->kode_mutu }}</td>
-                <td class="text-right">{{ $item->jumlah.' '.$item->satuan }}</td>
+                <td class="text-right">{{ number_format($item->jumlah,1,',','.').' '.$item->satuan }}</td>
                 <td>{{ $item->nama_customer }}</td>
                 <td>{{ $item->tujuan}}</td>
             </tr>
@@ -62,7 +66,7 @@
             @endforeach 
             <tr>
                 <td colspan="4" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,0,',','.').' '.$data[0]->satuan }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,1,',','.').' '.$data[0]->satuan }}</td>
                 <td colspan="2"></td>
             </tr>
         </table>

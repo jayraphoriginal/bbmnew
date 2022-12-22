@@ -84,6 +84,7 @@ final class CustomerTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('nama_customer')
+            ->addColumn('sub_company')
             ->addColumn('npwp')
             ->addColumn('alamat')
             ->addColumn('notelp')
@@ -115,6 +116,13 @@ final class CustomerTable extends PowerGridComponent
             Column::add()
                 ->title('NAMA CUSTOMER')
                 ->field('nama_customer')
+                ->sortable()
+                ->searchable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('SUB COMPANY')
+                ->field('sub_company')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),

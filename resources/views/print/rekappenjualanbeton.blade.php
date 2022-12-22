@@ -36,7 +36,7 @@
         <h2 style="text-align:center; font-size:18px;">Laporan Penjualan Beton</h2>
         @if (count($data) > 0)
         <h3 style="margin-bottom: 3rem;text-align:center; font-size:16px;">Periode : {{ date_format(date_create($tgl_awal),'d/M/Y').' - '.date_format(date_create($tgl_akhir),'d/M/Y') }}</h3>
-        <table class="mytable">
+        <table class="mytable" style="width:100%">
             <tr>
                 <td class="tdhead">No</td>
                 <td class="tdhead">NoSO</td>
@@ -81,7 +81,7 @@
                     @php
                         $totalmutu = 0;
                     @endphp
-                    <table>   
+                    <table style="width:100%">   
                     @foreach($datacustomer as $customer)
                         <tr>
                             <td>{{ $customer->nama_customer.' - '.$customer->tujuan.' ('.$customer->kode_mutu.')' }}</td>

@@ -8,6 +8,15 @@
                     :checkbox="$checkbox"
                     :theme="$theme->checkbox"/>
             @endif
+
+             @if(isset($actions) && count($actions))
+                <th class="{{ $theme->table->thClass }}" scope="col"
+                    style="{{ $theme->table->thStyle }}" colspan="{{ count($actions )}}"
+                    wire:key="{{ md5('actions') }}">
+                    {{ trans('livewire-powergrid::datatable.labels.action') }}
+                </th>
+            @endif
+
             @foreach($columns as $column)
                 <x-livewire-powergrid::cols
                     :column="$column"
@@ -17,13 +26,7 @@
                     :enabledFilters="$enabledFilters"/>
             @endforeach
 
-            @if(isset($actions) && count($actions))
-                <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"
-                    style="{{ $theme->table->thStyle }}" colspan="{{ count($actions )}}"
-                    wire:key="{{ md5('actions') }}">
-                    {{ trans('livewire-powergrid::datatable.labels.action') }}
-                </th>
-            @endif
+           
         </tr>
     </x-slot>
 
@@ -96,6 +99,12 @@
                             :checkbox="$checkbox"/>
                     @endif
 
+                    <x-livewire-powergrid::actions
+                        :primary-key="$primaryKey"
+                        :theme="$theme"
+                        :row="$row"
+                        :actions="$actions"/>
+
                     <x-livewire-powergrid::row
                         :tableName="$tableName"
                         :currentTable="$currentTable"
@@ -104,11 +113,7 @@
                         :row="$row"
                         :columns="$columns"/>
 
-                    <x-livewire-powergrid::actions
-                        :primary-key="$primaryKey"
-                        :theme="$theme"
-                        :row="$row"
-                        :actions="$actions"/>
+                    
                 </tr>
             @endforeach
             @if($footerTotalColumn)

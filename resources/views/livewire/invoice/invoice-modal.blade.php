@@ -19,6 +19,7 @@
         />
     </x-form-group>
 
+    @if($pembayaran <> 'Dimuka Full')
     <x-form-group caption="Dari Tanggal">
         <x-datepicker
             wire:model="tgl_awal"
@@ -36,7 +37,7 @@
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
-
+    @endif
     <x-form-group caption="Nilai Tagihan">
         <x-number-text
             readonly

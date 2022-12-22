@@ -15,8 +15,8 @@
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
         $field   = $column->dataField != '' ? $column->dataField : $column->field;
     @endphp
-    <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
-        style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
+    <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }};"
+        style="{{ $column->hidden === true ? 'display:none': '' }};font-size:0.85rem ;{{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
     >
         @if($column->editable === true && !str_contains($field, '.'))
             <span class="{{ $theme->clickToCopy->spanClass }}">

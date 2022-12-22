@@ -103,7 +103,7 @@ final class TicketTable extends PowerGridComponent
             ->addColumn('nopol')
             ->addColumn('driver_id')
             ->addColumn('nama_driver')
-            ->addColumn('jam_pengiriman', function(VTicketHeader $model) { 
+            ->addColumn('jam_ticket', function(VTicketHeader $model) { 
                 return Carbon::parse($model->jam_ticket)->format('d/m/Y H:i:s');
             })
             ->addColumn('jumlah')
@@ -198,7 +198,7 @@ final class TicketTable extends PowerGridComponent
 
             Column::add()
                 ->title('JAM TICKET')
-                ->field('jam_pengiriman')
+                ->field('jam_ticket')
                 ->sortable()
                 ->searchable()
                 ->makeInputDatePicker(),

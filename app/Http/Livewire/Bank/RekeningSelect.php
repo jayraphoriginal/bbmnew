@@ -34,6 +34,7 @@ class RekeningSelect extends Component
         $this->emitTo('invoice.invoice-modal','selectrekening', $id);
         $this->emitTo('pembayaran.pembayaran-pembelian-modal','selectrekening', $id);
         $this->emitTo('penerimaan.penerimaan-modal','selectrekening', $id);
+        $this->emitTo('laporan.laporan-saldo-rekening','selectrekening', $id);
     }
 
     public function selectDeskripsi($id){
@@ -45,9 +46,11 @@ class RekeningSelect extends Component
     public function updatedSearch()
     {
         if ($this->search == ''){
-            $this->rekening = Rekening::join('banks','rekenings.bank_id','banks.id')->get();
+            $this->rekening = Rekening::select('rekenings.id','banks.nama_bank','rekenings.norek','rekenings.atas_nama')
+            ->join('banks','rekenings.bank_id','banks.id')->get();
         }else{
-            $this->rekening = Rekening::join('banks','rekenings.bank_id','banks.id')
+            $this->rekening = Rekening::select('rekenings.id','banks.nama_bank','rekenings.norek','rekenings.atas_nama')
+                ->join('banks','rekenings.bank_id','banks.id')
                 ->orwhere('nama_bank', 'like', '%' . $this->search . '%')
                 ->orwhere('norek', 'like', '%' . $this->search . '%')
                 ->orwhere('atas_nama', 'like', '%' . $this->search . '%')

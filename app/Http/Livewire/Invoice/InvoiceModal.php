@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\MSalesorder;
 use App\Models\MSalesorderSewa;
 use App\Models\PenjualanRetail;
+use App\Models\VSalesOrder;
 use App\Models\VSalesOrderSewa;
 use App\Models\VTicketHeader;
 use App\Models\VTimesheetSewa;
@@ -24,6 +25,7 @@ class InvoiceModal extends ModalComponent
 
     public $noso, $so_id, $tipe_so, $customer;
     public Invoice $invoice;    
+    public $pembayaran;
     public $tgl_awal, $tgl_akhir, $jumlah_total, $dp, $jumlah_dp, $jumlah_penjualan_retail;
     public $rekening, $dp_sebelum, $pajak, $customer_id, $rekening_id, $tgl_cetak, $tanda_tangan, $keterangan;
 
@@ -32,8 +34,6 @@ class InvoiceModal extends ModalComponent
     protected $rules =[
         'rekening_id' => 'required',
         'tgl_cetak' => 'required',
-        'tgl_awal' => 'required',
-        'tgl_akhir' => 'required',
         'tanda_tangan' => 'required',
         'keterangan' => 'nullable'
     ];
@@ -52,6 +52,7 @@ class InvoiceModal extends ModalComponent
         $this->tgl_cetak = date('Y-m-d');
         if ($this->tipe_so=='Ready Mix'){
             $msalesorder = MSalesorder::find($this->so_id);
+            $this->pembayaran = $msalesorder->pembayaran;
             $this->customer_id = $msalesorder->customer_id;
             $this->noso = $msalesorder->noso;
             $this->pajak = $msalesorder->pajak;
@@ -60,19 +61,36 @@ class InvoiceModal extends ModalComponent
         }else{
             $msalesorder = MSalesorderSewa::find($this->so_id);
             $this->customer_id = $msalesorder->customer_id;
+            $this->pembayaran = $msalesorder->pembayaran;
             $this->noso = $msalesorder->noso;
             $this->pajak = $msalesorder->pajak;
             $customers = Customer::find($msalesorder->customer_id);
             $this->customer = $customers->nama_customer;
         }
-        $this->jumlah_total = 0;
-        $this->dp = "DP";
+        if($this->pembayaran <> 'Dimuka Full'){
+            $this->jumlah_total = 0;
+            $this->dp = "DP";
+        }else{
+            if ($this->tipe_so=='Sewa'){
+                $this->jumlah_total = VSalesOrderSewa::where('id',$this->so_id)
+                ->where('status_so','Open')->sum(DB::raw('lama*harga_intax'));
+                $this->dp = "Reg";
+            }else{
+                $this->jumlah_total = VSalesOrder::where('id',$this->so_id)
+                ->where('status_so','Open')->sum(DB::raw('jumlah*harga_intax'));
 
+                $totalconcretepump = Concretepump::where('m_salesorder_id', $this->so_id)
+                                            ->where('concretepumps.status','Open')
+                                            ->sum('concretepumps.harga_sewa');
+
+                $this->jumlah_total = $this->jumlah_total + $totalconcretepump;
+                $this->dp = "Reg";
+            }
+        }
         $this->dp_sebelum = Invoice::where('so_id', $this->so_id)
         ->where('tipe_so',$this->tipe_so)
         ->where('tipe','DP')
         ->where('status','open')->sum('total');
-
     }
 
     public function render()
@@ -114,7 +132,7 @@ class InvoiceModal extends ModalComponent
                     ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
                     ->count('*');
 
-                    $totalsewa = $totalsewa+($jumlahhari / $sewa->lama * $sewa->harga_intax);
+                    $totalsewa = $totalsewa+($jumlahhari * $sewa->harga_intax);
                 }elseif($sewa->satuan == 'Bln'){
 
                     $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
@@ -178,6 +196,13 @@ class InvoiceModal extends ModalComponent
         $this->dp_sebelum = str_replace(',', '', $this->dp_sebelum);
 
         $this->validate();
+
+        if ($this->pembayaran <> 'Dimuka Full' && $this->dp == 'Reg'){
+            $this->validate([
+                'tgl_awal' => 'required',
+                'tgl_akhir' => 'required',
+            ]);
+        }
 
         if ($this->jumlah_total + $this->jumlah_penjualan_retail <= 0 && $this->jumlah_dp <=0){
             $this->alert('error', 'Jumlah Nol', [

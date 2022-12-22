@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Invoice;
 
 use App\Models\Invoice;
+use App\Models\VInvoiceHeader;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -51,10 +52,7 @@ final class InvoiceTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return Invoice::join('customers','invoices.customer_id','customers.id')
-        ->join('rekenings','invoices.rekening_id','rekenings.id')
-        ->join('m_salesorders','invoices.so_id','m_salesorders.id')
-        ->select('invoices.*','customers.nama_customer','rekenings.norek','m_salesorders.noso');
+        return VInvoiceHeader::query();
     }
 
     /*
@@ -91,22 +89,23 @@ final class InvoiceTable extends PowerGridComponent
             ->addColumn('noso')
             ->addColumn('tipe_so')
             ->addColumn('nama_customer')
+            ->addColumn('sub_company')
             ->addColumn('norek')
             ->addColumn('tipe')
-            ->addColumn('total', function(Invoice $model) {
+            ->addColumn('total', function(VInvoiceHeader $model) {
                 return number_format($model->total,2,".",",");
             })
-            ->addColumn('ppn', function(Invoice $model) {
+            ->addColumn('ppn', function(VInvoiceHeader $model) {
                 return number_format($model->ppn,2,".",",");
             })
-            ->addColumn('dpp', function(Invoice $model) {
+            ->addColumn('dpp', function(VInvoiceHeader $model) {
                 return number_format($model->dpp,2,".",",");
             })
             ->addColumn('status')
-            ->addColumn('created_at_formatted', function(Invoice $model) { 
+            ->addColumn('created_at_formatted', function(VInvoiceHeader $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(Invoice $model) { 
+            ->addColumn('updated_at_formatted', function(VInvoiceHeader $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }
@@ -153,6 +152,13 @@ final class InvoiceTable extends PowerGridComponent
             Column::add()
             ->title('CUSTOMER')
             ->field('nama_customer')
+            ->searchable()
+            ->sortable()
+            ->makeInputText(),
+
+        Column::add()
+            ->title('SUB COMPANY')
+            ->field('sub_company')
             ->searchable()
             ->sortable()
             ->makeInputText(),
@@ -279,7 +285,7 @@ final class InvoiceTable extends PowerGridComponent
     {
        return [
             Rule::button('bayar')
-                ->when(fn(Invoice $model) => $model->sisa_invoice <= 0)
+                ->when(fn(VInvoiceHeader $model) => $model->sisa_invoice <= 0)
                 ->hide(),
         ];
     }

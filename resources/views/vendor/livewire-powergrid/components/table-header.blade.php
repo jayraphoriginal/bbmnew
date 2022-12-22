@@ -12,6 +12,11 @@
     @if($checkbox)
         <td></td>
     @endif
+    @if(isset($actions) && count($actions))
+        <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"
+            style="{{ $theme->table->thStyle }}" colspan="{{count($actions)}}">
+        </th>
+    @endif
     @foreach ($columns as $column)
         @php
             if (filled($column->dataField) && str_contains($column->dataField, '.')) {
@@ -47,9 +52,5 @@
             @endif
         </td>
     @endforeach
-    @if(isset($actions) && count($actions))
-        <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"
-            style="{{ $theme->table->thStyle }}" colspan="{{count($actions)}}">
-        </th>
-    @endif
+    
 </tr>

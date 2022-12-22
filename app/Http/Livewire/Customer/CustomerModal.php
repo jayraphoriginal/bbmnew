@@ -22,6 +22,7 @@ class CustomerModal extends ModalComponent
 
     protected $rules=[
         'customer.nama_customer' => 'required',
+        'customer.sub_company' => 'required',
         'customer.npwp' => 'required',
         'customer.alamat' => 'required',
         'customer.notelp' => 'required',
@@ -65,7 +66,7 @@ class CustomerModal extends ModalComponent
             
                 $coa = New Coa();
                 $coa['kode_akun'] = $kodeakun;
-                $coa['nama_akun'] = $this->customer->nama_customer;
+                $coa['nama_akun'] = $this->customer->nama_customer.' - '.$this->customer->sub_company;
                 $coa['level'] = 5;
                 $coa['tipe'] = 'Detail';
                 $coa['posisi'] = 'Asset';
@@ -74,7 +75,7 @@ class CustomerModal extends ModalComponent
                 $this->customer->coa_id = $coa->id;
             }else{
                 $coa = Coa::find($this->customer->coa_id);
-                $coa['nama_akun'] = $this->customer->nama_customer;
+                $coa['nama_akun'] = $this->customer->nama_customer.' - '.$this->customer->sub_company;
                 $coa->save();
             }
             

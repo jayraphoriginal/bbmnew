@@ -30,7 +30,7 @@
                 @endif
 					</span>
         @endif
-        <span>
+        <span style="font-size:0.65rem">
                     {{$column->title}}
                 </span>
     </div>

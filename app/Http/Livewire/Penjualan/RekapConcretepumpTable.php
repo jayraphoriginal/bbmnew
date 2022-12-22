@@ -190,6 +190,25 @@ final class RekapConcretepumpTable extends PowerGridComponent
             ->route("printconcretepump",[
                 'id' => 'id'
             ]),
+
+            Button::add('edit')
+            ->caption(__('Edit'))
+            ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->target('_blank')
+            ->openModal('penjualan.concretepump-modal',[
+                'editmode' => 'edit',
+                'concretepump_id' => 'id',
+                'm_salesorder_id' => 'm_salesorder_id'
+            ]),
+
+            Button::add('delete')
+            ->caption(__('Hapus'))
+            ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->target('_blank')
+            ->openModal('penjualan.delete-concretepump-modal',[
+                'concretepump_id' => 'id',
+            ]),
+
         ];
     }
 
@@ -208,18 +227,15 @@ final class RekapConcretepumpTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
 
-    /*
+    
     public function actionRules(): array
     {
        return [
-           
-           //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($concretepump) => $concretepump->id === 1)
+                ->when(fn($concretepump) => $concretepump->status === 'Finish' || $concretepump->status === 'Cancel')
                 ->hide(),
         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------

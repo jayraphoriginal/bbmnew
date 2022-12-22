@@ -45,6 +45,18 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Status">
+        <x-combobox
+            wire:model="mutubeton.status">
+            <option value="">-- Pilih Status --</option>
+            <option value="aktif">Aktif</option>
+            <option value="non aktif">Non Aktif</option>
+        </x-combobox>
+        @error('mutubeton.status')
+            <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-footer-modal>
         <x-secondary-button
             wire:click="$emit('closeModal')">

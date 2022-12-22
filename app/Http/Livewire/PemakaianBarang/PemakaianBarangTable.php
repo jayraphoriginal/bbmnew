@@ -84,11 +84,21 @@ final class PemakaianBarangTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('created_at_formatted', function(VPemakaianBarang $model) { 
-                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            ->addColumn('tgl_pemakaian')
+            ->addColumn('nama_biaya')
+            ->addColumn('jenis_pembebanan')
+            ->addColumn('alken')
+            ->addColumn('nama_barang')
+            ->addColumn('jumlah', function(VPemakaianBarang $model) { 
+                return number_format($model->jumlah, 2,',','.');
             })
-            ->addColumn('updated_at_formatted', function(VPemakaianBarang $model) { 
-                return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
+            ->addColumn('satuan')
+            ->addColumn('total', function(VPemakaianBarang $model) { 
+                return number_format($model->total, 2,',','.');
+            })
+            ->addColumn('keterangan')
+            ->addColumn('tgl_pemakaian_formatted', function(VPemakaianBarang $model) { 
+                return Carbon::parse($model->tgl_pemakaian)->format('d/m/Y');
             });
     }
 
@@ -115,21 +125,61 @@ final class PemakaianBarangTable extends PowerGridComponent
                 ->makeInputRange(),
 
             Column::add()
-                ->title('CREATED AT')
-                ->field('created_at_formatted', 'created_at')
+                ->title('TANGGAL')
+                ->field('tgl_pemakaian_formatted', 'tgl_pemakaian')
                 ->searchable()
                 ->sortable()
                 ->makeInputDatePicker('created_at'),
 
             Column::add()
-                ->title('UPDATED AT')
-                ->field('updated_at_formatted', 'updated_at')
+                ->title('BIAYA')
+                ->field('nama_biaya')
                 ->searchable()
                 ->sortable()
-                ->makeInputDatePicker('updated_at'),
+                ->makeInputText(),
 
-        ]
-;
+            Column::add()
+                ->title('DIBEBANKAN DI')
+                ->field('alken')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('NAMA BARANG')
+                ->field('nama_barang')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('JUMLAH')
+                ->field('jumlah')
+                ->searchable()
+                ->sortable()
+                ->makeInputRange(),  
+
+            Column::add()
+                ->title('SATUAN')
+                ->field('satuan')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('TOTAL')
+                ->field('total')
+                ->searchable()
+                ->sortable()
+                ->makeInputRange(),  
+
+            Column::add()
+                ->title('KETERANGAN')
+                ->field('keterangan')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+        ];
     }
 
     /*

@@ -12,6 +12,15 @@
         @enderror
     </x-form-group>
 
+     <x-form-group caption="Sub Company">
+        <x-textbox
+            wire:model="customer.sub_company"
+        />
+        @error('customer.sub_company')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="NPWP">
         <x-textbox
             x-mask="99.999.999.9-999.999"

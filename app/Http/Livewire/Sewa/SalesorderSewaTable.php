@@ -53,7 +53,7 @@ final class SalesorderSewaTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         return MSalesorderSewa::join('customers','m_salesorder_sewas.customer_id','customers.id')
-        ->select('m_salesorder_sewas.*','customers.nama_customer');
+        ->select('m_salesorder_sewas.*','customers.nama_customer','customers.sub_company');
     }
 
     /*
@@ -96,7 +96,8 @@ final class SalesorderSewaTable extends PowerGridComponent
                 return Carbon::parse($model->jatuh_tempo)->format('d/m/Y');
             })
             ->addColumn('customer_id')
-            ->addColumn('nama_customer');
+            ->addColumn('nama_customer')
+            ->addColumn('sub_company');
     }
 
     /*
@@ -133,6 +134,13 @@ final class SalesorderSewaTable extends PowerGridComponent
             Column::add()
                 ->title('CUSTOMER')
                 ->field('nama_customer')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('SUB COMPANY')
+                ->field('sub_company')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),
@@ -214,6 +222,15 @@ final class SalesorderSewaTable extends PowerGridComponent
                     'TableName'               => 'm_salesorder_sewas',
                     'confirmationTitle'       => 'Delete SO',
                     'confirmationDescription' => 'apakah yakin ingin hapus SO?',
+            ]),
+            
+            Button::add('cetak')
+                ->caption(__('RekapTimesheet'))
+                ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->target('_blank')
+                ->method('get')
+                ->route("timesheetso",[
+                    'so_id' => 'id'
                 ]),
         ];
     }

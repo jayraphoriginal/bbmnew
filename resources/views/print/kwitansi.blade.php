@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             *{
-                font-size:14px;
+                font-size:12px;
             }
             table{margin:0rem}
             @page{
@@ -45,11 +45,11 @@
     </head>
 
     <body>
-        <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
-        <div style="float:left;width:15%">
-            <img src="{{ asset('/img/logobbm.jpeg') }}" width="80px"/>
+        <div style="float:left;width:10%;border:solid 1px;padding:10px;height:87%;">
+            <img src="{{ asset('/img/logobbm.jpeg') }}" width="70px"/>
         </div>
         <div style="float:right;width:85%">
+            <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
             <table style="float:right">
                 <tr>
                     <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
@@ -65,7 +65,7 @@
                 <tr>
                     <td>Uang Sejumlah</td>
                     <td>:</td>
-                    <td style="background-color:#ccc;font-weight:bold;font-size:16px;">{{ ucwords($terbilang).' Rupiah' }}</td>
+                    <td style="background-color:#ccc;font-weight:bold">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
                     <td style="padding-top: 18px;">Untuk Pembayaran</td>
@@ -76,7 +76,10 @@
                                 @if( substr($jual->uraian,0,2) == 'DP' )
                                     {{ $jual->uraian }}
                                 @else
-                                    {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                    @if($jual->tipe_so=='Sewa')
+                                    @else
+                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                    @endif
                                 @endif
                             </div>
                         @endforeach
@@ -126,7 +129,7 @@
                 <tr>
                     <td>Uang Sejumlah</td>
                     <td>:</td>
-                    <td style="background-color:#ccc;font-weight:bold;font-size:16px;">{{ ucwords($terbilang).' Rupiah' }}</td>
+                    <td style="background-color:#ccc;font-weight:bold">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
                     <td style="padding-top: 18px;">Untuk Pembayaran</td>
@@ -188,7 +191,7 @@
                 <tr>
                     <td>Uang Sejumlah</td>
                     <td>:</td>
-                    <td style="background-color:#ccc;font-weight:bold;font-size:16px;">{{ ucwords($terbilang).' Rupiah' }}</td>
+                    <td style="background-color:#ccc;font-weight:bold">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
                     <td style="padding-top: 18px;">Untuk Pembayaran</td>
@@ -249,7 +252,7 @@
                 <tr>
                     <td>Uang Sejumlah</td>
                     <td>:</td>
-                    <td style="background-color:#ccc;font-weight:bold;font-size:16px;">{{ ucwords($terbilang).' Rupiah' }}</td>
+                    <td style="background-color:#ccc;font-weight:bold">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
                     <td style="padding-top: 18px;">Untuk Pembayaran</td>

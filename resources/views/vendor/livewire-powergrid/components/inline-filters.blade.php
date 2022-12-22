@@ -17,6 +17,10 @@
                     <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
                 @endif
 
+                @if(isset($actions) && count($actions))
+                    <td colspan="{{count($actions)}}"></td>
+                @endif
+
                 @foreach($columns as $column)
                     <td class="{{ $theme->table->tdBodyClass }}"
                         style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle }}">
@@ -85,9 +89,7 @@
                         @endforeach
                     </td>
                 @endforeach
-                @if(isset($actions) && count($actions))
-                    <td colspan="{{count($actions)}}"></td>
-                @endif
+                
             @endif
         </tr>
     @endif

@@ -36,6 +36,7 @@
             <tr>
                 <td class="tdhead">No</td>
                 <td class="tdhead">Kode Mutu</td>
+                <td class="tdhead">Deskripsi</td>
                 <td class="tdhead text-right">Jumlah M<sup>3</sup></td>
                 <td class="tdhead text-right">Total</td>
             </tr>
@@ -48,6 +49,7 @@
             <tr>
                 <td>{{ ++$index }}</td>
                 <td>{{ $item->kode_mutu }}</td>
+                <td>{{ $item->deskripsi }}</td>
                 <td class="text-right">{{ number_format($item->jumlah,2,',','.') }} M<sup>3</sup></td>
                 <td class="text-right">{{ number_format($item->total,2,',','.') }}</td>
             </tr>
@@ -57,7 +59,7 @@
                 @endphp
             @endforeach 
             <tr>
-                <td colspan="2" style="font-weight:bold">Total</td>
+                <td colspan="3" style="font-weight:bold">Total</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalkubik,2,',','.') }} M<sup>3</sup></td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
             </tr>

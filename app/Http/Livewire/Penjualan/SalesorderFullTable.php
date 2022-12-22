@@ -86,6 +86,7 @@ final class SalesorderFullTable extends PowerGridComponent
         ->addColumn('m_salesorder_id')
         ->addColumn('noso')
         ->addColumn('nama_customer')
+        ->addColumn('sub_company')
         ->addColumn('tujuan')
         ->addColumn('mutubeton_id')
         ->addColumn('kode_mutu')
@@ -134,6 +135,13 @@ final class SalesorderFullTable extends PowerGridComponent
             Column::add()
                 ->title('CUSTOMER')
                 ->field('nama_customer')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('SUB COMPANY')
+                ->field('sub_company')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),
@@ -200,6 +208,13 @@ final class SalesorderFullTable extends PowerGridComponent
                 'm_salesorder_id' => 'm_salesorder_id',
                 'mutubeton_id' => 'mutubeton_id'
             ]),
+            Button::add('finish')
+            ->caption(__('Finish'))
+            ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->target('_blank')
+            ->openModal('penjualan.finish-detail-so',[
+                'm_salesorder_id' => 'm_salesorder_id',
+            ]),
         ];
     }
     
@@ -227,6 +242,10 @@ final class SalesorderFullTable extends PowerGridComponent
             Rule::Rows('status_detail')
                 ->when(fn(VJumlahSo $model) => $model->status_detail == 'Open')
                 ->setAttribute('class', 'bg-red-200 dark:bg-red-800'),
+            
+            Rule::Button('finish')
+                ->when(fn(VJumlahSo $model) => $model->status_detail == 'finish')
+                ->hide(),
         ];
     }
 

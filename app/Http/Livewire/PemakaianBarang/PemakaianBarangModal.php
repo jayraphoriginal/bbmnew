@@ -26,11 +26,13 @@ class PemakaianBarangModal extends ModalComponent
     public $barang,$alat,$kendaraan;
 
     protected $rules=[
+        'pemakaian.tgl_pemakaian' => 'required',
         'pemakaian.m_biaya_id' => 'required',
+        'pemakaian.jenis_pembebanan' => 'required',
+        'pemakaian.beban_id' => 'nullable',
         'pemakaian.barang_id' => 'required',
         'pemakaian.jumlah' => 'required',
         'pemakaian.total' => 'nullable',
-        'pemakaian.keterangan_id' => 'nullable',
         'pemakaian.keterangan' => 'required',
     ];
 
@@ -41,10 +43,10 @@ class PemakaianBarangModal extends ModalComponent
     ];
 
     public function selectkendaraan($id){
-        $this->pemakaian->keterangan_id=$id;
+        $this->pemakaian->beban_id=$id;
     }
     public function selectalat($id){
-        $this->pemakaian->keterangan_id=$id;
+        $this->pemakaian->beban_id=$id;
     }
 
     public function selectbarang($id){
@@ -72,8 +74,14 @@ class PemakaianBarangModal extends ModalComponent
         $this->pemakaian->jumlah = str_replace(',', '', $this->pemakaian->jumlah);
 
         $this->validate();
+
+        if ($this->pemakaian->jenis_pembebanan <> '-'){
+            $this->validate([
+                'pemakaian.beban_id' => 'required'
+            ]);
+        }
+
         $total = 0;
-        $this->pemakaian->keterangan_id = 
         $this->pemakaian->total = $total;
         $this->pemakaian->save();
 
@@ -115,6 +123,7 @@ class PemakaianBarangModal extends ModalComponent
                                 ->sum('jumlah');
 
                             $kartustok = new Kartustok();
+                            $kartustok['tanggal']=$this->pemakaian->tgl_pemakaian;
                             $kartustok['barang_id']=$this->pemakaian->barang_id;
                             $kartustok['tipe']='Pemakaian Barang';
                             $kartustok['trans_id']=$this->pemakaian->id;
@@ -138,6 +147,7 @@ class PemakaianBarangModal extends ModalComponent
                                 ->sum('jumlah');
 
                             $kartustok = new Kartustok();
+                            $kartustok['tanggal']=$this->pemakaian->tgl_pemakaian;
                             $kartustok['barang_id']=$this->pemakaian->barang_id;
                             $kartustok['tipe']='Pemakaian Barang';
                             $kartustok['trans_id']=$this->pemakaian->id;
@@ -167,7 +177,7 @@ class PemakaianBarangModal extends ModalComponent
             $journal = new Journal();
             $journal['tipe']='Pemakaian Barang';
             $journal['trans_id']=$this->pemakaian->id;
-            $journal['tanggal_transaksi']=$this->pemakaian->created_at;
+            $journal['tanggal_transaksi']=$this->pemakaian->tgl_pemakaian;
             $journal['coa_id']=$coabiaya->coa_id;
             $journal['debet']=$total;
             $journal['kredit']=0;
@@ -176,7 +186,7 @@ class PemakaianBarangModal extends ModalComponent
             $journal = new Journal();
             $journal['tipe']='Pemakaian Barang';
             $journal['trans_id']=$this->pemakaian->id;
-            $journal['tanggal_transaksi']=$this->pemakaian->created_at;
+            $journal['tanggal_transaksi']=$this->pemakaian->tgl_pemakaian;
             $journal['coa_id']=$kategori->coa_asset_id;
             $journal['debet']=0 ;
             $journal['kredit']=$total;
@@ -189,6 +199,8 @@ class PemakaianBarangModal extends ModalComponent
             $this->alert('success', 'Save Success', [
                 'position' => 'center'
             ]);
+
+            $this->emitTo('pemakaian-barang.pemakaian-barang-table', 'pg:eventRefresh-default');
 
         }catch(Throwable $e){
             DB::rollBack();

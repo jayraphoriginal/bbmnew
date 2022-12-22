@@ -52,15 +52,19 @@
             </tr>
             <tr>
                 <td style="height:40px;width:20%">Untuk Keperluan </td>
-                <td>
-                    @foreach($data as $key => $value)
-                        @if($key == 0)
-                            {{ ' '.$value->keterangan }}
-                        @else
-                            {{ ' ,'.$value->keterangan }}
-                        @endif
-                    @endforeach
-                </td>
+                @if(is_null($data[0]->ket) || $data[0]->ket =='')
+                    <td>
+                        @foreach($data as $key => $value)
+                            @if($key == 0)
+                                {{ ' '.$value->keterangan }}
+                            @else
+                                {{ ' ,'.$value->keterangan }}
+                            @endif
+                        @endforeach
+                    </td>
+                @else
+                    <td>{{$data[0]->ket}}</td>
+                @endif
             </tr>
         </table>
         <table style="width:100%">

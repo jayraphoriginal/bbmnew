@@ -44,6 +44,9 @@ class AccessComponent extends Component
             if ($selected == true){
                 $permission = ModelsPermission::find($permission_id);
                 $user->givePermissionTo($permission->name);
+            }else{
+                $permission = ModelsPermission::find($permission_id);
+                $user->revokePermissionTo($permission->name);
             }
         }
         $this->alert('success', 'Save Success', [

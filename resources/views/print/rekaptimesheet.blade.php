@@ -1,7 +1,6 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <title>Rekap Timesheet</title>
     </head>
 
@@ -9,9 +8,14 @@
         .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
             padding: 5px;
             vertical-align: middle;
+            border:1px solid;
+            margin:0;
         }
         *{
             font-size:13px;
+        }
+        table{
+            border-collapse: collapse;
         }
         @page{
             margin: 0.3in 0.3in 0.2in 0.3in;
@@ -28,17 +32,17 @@
         
 
         @php
-            $timesheets = $data->groupBy('nama_alat');
+            $timesheets = $data->groupBy('nama_item');
             $timesheets->toArray();
             $jumlah = count($timesheets);
             $urut = 1;
         @endphp        
         
         @foreach ($timesheets as $timesheet => $times )
-        <h3 style="margin-bottom: 3rem;text-align:center">REKAP TIME SHEET</h3>
-            <table style="margin-bottom: 3rem;">
+        <h3 style="margin-bottom: 3rem;text-align:center; font-size:18px">REKAP TIME SHEET</h3>
+            <table style="margin-bottom: 3rem;width:100%">
                 <tr>
-                    <td style="width: 2rem;">Jenis alat</td>
+                    <td style="width: 8rem;">Jenis alat</td>
                     <td> : </td>
                     <td>{{ $timesheet }}</td>
                 </tr>
@@ -49,7 +53,7 @@
                 </tr>
             </table>
 
-            <table class="table table-striped table-bordered mytable">
+            <table class="mytable" style="width:100%">
                 <tr>
                     <td rowspan="2" class="tdhead">No</td>
                     <td rowspan="2" class="tdhead">Tanggal</td>
@@ -70,12 +74,16 @@
             <tr>
                 <td>{{ ++$index }}</td>
                 <td>{{ $time->tanggal }}</td>
-                <td>{{ $time->operator }}</td>
-                @if($time->tipe == 'jam')
-                    <td>{{ $time->jam_awal }}</td>
-                    <td>{{ $time->jam_akhir }}</td>
+                <td>{{ $time->nama_driver }}</td>
+                @if($time->tipe == 'Jam')
+                
+                    <td>{{ date_create($time->jam_awal)->format('h:i:s') }}</td>
+                    <td>{{ date_create($time->jam_akhir)->format('h:i:s') }}</td>
                     <td>{{ $time->istirahat }}</td>
-                    <td>{{ $time->jam_operasi - $time->istirahat }}</td>
+                @php
+                   $menit = $time->lama%60 <> 0 ? $time->lama%60 . ' Menit' : '';
+                @endphp
+                    <td>{{ floor($time->lama/60). ' Jam '. $menit   }}</td>
                 @else
                     <td>{{ $time->hm_awal }}</td>
                     <td>{{ $time->hm_akhir }}</td>
@@ -85,19 +93,22 @@
                 <td>{{ $time->keterangan }}</td>
             </tr>
                 @php
-                    if($time->tipe == 'jam'){
-                        $jamtotal = $jamtotal+$time->jam_operasi - $time->istirahat;
+                    if($time->tipe == 'Jam'){
+                        $jamtotal = $jamtotal + $time->lama;
                     }
                     else{
-                        $jamtotal = $time->hm_akhir - $time->hm_awal - $time->istirahat;
+                        $jamtotal = $jamtotal + $time->hm_akhir - $time->hm_awal - $time->istirahat;
                     }
                 @endphp
             @endforeach 
             <tr>
+                @php
+                   $menit = $jamtotal%60 <> 0 ? $jamtotal%60 . ' Menit' : '';
+                @endphp
                 <td colspan="6">
                     Jumlah Total
                 </td>
-                <td>{{ $jamtotal }}</td>
+                <td>{{ floor($jamtotal/60). ' Jam '. $menit }}</td>
                 <td></td>
             </tr>
             </table>

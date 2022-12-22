@@ -109,6 +109,8 @@ class TicketModal extends ModalComponent
 
     public function save(){
 
+        $pembayaran = MSalesorder::find($this->m_salesorder_id)->pembayaran;
+
         $this->ticket->lembur = str_replace(',', '', $this->ticket->lembur);
 
         $this->ticket->jumlah = str_replace(',', '', $this->ticket->jumlah);
@@ -150,7 +152,14 @@ class TicketModal extends ModalComponent
             }
 
             $this->ticket->noticket = $noticket;
-            $this->ticket->status = 'Open';
+
+            if ($pembayaran == 'Dimuka Full'){
+                $this->ticket->status = 'Finish';
+            }else{
+                $this->ticket->status = 'Open';
+            }
+
+            
             $this->ticket->jam_ticket = date_create($this->ticket->jam_ticket)->format('Y-m-d H:i:s');
             $this->ticket->save();
 

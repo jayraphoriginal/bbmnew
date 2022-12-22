@@ -27,19 +27,22 @@ class CustomerSelect extends Component
 
     public function selectdata($id)
     {
-        $this->deskripsi = Customer::find($id)->nama_customer;
+        $customer = Customer::find($id);
+        $this->deskripsi = $customer->nama_customer.' - '.$customer->sub_company;
         $this->emitTo('penjualan.salesorder-modal','selectcustomer', $id);
         $this->emitTo('sewa.salesorder-sewa-modal','selectcustomer', $id);
         $this->emitTo('penjualan.penjualan-modal','selectcustomer', $id);
     }
 
     public function selectDeskripsi($id){
-        $this->deskripsi = Customer::find($id)->nama_customer;
+        $customer = Customer::find($id);
+        $this->deskripsi = $customer->nama_customer.' - '.$customer->sub_company;
     }
 
     public function updatedSearch()
     {
         $this->customer = Customer::where('nama_customer', 'like', '%' . $this->search . '%')
+            ->orwhere('sub_company', 'like', '%' . $this->search . '%')
             ->get();
     }
 

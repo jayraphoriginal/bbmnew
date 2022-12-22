@@ -49,7 +49,7 @@ final class SoSewaTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         return MSalesorderSewa::join('customers','m_salesorder_sewas.customer_id','customers.id')
-        ->select('m_salesorder_sewas.*','customers.nama_customer');
+        ->select('m_salesorder_sewas.*','customers.nama_customer','customers.sub_company');
     }
 
     /*
@@ -92,7 +92,8 @@ final class SoSewaTable extends PowerGridComponent
                 return Carbon::parse($model->jatuh_tempo)->format('d/m/Y');
             })
             ->addColumn('customer_id')
-            ->addColumn('nama_customer');
+            ->addColumn('nama_customer')
+            ->addColumn('sub_company');
     }
 
     /*
@@ -129,6 +130,13 @@ final class SoSewaTable extends PowerGridComponent
             Column::add()
                 ->title('CUSTOMER')
                 ->field('nama_customer')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('SUB COMPANY')
+                ->field('sub_company')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),

@@ -35,6 +35,7 @@ class MutubetonModal extends ModalComponent
         'mutubeton.jumlah' => 'required',
         'mutubeton.satuan_id' => 'required',
         'mutubeton.berat_jenis' => 'required',
+        'mutubeton.status' => 'required'
     ];
 
     public function mount(){

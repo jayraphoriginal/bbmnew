@@ -56,6 +56,12 @@ class ConcretepumpModal extends ModalComponent
             $this->concretepump = Concretepump::find($this->concretepump_id);
             $rate = Rate::find($this->concretepump->rate_id);
             $this->rate = $rate->tujuan.' - '.$rate->estimasi_jarak.' KM';
+            $kendaraan = Kendaraan::find($this->concretepump->kendaraan_id);
+            $this->kendaraan = Kendaraan::find($this->concretepump->kendaraan_id)->nopol;
+            $this->concretepump->loading=$kendaraan->loading;
+            $driver = Driver::find($kendaraan->driver_id);
+            $this->concretepump->driver_id = $driver->id;
+            $this->driver = Driver::find($this->concretepump->driver_id)->nama_driver;
         }else{
             $this->concretepump = new Concretepump();
         }
@@ -67,7 +73,6 @@ class ConcretepumpModal extends ModalComponent
         
         $this->concretepump->kendaraan_id=$id;
         $kendaraan = Kendaraan::find($id);
-      
         $this->kendaraan = Kendaraan::find($this->concretepump->kendaraan_id)->nopol;
         $this->concretepump->loading=$kendaraan->loading;
         $driver = Driver::find($kendaraan->driver_id);
@@ -96,61 +101,73 @@ class ConcretepumpModal extends ModalComponent
         DB::beginTransaction();
 
         try{
-            $this->concretepump->status='Open';
+            $pembayaran = MSalesorder::find($this->m_salesorder_id)->pembayaran;
+
+            if ($pembayaran == 'Dimuka Full'){
+                $this->concretepump->status='Finish';
+            }else{
+                $this->concretepump->status='Open';
+            }
+
             $this->concretepump->save();
 
-            $msalesorder = MSalesorder::find($this->m_salesorder_id);
+            // $msalesorder = MSalesorder::find($this->m_salesorder_id);
 
-            $pajak = Mpajak::where('jenis_pajak','PPN')->first();
-            $pajakpph = Mpajak::where('jenis_pajak','PPH 23')->first();
-            $customer = Customer::find($msalesorder->customer_id);
+            // $pajak = Mpajak::where('jenis_pajak','PPN')->first();
+            // $pajakpph = Mpajak::where('jenis_pajak','PPH 23')->first();
+            // $customer = Customer::find($msalesorder->customer_id);
 
-            $dpp = $this->concretepump->harga_sewa / (1 + ($pajak->persen / 100));
-            $ppn = $this->concretepump->harga_sewa - $dpp;
-            $pph = $dpp / (1 + ($pajakpph->persen / 100));
+            // $dpp = $this->concretepump->harga_sewa / (1 + ($pajak->persen / 100));
+            // $ppn = $this->concretepump->harga_sewa - $dpp;
+            // $pph = $dpp / (1 + ($pajakpph->persen / 100));
 
-            //Jurnal Piutang
-            $journal = new Journal();
-            $journal['tipe']='Concrete Pump';
-            $journal['trans_id']=$this->concretepump->id;
-            $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
-            $journal['coa_id']=$customer->coa_id;
-            $journal['debet']=$this->concretepump->harga_sewa;
-            $journal['kredit']=0;
-            $journal->save();
+            // //Jurnal Piutang
+            // $journal = new Journal();
+            // $journal['tipe']='Concrete Pump';
+            // $journal['trans_id']=$this->concretepump->id;
+            // $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
+            // $journal['coa_id']=$customer->coa_id;
+            // $journal['debet']=$this->concretepump->harga_sewa;
+            // $journal['kredit']=0;
+            // $journal->save();
 
-            //Jurnal PPN Keluaran
-            $journal = new Journal();
-            $journal['tipe']='Concrete Pump';
-            $journal['trans_id']=$this->concretepump->id;
-            $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
-            $journal['coa_id']=$pajak->coa_id_kredit;
-            $journal['debet']=0;
-            $journal['kredit']=$ppn;
-            $journal->save();
+            // //Jurnal PPN Keluaran
+            // $journal = new Journal();
+            // $journal['tipe']='Concrete Pump';
+            // $journal['trans_id']=$this->concretepump->id;
+            // $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
+            // $journal['coa_id']=$pajak->coa_id_kredit;
+            // $journal['debet']=0;
+            // $journal['kredit']=$ppn;
+            // $journal->save();
 
-            //Jurnal PPH Keluaran
-            $journal = new Journal();
-            $journal['tipe']='Concrete Pump';
-            $journal['trans_id']=$this->concretepump->id;
-            $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
-            $journal['coa_id']=$pajak->coa_id_kredit;
-            $journal['debet']=0;
-            $journal['kredit']=$pph;
-            $journal->save();
+            // //Jurnal PPH Keluaran
+            // $journal = new Journal();
+            // $journal['tipe']='Concrete Pump';
+            // $journal['trans_id']=$this->concretepump->id;
+            // $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
+            // $journal['coa_id']=$pajak->coa_id_kredit;
+            // $journal['debet']=0;
+            // $journal['kredit']=$pph;
+            // $journal->save();
 
-            $coapenjualan = Coa::where('kode_akun','430001')->first();
-            // Jurnal penjualan
-            $journal = new Journal();
-            $journal['tipe']='Concrete Pump';
-            $journal['trans_id']=$this->concretepump->id;
-            $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
-            $journal['coa_id']=$coapenjualan->id;
-            $journal['debet']=0;
-            $journal['kredit']=$dpp - $pph;
-            $journal->save();
+            // $coapenjualan = Coa::where('kode_akun','430001')->first();
+            // // Jurnal penjualan
+            // $journal = new Journal();
+            // $journal['tipe']='Concrete Pump';
+            // $journal['trans_id']=$this->concretepump->id;
+            // $journal['tanggal_transaksi']=$this->concretepump->created_at->format('Y-m-d');
+            // $journal['coa_id']=$coapenjualan->id;
+            // $journal['debet']=0;
+            // $journal['kredit']=$dpp - $pph;
+            // $journal->save();
 
             DB::commit();
+            $this->alert('success', 'Save Success', [
+                'position' => 'center'
+            ]);
+    
+            $this->emitTo('penjualan.rekap-concretepump-table', 'pg:eventRefresh-default');
         }
         catch(Throwable $e){
             DB::rollBack();
@@ -162,11 +179,7 @@ class ConcretepumpModal extends ModalComponent
        
         $this->closeModal();
 
-        $this->alert('success', 'Save Success', [
-            'position' => 'center'
-        ]);
-
-        $this->emitTo('penjualan.rekap-concretepump-table', 'pg:eventRefresh-default');
+        
 
     }
 
