@@ -23,6 +23,7 @@
     <x-form-group caption="Dari Tanggal">
         <x-datepicker
             wire:model="tgl_awal"
+            wire:change="selecttgl"
         />
         @error('tgl_awal')
         <x-error-form>{{ $message }}</x-error-form>
@@ -32,6 +33,7 @@
     <x-form-group caption="Sampai Tanggal">
         <x-datepicker
             wire:model="tgl_akhir"
+            wire:change="selecttgl"
         />
         @error('tgl_akhir')
         <x-error-form>{{ $message }}</x-error-form>

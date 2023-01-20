@@ -35,14 +35,15 @@
         
         <h4 style="text-align:center;font-size:14px">Rekap Penjualan Ready Mix</h4>
         @if (count($data) > 0)
-        <h5 style="margin-bottom: 3rem;text-align:center">Periode : {{ date_format(date_create($data[0]->tgl_awal),'d/M/Y').' - '.date_format(date_create($data[0]->tgl_akhir),'d/M/Y') }}</h5>
+        <h5 style="margin-bottom: 3rem;text-align:center">Periode : {{ date_format(date_create($tgl_awal),'d/M/Y').' - '.date_format(date_create($tgl_akhir),'d/M/Y') }}</h5>
         <table class="mytable" style="width:100%">
             <tr>
                 <td class="tdhead" style="text-align:center">No</td>
+                <td class="tdhead">No Ticket</td>
                 <td class="tdhead">Tanggal</td>
                 <td class="tdhead">Nopol</td>
                 <td class="tdhead">Kode Mutu</td>
-                <td class="tdhead text-right">Jumlah</td>
+                <td class="tdhead text-right">Volume</td>
                 <td class="tdhead">Customer</td>
                 <td class="tdhead">Lokasi</td>
             </tr>
@@ -51,21 +52,38 @@
                 $total = 0;
             @endphp
             @foreach($data as $index => $item)
+            @if($item->status == 'Cancel')
+            <tr style="background-color:#aaa">
+            @else
             <tr>
+            @endif
                 <td style="text-align:center">{{ ++$index }}</td>
-                <td>{{ date_format(date_create($item->jam_ticket),'d-m-Y') }}</td>
+                <td style="text-align:center">{{ $item->noticket }}</td>
+                <td style="width:70px;">{{ date_format(date_create($item->jam_ticket),'d-m-Y') }}</td>
                 <td>{{ $item->nopol }}</td>
                 <td>{{ $item->kode_mutu }}</td>
-                <td class="text-right">{{ number_format($item->jumlah,1,',','.').' '.$item->satuan }}</td>
-                <td>{{ $item->nama_customer }}</td>
-                <td>{{ $item->tujuan}}</td>
+                @if($item->status == 'Cancel')
+                    <td class="text-right">{{ '0 '.$item->satuan }} </td>
+                    <td>{{ $item->nama_customer }}</td>
+                    <td>{{ $item->tujuan.'(Cancel)'}}</td>
+                @else
+                    <td class="text-right">{{ number_format($item->jumlah,1,',','.').' '.$item->satuan }}</td>
+                    <td>{{ $item->nama_customer }}</td>
+                    <td>{{ $item->tujuan}}</td>
+                @endif
+                
             </tr>
                 @php
-                    $total = $total + $item->jumlah;
+                    if($item->status == 'Cancel'){
+                        $total = $total + 0;
+                    }
+                    else{
+                        $total = $total + $item->jumlah;
+                    }
                 @endphp
             @endforeach 
             <tr>
-                <td colspan="4" style="font-weight:bold">Total</td>
+                <td colspan="5" style="font-weight:bold">Total</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($total,1,',','.').' '.$data[0]->satuan }}</td>
                 <td colspan="2"></td>
             </tr>

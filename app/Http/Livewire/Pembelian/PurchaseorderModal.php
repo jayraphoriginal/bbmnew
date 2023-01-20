@@ -78,13 +78,20 @@ class PurchaseorderModal extends ModalComponent
 
         $this->validate();
 
-        if ($this->Mpo->pembebanan == 'Langsung'){
+        if ($this->Mpo->pembebanan == 'Langsung' && $this->jenis_pembebanan != 'Beban Kantor'){
             $this->validate(
                 ['coa_id' => 'required',
                 'jenis_pembebanan'=> 'required',
                 'beban_id' => 'required',
                 ]);
+        }else if($this->Mpo->pembebanan == 'Langsung' && $this->jenis_pembebanan == 'Beban Kantor'){
+            $this->validate(
+                ['coa_id' => 'required',
+                'jenis_pembebanan'=> 'required',
+                'beban_id' => 'nullable',
+                ]);
         }
+
         if ($this->editmode!='edit') {
             $nomorterakhir = DB::table('m_purchaseorders')
                 ->orderBy('id', 'DESC')->get();

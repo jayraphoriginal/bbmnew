@@ -17,6 +17,7 @@ class Card extends Component
     {
         $this->title = $title;
         $this->value = $value;
+        $this->link = $link;
     }
 
     /**

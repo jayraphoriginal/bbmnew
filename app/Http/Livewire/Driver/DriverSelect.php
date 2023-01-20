@@ -29,12 +29,14 @@ class DriverSelect extends Component
         $this->deskripsi = Driver::find($id)->nama_driver;
         $this->emitTo('kendaraan.kendaraan-modal','selectdriver', $id);
         $this->emitTo('penjualan.ticket-modal','selectdriver', $id);
+        $this->emitTo('penjualan.ticket-edit-modal','selectdriver', $id);
         $this->emitTo('penjualan.concretepump-modal','selectdriver', $id);
         $this->emitTo('sewa.timesheet-modal','selectdriver', $id);
         $this->emitTo('produksi.produksi-modal','selectdriver', $id);
         $this->emitTo('bbm.pengisian-bbm-modal','selectdriver', $id);
         $this->emitTo('bbm.penambahan-bbm-modal','selectdriver', $id);
         $this->emitTo('laporan.rekap-gajiper-driver-modal','selectdriver', $id);
+        $this->emitTo('laporan.tt-driver','selectdriver', $id);
     }
 
     public function selectDeskripsi($id){

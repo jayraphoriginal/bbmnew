@@ -114,11 +114,13 @@
                     $i = 1;
                     $total = 0;
                     $totaldpp = 0;
+                    $totalvolume = 0;
                 @endphp
                 @foreach($data as $jual)
                     @php
                         $totaldpp += $jual->jumlah * $jual->harga_intax/((100+$jual->pajak)/100);
                         $total += $jual->jumlah * $jual->harga_intax;
+                        $totalvolume = $totalvolume + $jual->jumlah;
                     @endphp
                     <tr>
                         <td class="captioncenter">{{ $i++ }}</td>
@@ -130,6 +132,11 @@
                 @endforeach
             </tbody>
             <tfoot>
+                <tr>
+                    <td colspan=2 class="captionleft">Total Volume</td>
+                    <td class="captionright">{{ number_format($totalvolume,2,".",",") }}</td>
+                    <td colspan=2></td>
+                </tr>
                 <tr>
                     <td colspan=4 class="captionleft">DPP</td>
                     <td class="captionright">{{ number_format($totaldpp,2,".",",") }}</td>
@@ -147,7 +154,7 @@
                     <td class="captionright">{{ number_format($totaldpp,2,".",",") }}</td>
                 </tr>
                 <tr>
-                    <td colspan=4 class="captionleft">PPN {{ $data[0]->pajak.'%' }}</td>
+                    <td colspan=4 class="captionleft">PPN {{ number_format($data[0]->pajak,0,',','.').'%' }}</td>
                     <td class="captionright">{{ number_format($totaldpp*($data[0]->pajak/100),2,".",",") }}</td>
                 </tr>
                 <tr>

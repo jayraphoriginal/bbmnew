@@ -1,6 +1,66 @@
 <div class="w-full">
     <x-container title="Laporan">
         <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Persediaan
+        </h4>
+        <div class="w-full overflow-hidden rounded-lg shadow-xs">
+            <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Laporan</th>
+                            <th class="px-4 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        <x-datarowtable title="Laporan Stok Barang All">
+                            <a href="/laporanstokall" target="_blank"
+                                class='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'>
+                                Cetak
+                            </a>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Kartu Stok">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-kartustok')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Kartu Stok Harian">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-kartu-stok-harian')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Komposisi
+        </h4>
+        <div class="w-full overflow-hidden rounded-lg shadow-xs">
+            <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Laporan</th>
+                            <th class="px-4 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        <x-datarowtable title="Laporan Komposisi">
+                            <a href="/laporankomposisi" target="_blank"
+                                class='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'>
+                                Cetak
+                            </a>
+                        </x-datarowtable>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
             Pembelian
         </h4>
         <div class="w-full overflow-hidden rounded-lg shadow-xs">
@@ -50,6 +110,12 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        <x-datarowtable title="Laporan Penjualan Beton Harian">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-penjualan-harian')">
+                                Cetak
+                        </x-print-button>
+                        </x-datarowtable>
                         <x-datarowtable title="Laporan Penjualan Beton">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.penjualan-beton')">
@@ -116,6 +182,12 @@
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>
+                        <x-datarowtable title="TT Driver">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.tt-driver')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
                     </tbody>
                 </table>
             </div>
@@ -162,6 +234,30 @@
                 </table>
             </div>
         </div>
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Accounting
+        </h4>
+        <div class="w-full overflow-hidden rounded-lg shadow-xs">
+            <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                    <thead>
+                        <tr
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Laporan</th>
+                            <th class="px-4 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        <x-datarowtable title="Laporan Jurnal Umum">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.jurnal-umum')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                    </tbody>
+                </table>
+            </div>
+        </div>    
     </x-container>
 </div>
 

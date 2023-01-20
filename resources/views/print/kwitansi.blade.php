@@ -1,10 +1,9 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             *{
-                font-size:12px;
+                font-size:14px;
             }
             table{margin:0rem}
             @page{
@@ -44,11 +43,11 @@
         <title>{{ $data[0]->nokwitansi }}</title>
     </head>
 
-    <body>
-        <div style="float:left;width:10%;border:solid 1px;padding:10px;height:87%;">
-            <img src="{{ asset('/img/logobbm.jpeg') }}" width="70px"/>
+    <body style="height:40%;">
+        <div style="float:left;width:10%;border:solid 1px;padding:10px;overflow:auto;height:100%">
+            <img src="{{ asset('/img/logobbm.jpeg') }}" width="70px" style="margin-top:40px;"/>
         </div>
-        <div style="float:right;width:85%">
+        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
             <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
             <table style="float:right">
                 <tr>
@@ -56,7 +55,7 @@
                 </tr>
             </table>
 
-            <table style="width:80%;height:50%">
+            <table style="width:80%;height:45%">
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
@@ -65,7 +64,7 @@
                 <tr>
                     <td>Uang Sejumlah</td>
                     <td>:</td>
-                    <td style="background-color:#ccc;font-weight:bold">{{ ucwords($terbilang).' Rupiah' }}</td>
+                    <td style="background-color:#ccc;font-weight:bold;font-style:italic;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
                     <td style="padding-top: 18px;">Untuk Pembayaran</td>
@@ -87,40 +86,40 @@
                     </td>
                 </tr>
             </table>
-            <table style="float:right;width:40%;">
-                <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
-                </tr>
-                <tr>
-                    <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
-                </tr>
-                <tr>
-                    <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
-                </tr>
-            </table>
-            <table style="float:left;width:40%;margin-top:8rem;">
+             <table style="float:left;width:40%;">
                 <tr>
                     <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
-                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;">{{ number_format($data[0]->total,2,',','.') }}</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
-            <p style="float:right;margin-top:10rem;text-align:right">I</p>
+            <table style="float:right;width:30%;margin-top:2rem;">
+                <tr>
+                    <td style="text-align:left; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
+                </tr>
+                <tr>
+                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <p style="float:right;margin-top:13rem;text-align:right">I</p>
         </div>
         
         <div class="page_break"></div>
 
-        <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
-        <div style="float:left;width:15%">
-            <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="80px"/>
+        <div style="float:left;width:10%;border:solid 1px;padding:10px;overflow:auto;height:100%">
+            <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
         </div>
-        <div style="float:right;width:85%">
+        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
+            <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
             <table style="float:right">
                 <tr>
                     <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
-            <table style="width:80%;height:50%">
+            <table style="width:80%;height:45%">
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
@@ -129,7 +128,7 @@
                 <tr>
                     <td>Uang Sejumlah</td>
                     <td>:</td>
-                    <td style="background-color:#ccc;font-weight:bold">{{ ucwords($terbilang).' Rupiah' }}</td>
+                    <td style="background-color:#ccc;font-weight:bold;font-style:italic;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
                     <td style="padding-top: 18px;">Untuk Pembayaran</td>
@@ -140,7 +139,10 @@
                                 @if( substr($jual->uraian,0,2) == 'DP' )
                                     {{ $jual->uraian }}
                                 @else
-                                    {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                    @if($jual->tipe_so=='Sewa')
+                                    @else
+                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                    @endif
                                 @endif
                             </div>
                         @endforeach
@@ -148,41 +150,40 @@
                     </td>
                 </tr>
             </table>
-
-            <table style="float:right;width:40%;">
-                <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
-                </tr>
-                <tr>
-                    <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
-                </tr>
-                <tr>
-                    <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
-                </tr>
-            </table>
-            <table style="float:left;width:40%;margin-top:8rem;">
+            <table style="float:left;width:40%;">
                 <tr>
                     <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
-                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;">{{ number_format($data[0]->total,2,',','.') }}</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
-            <p style="float:right;margin-top:10rem;text-align:right">II</p>
+            <table style="float:right;width:30%;margin-top:2rem;">
+                <tr>
+                    <td style="text-align:left; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
+                </tr>
+                <tr>
+                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <p style="float:right;margin-top:13rem;text-align:right">II</p>
         </div>
         
         <div class="page_break"></div>
 
-        <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
-        <div style="float:left;width:15%">
-            <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="80px"/>
+        <div style="float:left;width:10%;border:solid 1px;padding:10px;overflow:auto;height:100%">
+            <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
         </div>
-        <div style="float:right;width:85%">
+        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
+            <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
             <table style="float:right">
                 <tr>
                     <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
-            <table style="width:80%;height:50%">
+            <table style="width:80%;height:45%">
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
@@ -191,7 +192,7 @@
                 <tr>
                     <td>Uang Sejumlah</td>
                     <td>:</td>
-                    <td style="background-color:#ccc;font-weight:bold">{{ ucwords($terbilang).' Rupiah' }}</td>
+                    <td style="background-color:#ccc;font-weight:bold;font-style:italic;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
                     <td style="padding-top: 18px;">Untuk Pembayaran</td>
@@ -202,7 +203,10 @@
                                 @if( substr($jual->uraian,0,2) == 'DP' )
                                     {{ $jual->uraian }}
                                 @else
-                                    {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                    @if($jual->tipe_so=='Sewa')
+                                    @else
+                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                    @endif
                                 @endif
                             </div>
                         @endforeach
@@ -210,40 +214,40 @@
                     </td>
                 </tr>
             </table>
-            <table style="float:right;width:40%;">
-                <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
-                </tr>
-                <tr>
-                    <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
-                </tr>
-                <tr>
-                    <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
-                </tr>
-            </table>
-            <table style="float:left;width:40%;margin-top:8rem;">
+            <table style="float:left;width:40%;">
                 <tr>
                     <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
-                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;">{{ number_format($data[0]->total,2,',','.') }}</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
-            <p style="float:right;margin-top:10rem;text-align:right">III</p>
+            <table style="float:right;width:30%;margin-top:2rem;">
+                <tr>
+                    <td style="text-align:left; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
+                </tr>
+                <tr>
+                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <p style="float:right;margin-top:13rem;text-align:right">III</p>
         </div>
         
         <div class="page_break"></div>
 
-        <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
-        <div style="float:left;width:15%">
-            <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="80px"/>
+        <div style="float:left;width:10%;border:solid 1px;padding:10px;overflow:auto;height:100%">
+            <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
         </div>
-        <div style="float:right;width:85%">
+        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
+            <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
             <table style="float:right">
                 <tr>
                     <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
-            <table style="width:80%;height:50%">
+            <table style="width:80%;height:45%">
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
@@ -252,7 +256,7 @@
                 <tr>
                     <td>Uang Sejumlah</td>
                     <td>:</td>
-                    <td style="background-color:#ccc;font-weight:bold">{{ ucwords($terbilang).' Rupiah' }}</td>
+                    <td style="background-color:#ccc;font-weight:bold;font-style:italic">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
                     <td style="padding-top: 18px;">Untuk Pembayaran</td>
@@ -263,7 +267,10 @@
                                 @if( substr($jual->uraian,0,2) == 'DP' )
                                     {{ $jual->uraian }}
                                 @else
-                                    {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                    @if($jual->tipe_so=='Sewa')
+                                    @else
+                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                    @endif
                                 @endif
                             </div>
                         @endforeach
@@ -271,24 +278,24 @@
                     </td>
                 </tr>
             </table>
-            <table style="float:right;width:40%;">
-                <tr>
-                    <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
-                </tr>
-                <tr>
-                    <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
-                </tr>
-                <tr>
-                    <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
-                </tr>
-            </table>
-            <table style="float:left;width:40%;margin-top:8rem;">
+            <table style="float:left;width:40%;">
                 <tr>
                     <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
-                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;">{{ number_format($data[0]->total,2,',','.') }}</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,2,',','.') }}</td>
                 </tr>
             </table>
-            <p style="float:right;margin-top:10rem;text-align:right">IV</p>
+            <table style="float:right;width:30%;margin-top:2rem;">
+                <tr>
+                    <td style="text-align:left; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
+                </tr>
+                <tr>
+                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                </tr>
+            </table>
+            <p style="float:right;margin-top:13rem;text-align:right">IV</p>
         </div>
     </body>
 

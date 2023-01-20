@@ -18,6 +18,7 @@ use App\Models\Invoicedp;
 use App\Models\Kendaraan;
 use App\Models\PemakaianBbm;
 use App\Models\PengisianBbm;
+use App\Models\PengisianBbmStok;
 use App\Models\Rate;
 use App\Models\Supplier;
 use App\Models\TambahanBbm;
@@ -89,7 +90,7 @@ class PrintController extends Controller
             return abort(401);
         }
 
-        DB::update('Exec SP_ReportTicket '.$id);
+        DB::update("Exec SP_ReportTicket ".$id);
         $data = TmpReportTicket::where('id',$id)->get();
 
         $customPaper = array(0,0,609.44,396.85);
@@ -97,6 +98,19 @@ class PrintController extends Controller
         $pdf = PDF::loadView('print.ticket', array(
             'data' => $data,
         ))->setPaper($customPaper);
+        return $pdf->stream();
+    }
+
+    public function ticketkosong(){
+        
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Ticket')){
+            return abort(401);
+        }
+
+        $customPaper = array(0,0,609.44,396.85);
+
+        $pdf = PDF::loadView('print.ticketkosong', [])->setPaper($customPaper);
         return $pdf->stream();
     }
 
@@ -167,14 +181,14 @@ class PrintController extends Controller
         
         $terbilang = Terbilang::make($data[0]->total);
 
-        $customPaper = array(0,0,609.44,396.85);
+        //$customPaper = array(0,0,609.44,396.85);
 
         $pdf = PDF::loadView('print.kwitansi', array(
             'data' => $data,
             'terbilang' => $terbilang,
             'dp' => $dp
-        ))->setPaper($customPaper);
-        return $pdf->stream();        
+        ));
+        return $pdf->setPaper('A4','Potrait')->stream();        
     }
 
     public function invoice($id){
@@ -191,14 +205,14 @@ class PrintController extends Controller
 
         $terbilang = Terbilang::make($data[0]->total);
 
-        $customPaper = array(0,0,609.44,396.85);
+        //$customPaper = array(0,0,609.44,396.85);
 
         $pdf = PDF::loadView('print.invoice', array(
             'data' => $data,
             'terbilang' => $terbilang,
             'dp' => $dp
-        ))->setPaper($customPaper);
-        return $pdf->stream();
+        ));
+        return $pdf->setPaper('A4','potrait')->stream();
 
     } 
 
@@ -286,6 +300,190 @@ class PrintController extends Controller
             'data' => $data,
         ));
         return $pdf->setPaper('A4','portrait')->stream();
+    }
+
+
+    public function ttdriver($tgl_awal,$tgl_akhir,$driver_id){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('TT Driver')){
+            return abort(401);
+        }
+
+        DB::table('tmp_gaji_drivers')->delete();
+
+        $driver = Driver::find($driver_id);
+
+        $kendaraan = Kendaraan::where('driver_id',$driver->id)->first();
+
+        if (!is_null($kendaraan)){
+
+            $tickets = VTicketHeader::select('driver_id', 'jam_ticket',
+            'loading', 'lembur', 'so_id',
+            'kendaraan_id','rate_id')
+            ->where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+            ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
+            ->where(
+                function ($query) use ($kendaraan,$driver) {
+                    $query->where('kendaraan_id',$kendaraan->id)
+                        ->orWhere('driver_id',$driver->id);
+                })
+            ->get();
+
+            foreach($tickets as $ticket){
+
+                $rate = Rate::find($ticket->rate_id);
+                $pemakaianbbms = PemakaianBbm::where('muatan',$kendaraan->muatan)->first();
+
+                if($ticket->kendaraan_id == $kendaraan->id){
+                    $pemakaianbbm = $pemakaianbbms->pemakaian * $rate->estimasi_jarak;
+                    $loading = $ticket->loading;
+                }
+                else{
+                    $pemakaianbbm = 0;
+                    $loading = 0;
+                }
+
+                $msalesorder = MSalesorder::find($ticket->so_id);
+                $customer = Customer::find($msalesorder->customer_id);
+
+                $kendaraanticket = Kendaraan::find($ticket->kendaraan_id);
+
+                if($ticket->driver_id==$driver->id){
+                    $gajis = GajiRate::where('muatan',$kendaraanticket->muatan)
+                                    ->where('batas_bawah_jarak','<=',$rate->estimasi_jarak)
+                                    ->where('batas_atas_jarak','>=',$rate->estimasi_jarak)
+                                    ->first();
+                    //  return $rate->estimasi_jarak;
+                    if (is_null($gajis)){
+                        return $rate->estimasi_jarak;
+                    }
+                    else{
+                        $gaji = $gajis->gaji;
+                    }
+                }
+                else
+                {
+                    $gaji = 0;
+                }
+
+                $tmp = new TmpGajiDriver();
+                $tmp['tanggal_awal'] = $tgl_awal;
+                $tmp['tanggal_akhir'] = $tgl_akhir;
+                $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                $tmp['nopol'] = $kendaraanticket->nopol;
+                $tmp['nama_driver'] = $driver->nama_driver;
+                $tmp['tanggal_ticket'] = date_format(date_create($ticket->jam_ticket),'Y-m-d');
+                $tmp['nama_customer'] = $customer->nama_customer;
+                $tmp['lokasi'] = $rate->tujuan;
+                $tmp['jarak'] = $rate->estimasi_jarak;
+                $tmp['pemakaian_bbm'] = $pemakaianbbm;
+                $tmp['lembur'] = $ticket->lembur;
+                $tmp['gaji'] = $gaji;
+                $tmp['pengisian_bbm'] =0;
+                $tmp['loading'] = $loading;
+                $tmp->save();
+
+            }
+
+            $pengisianbbms = PengisianBbm::where('kendaraan_id', $kendaraan->id)
+                            ->where(DB::raw('convert(date,tanggal_pengisian)'),'>=',$tgl_awal)
+                            ->where(DB::raw('convert(date,tanggal_pengisian)'),'<=',$tgl_akhir)
+                            ->get();
+
+            foreach($pengisianbbms as $pengisianbbm){
+
+                $tmp = new TmpGajiDriver();
+                $tmp['tanggal_awal'] = $tgl_awal;
+                $tmp['tanggal_akhir'] = $tgl_akhir;
+                $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                $tmp['nopol'] = $kendaraan->nopol;
+                $tmp['nama_driver'] = $driver->nama_driver;
+                $tmp['tanggal_ticket'] = date_format(date_create($pengisianbbm->tanggal_pengisian),'Y-m-d');
+                $tmp['nama_customer'] = 'Isi BBM';
+                $tmp['lokasi'] = 'Isi BBM';
+                $tmp['jarak'] = 0;
+                $tmp['pemakaian_bbm'] = 0;
+                $tmp['lembur'] = 0;
+                $tmp['gaji'] = 0;
+                $tmp['pengisian_bbm'] = $pengisianbbm->jumlah;
+                $tmp['loading'] = 0;
+                $tmp->save();
+
+            }
+
+            $pengisianbbmstoks = PengisianBbmStok::where('beban_id', $kendaraan->id)
+                            ->where(DB::raw('convert(date,tgl_pengisian)'),'>=',$tgl_awal)
+                            ->where(DB::raw('convert(date,tgl_pengisian)'),'<=',$tgl_akhir)
+                            ->get();
+
+            foreach($pengisianbbmstoks as $pengisianbbmstok){
+
+                $tmp = new TmpGajiDriver();
+                $tmp['tanggal_awal'] = $tgl_awal;
+                $tmp['tanggal_akhir'] = $tgl_akhir;
+                $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                $tmp['nopol'] = $kendaraan->nopol;
+                $tmp['nama_driver'] = $driver->nama_driver;
+                $tmp['tanggal_ticket'] = date_format(date_create($pengisianbbmstok->tgl_pengisian),'Y-m-d');
+                $tmp['nama_customer'] = 'Isi BBM dari Stok';
+                $tmp['lokasi'] = 'Isi BBM dari Stok';
+                $tmp['jarak'] = 0;
+                $tmp['pemakaian_bbm'] = 0;
+                $tmp['lembur'] = 0;
+                $tmp['gaji'] = 0;
+                $tmp['pengisian_bbm'] = $pengisianbbmstok->jumlah;
+                $tmp['loading'] = 0;
+                $tmp->save();
+
+            }
+
+            $tambahanbbms = TambahanBbm::where('kendaraan_id', $kendaraan->id)
+                            ->where(DB::raw('convert(date,tanggal_penambahan)'),'>=',$tgl_awal)
+                            ->where(DB::raw('convert(date,tanggal_penambahan)'),'<=',$tgl_akhir)
+                            ->get();
+
+            foreach($tambahanbbms as $tambahanbbm){
+
+                $tmp = new TmpGajiDriver();
+                $tmp['tanggal_awal'] = $tgl_awal;
+                $tmp['tanggal_akhir'] = $tgl_akhir;
+                $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                $tmp['nopol'] = $kendaraan->nopol;
+                $tmp['nama_driver'] = $driver->nama_driver;
+                $tmp['tanggal_ticket'] = date_format(date_create($tambahanbbm->tanggal_penambahan),'Y-m-d');
+                $tmp['nama_customer'] = $tambahanbbm->keterangan;
+                $tmp['lokasi'] = '-';
+                $tmp['jarak'] = 0;
+                $tmp['pemakaian_bbm'] = $tambahanbbm->jumlah;
+                $tmp['lembur'] = 0;
+                $tmp['gaji'] = 0;
+                $tmp['pengisian_bbm'] = 0;
+                $tmp['loading'] = 0;
+                $tmp->save();
+            }
+        }
+        $data = TmpGajiDriver::select('nama_driver',DB::raw('sum(loading) as loading'),'nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm',
+        DB::raw('count(*) as rate'),DB::raw('sum(pemakaian_bbm) as total_liter'),
+        DB::raw('sum(lembur) as lembur'),'gaji',DB::raw('sum(gaji) as total_gaji'),'pengisian_bbm')
+        ->orderBy('nopol','asc')
+        ->orderBy('tanggal_ticket','asc')
+        ->groupby('nama_driver','nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm','gaji','pengisian_bbm')
+        ->get();
+        $bbm = BahanBakar::orderby('id', 'desc')->first();
+
+        $customPaper = array(0,0,609.44,396.85);
+
+        //return $data;
+
+        $pdf = PDF::loadView('print.ttdriver', array(
+            'data' => $data,
+            'bbm' => $bbm,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ))->setPaper($customPaper);
+        return $pdf->stream();
+
     }
 
 }

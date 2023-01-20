@@ -29,6 +29,7 @@ class KendaraanSelect extends Component
         $this->deskripsi = Kendaraan::find($id)->nopol;
         $this->emitTo('pembelian.purchaseorder-modal','selectkendaraan', $id);
         $this->emitTo('penjualan.ticket-modal','selectkendaraan', $id);
+        $this->emitTo('penjualan.ticket-edit-modal','selectkendaraan', $id);
         $this->emitTo('penjualan.concretepump-modal','selectkendaraan', $id);
         $this->emitTo('bbm.pengisian-bbm-modal','selectkendaraan', $id);
         $this->emitTo('bbm.penambahan-bbm-modal','selectkendaraan', $id);

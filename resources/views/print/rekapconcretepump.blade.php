@@ -45,7 +45,6 @@
                 <td colspan="2" class="tdhead" style="text-align:center">Waktu Operasi</td>
                 <td style="font-weight: bold;text-align:center;width:50px;" rowspan="2">Jumlah Waktu Operasi</td>
                 <td style="font-weight: bold;text-align:center" rowspan="2">Volume</td>
-                <td style="font-weight: bold;text-align:center" rowspan="2">Nilai</td>
             </tr>
 
             <tr>
@@ -69,7 +68,6 @@
                 <td style="text-align:center">{{ date_format(date_create($item->jam_akhir),'H:i') }}</td>
                 <td style="text-align:center">{{ date_diff(date_create($item->jam_awal),date_create($item->jam_akhir))->format('%H:%I') }}</td>
                 <td class="text-right">{{ number_format($item->volume,1,',','.') }} M<sup>3</sup></td>
-                <td class="text-right">{{ number_format($item->harga_sewa,0,'.',',') }}</td>
             </tr>
                 @php
                     $total = $total + $item->harga_sewa;
@@ -80,9 +78,8 @@
             @endforeach 
             <tr>
                 <td colspan="6" style="font-weight:bold">Total</td>
-                <td style="font-weight:bold;text-align:center">{{ $totaljam + intdiv($totalmenit,60) .':'.fmod($totalmenit, 60) }}</td>
+                <td style="font-weight:bold;text-align:center">{{ substr('00'.$totaljam + intdiv($totalmenit,60),-2) .':'.substr('00'.fmod($totalmenit, 60),-2) }}</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalvolume,1,'.',',') }} M<sup>3</sup></td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,0,'.',',')}}</td>
             </tr>
         </table>
         @endif

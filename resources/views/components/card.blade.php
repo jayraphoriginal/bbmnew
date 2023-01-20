@@ -7,7 +7,7 @@
         <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
             {{ $value  }}
             <br/>
-            <a class="text-sm underline underline-offset-1 text-gray-700 font-underlined" href="{{ $link }}">Detail</a>
+            <a class="text-sm underline underline-offset-1 text-gray-700 font-underlined" target="__blank" href="{{ $link }}">Detail</a>
         </p>
     </div>
 </div>

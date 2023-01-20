@@ -57,7 +57,7 @@ final class TicketTable extends PowerGridComponent
     {
         return VTicketHeader::
         where('V_TicketHeader.so_id', $this->m_salesorder_id)
-        ->select(DB::raw('ROW_NUMBER() OVER(ORDER BY noticket ASC) AS no'),'V_TicketHeader.*');
+        ->select('V_TicketHeader.*');
     }
 
     /*
@@ -93,6 +93,7 @@ final class TicketTable extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('no')
             ->addColumn('noticket')
+            ->addColumn('nourut')
             ->addColumn('customer_id')
             ->addColumn('nama_customer')
             ->addColumn('d_purchaseorder_id')
@@ -139,7 +140,7 @@ final class TicketTable extends PowerGridComponent
 
             Column::add()
             ->title('NO')
-            ->field('no')
+            ->field('nourut')
             ->sortable(),
 
             Column::add()
@@ -232,6 +233,15 @@ final class TicketTable extends PowerGridComponent
             ->method('get')
             ->route("printticket",[
                 'id' => 'id'
+            ]),
+
+            Button::add('edit')
+            ->caption('<svg class="h-5 w-5 text-white" <svg  width="24"  height="24"  viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>')
+            ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->tooltip('update')
+            ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->openModal('penjualan.ticket-edit-modal',[
+                'ticket_id' => 'id'
             ]),
         ];
     }

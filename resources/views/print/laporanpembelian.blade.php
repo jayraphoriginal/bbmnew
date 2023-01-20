@@ -45,7 +45,7 @@
             </tr>
         </table>
         @if (count($data) > 0)
-        <table class="mytable">
+        <table class="mytable" style="width:100%">
             <tr>
                 <td class="tdhead">No</td>
                 <td class="tdhead">NoPO</td>
@@ -69,7 +69,7 @@
                 <td>{{ ++$index }}</td>
                 <td>{{ $item->nopo }}</td>
                 <td>{{ date_format(date_create($item->tgl_masuk),'d/M/Y') }}</td>
-                <td>{{ $item->jenis_beban }}</td>
+                <td>{{ $item->jenis_pembebanan }}</td>
                 <td>{{ $item->Alken }}</td>
                 <td>{{ $item->nama_supplier }}</td>
                 <td>{{ $item->nama_barang }}</td>

@@ -40,6 +40,7 @@
             <tr>
                 <td class="tdhead" style="text-align:center">No</td>
                 <td class="tdhead">Tanggal</td>
+                <td class="tdhead">No Ticket</td>
                 <td class="tdhead">Nopol</td>
                 <td class="tdhead">Kode Mutu</td>
                 <td class="tdhead text-right">Jumlah</td>
@@ -53,6 +54,7 @@
             @foreach($data as $index => $item)
             <tr>
                 <td style="text-align:center">{{ ++$index }}</td>
+                <td style="text-align:center">{{ $item->noticket }}</td>
                 <td>{{ date_format(date_create($item->jam_pengiriman),'d-m-Y') }}</td>
                 <td>{{ $item->nopol }}</td>
                 <td>{{ $item->kode_mutu }}</td>

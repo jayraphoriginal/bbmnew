@@ -71,7 +71,7 @@
                     >
                         <option value="">-- Isi COA Biaya --</option>
                         @foreach ($coa as $item)
-                            <option value="{{ $item->kode_akun }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
+                            <option value="{{ $item->id }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
                         @endforeach
                     </x-combobox>
                     @error('coa_id')
@@ -86,7 +86,7 @@
                         <option value="-"> - </option>
                         <option value="Beban Alat">Beban Alat</option>
                         <option value="Beban Kendaraan">Beban Kendaraan</option>
-                        
+                        <option value="Beban Kantor">Beban Kantor</option>
                         @error('jenis_pembebanan')
                         <x-error-form>{{ $message }}</x-error-form>
                         @enderror

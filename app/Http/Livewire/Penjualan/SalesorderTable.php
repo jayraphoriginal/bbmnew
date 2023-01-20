@@ -206,24 +206,37 @@ final class SalesorderTable extends PowerGridComponent
         return [
 
             Button::add('concretepump')
-                ->caption(__('Concrete Pump'))
-                ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-36')
+                ->caption('<svg class="h-5 w-5 text-white"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="6" cy="18" r="2" />  <circle cx="6" cy="6" r="2" />  <circle cx="18" cy="18" r="2" />  <line x1="6" y1="8" x2="6" y2="16" /><path d="M11 6h5a2 2 0 0 1 2 2v8" /><polyline points="14 9 11 6 14 3" /></svg>')
+                ->tooltip('concretepump')
+                ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
                 ->openModal('penjualan.rekap-concretepump-modal',[
                     'm_salesorder_id' => 'id'
             ]),
 
             Button::add('rekap')
-                ->caption(__('Ticket'))
-                ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm w-36')
+                ->caption('<span class="material-icons align-middle text-center">confirmation_number</span>')
+                ->tooltip('ticket')
+                ->class('bg-yellow-500 cursor-pointer text-white rounded text-sm px-3 py-2')
                 ->target('_blank')
                 ->method('get')
                 ->route("rekapticket",[
                     'soid' => 'id'
                 ]),
 
+            Button::add('rekapall')
+                ->caption('<span class="material-icons align-middle text-center">local_activity</span>')
+                ->tooltip('ticket all')
+                ->class('bg-red-500 cursor-pointer text-white rounded text-sm px-3 py-2')
+                ->target('_blank')
+                ->method('get')
+                ->route("rekapticketall",[
+                    'soid' => 'id'
+                ]),
+
             Button::add('cetak')
-                ->caption(__('Cetak'))
-                ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->caption('<span class="material-icons align-middle text-center">print</span>')
+                ->tooltip('cetak')
+                ->class('bg-blue-500 cursor-pointer text-white rounded text-sm px-3 py-2')
                 ->target('_blank')
                 ->method('get')
                 ->route("printso",[
@@ -231,7 +244,8 @@ final class SalesorderTable extends PowerGridComponent
                 ]),
 
             Button::add('edit')
-                ->caption(__('Edit'))
+                ->caption('<svg class="h-5 w-5 text-white" <svg  width="24"  height="24"  viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>')
+                ->tooltip('update')
                 ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
                 ->openModal('penjualan.salesorder-modal',[
                     'editmode' => 'edit',
@@ -239,7 +253,8 @@ final class SalesorderTable extends PowerGridComponent
                 ]),
 
             Button::add('destroy')
-                ->caption(__('Delete'))
+                ->caption('<svg class="h-5 w-5 text-white"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <circle cx="12" cy="12" r="10" />  <line x1="15" y1="9" x2="9" y2="15" />  <line x1="9" y1="9" x2="15" y2="15" /></svg>')
+                ->tooltip('delete')
                 ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
                 ->openModal('delete-modal', [
                     'data_id'                 => 'id',

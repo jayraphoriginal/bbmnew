@@ -15,14 +15,14 @@
             
             <x-form-group caption="Kendaraan">
                 <livewire:kendaraan.kendaraan-select :deskripsi="$kendaraan"/>
-                @error('ticket.kendaraan_id')
+                @error('kendaraan_id')
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
 
             <x-form-group caption="Operator">
                 <livewire:driver.driver-select :deskripsi="$driver"/>
-                @error('ticket.driver_id')
+                @error('driver_id')
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
@@ -36,9 +36,9 @@
 
             <x-form-group caption="Jumlah">
                 <x-number-text
-                    wire:model="ticket.jumlah"
+                    wire:model="jumlah"
                 />
-                @error('ticket.jumlah')
+                @error('jumlah')
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
@@ -54,16 +54,16 @@
         <div class="lg:w-1/2">
             <x-form-group caption="Rate">
                 <livewire:rate.rate-select :deskripsi="$rate"/>
-                @error('ticket.rate_id')
+                @error('rate_id')
                     <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
 
             <x-form-group caption="Jam Ticket">
                 <x-datetime-picker
-                    wire:model="ticket.jam_ticket"
+                    wire:model="jam_ticket"
                 />
-                @error('ticket.jam_ticket')
+                @error('jam_ticket')
                     <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
@@ -71,33 +71,30 @@
             <x-form-group caption="Loading">
                 <x-textbox
                     readonly
-                    wire:model="ticket.loading"
+                    wire:model="loading"
                 />
-                @error('ticket.loading')
+                @error('loading')
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
 
             <x-form-group caption="Tambahan Biaya">
                 <x-number-text
-                    wire:model="ticket.tambahan_biaya"
+                    wire:model="tambahan_biaya"
                 />
-                @error('ticket.tambahan_biaya')
+                @error('tambahan_biaya')
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
 
             <x-form-group caption="Lembur">
                 <x-number-text
-                    wire:model="ticket.lembur"
+                    wire:model="lembur"
                 />
-                @error('ticket.lembur')
+                @error('lembur')
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
-            </x-form-group>
-
-
-           
+            </x-form-group>           
         </div>
 
     </div>

@@ -63,7 +63,7 @@ class JurnalManualModal extends ModalComponent
                     $journal->save();
                 }
 
-                ManualJournal::where('user_id',Auth::user()->id)->delete();
+                TmpJurnalManual::where('user_id',Auth::user()->id)->delete();
 
                 DB::commit();
 

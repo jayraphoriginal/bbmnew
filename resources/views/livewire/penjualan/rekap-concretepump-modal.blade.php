@@ -9,6 +9,7 @@
     </x-button>
 
     <x-link-button
+        target="__blank"
         href="rekapconcretepump/{{ $m_salesorder_id }}">
         Rekap Concrete Pump
     </x-link-button>

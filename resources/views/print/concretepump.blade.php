@@ -103,7 +103,7 @@
                         <td style="height:6rem; text-align:center; border: solid 1px #000">{{ date_format(date_create($detail->jam_awal),'H:i') }}</td>
                         <td style="height:6rem; text-align:center;border: solid 1px #000">{{ date_format(date_create($detail->jam_akhir),'H:i') }}</td>
                         <td style="height:6rem; text-align:center;border: solid 1px #000">{{ date_diff(date_create($detail->jam_awal),date_create($detail->jam_akhir))->format('%h Jam %i Menit') }}</td>
-                        <td style="height:6rem; text-align:center;border: solid 1px #000">{{ $detail->volume }} M<sup>3</sup></td>
+                        <td style="height:6rem; text-align:center;border: solid 1px #000">{{ number_format($detail->volume,1,',','.') }} M<sup>3</sup></td>
                     </tr>
                 @else
                 <tr>

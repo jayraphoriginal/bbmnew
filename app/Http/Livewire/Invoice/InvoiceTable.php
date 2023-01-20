@@ -229,7 +229,7 @@ final class InvoiceTable extends PowerGridComponent
     {
        return [
             Button::add('cetak')
-            ->caption(__('Cetak'))
+            ->caption('<span class="material-icons align-middle text-center">print</span>')
             ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
             ->target('_blank')
             ->method('get')
@@ -238,7 +238,7 @@ final class InvoiceTable extends PowerGridComponent
             ]),
 
             Button::add('kwitansi')
-            ->caption(__('Kwitansi'))
+            ->caption('<span class="material-icons align-middle text-center">payments</span>')
             ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
             ->target('_blank')
             ->method('get')
@@ -247,7 +247,7 @@ final class InvoiceTable extends PowerGridComponent
             ]),
 
             Button::add('bayar')
-            ->caption(__('Bayar'))
+            ->caption('<span class="material-icons align-middle text-center">credit_card</span>')
             ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
             ->openModal('penerimaan.penerimaan-modal',[
                 'invoice_id' => 'id'

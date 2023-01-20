@@ -28,11 +28,11 @@
         @enderror
     </x-form-group>
 
-    <x-form-group caption="Jenis Biaya">
+    <x-form-group caption="COA">
         <x-combobox
             wire:model="header_coa"
         >
-            <option value="">-- Isi COA Biaya --</option>
+            <option value="">-- Isi Header COA --</option>
             @foreach ($coa as $item)
                 <option value="{{ $item->kode_akun }}">{{ $item->kode_akun.' - '.$item->nama_akun }}</option>
             @endforeach

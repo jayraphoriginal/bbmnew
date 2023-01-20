@@ -96,7 +96,11 @@
                     <td>{{ $data->lokasi }}</td>
                     <td style="text-align:right;">{{ number_format($data->jarak,2,'.',',') }}</td>
                     <td style="text-align:right;">{{ number_format($data->pemakaian_bbm,2,'.',',')  }}</td>
-                    <td style="text-align:right;">{{ $data->rate  }}</td>
+                    @if($data->pengisian_bbm > 0) 
+                        <td style="text-align:right;"></td>
+                    @else
+                        <td style="text-align:right;">{{ $data->rate  }}</td>
+                    @endif
                     <td style="text-align:right;">{{ number_format($data->total_liter,2,'.',',')  }}</td>
                     <td style="text-align:right;">{{ number_format($data->lembur,2,'.',',')  }}</td>
                     <td style="text-align:right;">{{ number_format($data->gaji,2,'.',',')  }}</td>
@@ -107,7 +111,9 @@
                     $totalgaji = $totalgaji + $data->total_gaji;
                     $totalpemakaian = $totalpemakaian + $data->total_liter;
                     $totalpengisian = $totalpengisian + $data->pengisian_bbm;
-                    $totalrate = $totalrate + $data->rate;
+                    if ($data->pengisian_bbm <=0){
+                        $totalrate = $totalrate + $data->rate;
+                    }
                     $totalloading = $totalloading + $data->loading;
                     $totallembur = $totallembur + $data->lembur;
                 @endphp
@@ -150,7 +156,7 @@
             <td colspan="6">
                     Total
                 </td>
-                <td style="text-align:right;">{{ number_format($totalrate,2,'.',',') }}</td>
+                <td style="text-align:right;">{{ number_format($totalrate,0,'.',',') }}</td>
                 <td style="text-align:right;">{{ number_format($totalpemakaian + $totalloading,2,'.',',') }}</td>
                 <td style="text-align:right;">{{ number_format($totallembur,2,'.',',') }}</td>
                 <td style="text-align:right;">{{ number_format($totalgaji,2,'.',',') }}</td>

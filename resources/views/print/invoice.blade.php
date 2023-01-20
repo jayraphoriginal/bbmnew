@@ -1,12 +1,19 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
-            *{
-                font-size:10px;
+            .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>th {
+            padding: 5px;
+            vertical-align: middle;
+            border:1px solid;
+            margin:0;
             }
-            table{margin:0rem}
+            *{
+                font-size:14px
+            }
+            table{
+                border-collapse: collapse;
+            }
             @page{
                 margin: 0.1in 0.3in 0.2in 0.3in;
             }
@@ -26,15 +33,12 @@
                 float:right;
             }
             .captioncenter{
-                font-weight:bold;
                 text-align:center;
             }
             .captionleft{
-                font-weight:bold;
                 text-align:left;
             }
             .captionright{
-                font-weight:bold;
                 text-align:right;
             }  
         </style>
@@ -42,8 +46,9 @@
     </head>
 
     <body>
-        <h4 style="margin-top:1em; text-align:center; text-decoration:underline">FAKTUR INVOICE</h4>
-        <h4 style="text-align:center">FAKTUR TAGIHAN</h4>
+        <div style="padding:10px;border:solid 1px;margin-bottom:2rem">
+        <p style="margin-top:1em; text-align:center; text-decoration:underline; font-size:18px; font-weight:bold">FAKTUR INVOICE</p>
+        <p style="text-align:center;font-size:18px; font-weight:bold; margin-bottom:2.5rem">FAKTUR TAGIHAN</p>
 
         <table style="float:right">
             <tr>
@@ -55,16 +60,14 @@
         <p style="font-weight:bold;">{{ $data[0]->nama_customer }}</p>
         <p>di - Tempat</p>
 
-        <table class="table table-sm table-bordered" style="margin-top:1.5em; margin-bottom:1em">
-            <thead>
-                <tr>
-                    <td class="captioncenter">No</td>
-                    <td class="captioncenter">Uraian</td>
-                    <td class="captionright">Satuan</td>
-                    <td class="captionright">Harga</td>
-                    <td class="captionright">Jumlah</td>
-                </tr>
-            </thead>
+        <table class="mytable" style="margin-top:2em; margin-bottom:1em;width:100%">
+            <tr>
+                <td class="captioncenter">No</td>
+                <td class="captioncenter">Uraian</td>
+                <td class="captionright">Satuan</td>
+                <td class="captionright">Harga</td>
+                <td class="captionright">Jumlah</td>
+            </tr>
             <tbody>
                 @php 
                     $i = 1;
@@ -76,9 +79,9 @@
                         <tr>
                             <td class="captioncenter" style="width:5%">{{ $i++ }}</td>
                             <td class="captionleft">{{ $jual->uraian }}</td>
-                            <td class="captionright" style="width:10%">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
-                            <td class="captionright" style="width:15%">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
-                            <td class="captionright" style="width:15%">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),2,".",",") }}</td>
+                            <td class="captionright" style="width:15%">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
+                            <td class="captionright" style="width:15%">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),0,".",",") }}</td>
+                            <td class="captionright" style="width:15%">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),0,".",",") }}</td>
                         </tr>
                         @php 
                             $totalall = $totalall + $jual->jumlah * $jual->harga_intax;
@@ -92,21 +95,21 @@
             <tfoot>
                 <tr>
                     <td colspan=4 class="captionleft">DPP</td>
-                    <td class="captionright">{{ number_format($dpp,2,".",",") }}</td>
+                    <td class="captionright">{{ number_format($dpp,0,".",",") }}</td>
                 </tr>
                 <tr>
                     <td colspan=4 class="captionleft">PPN {{ number_format($data[0]->pajak,0,'.'.',').'%' }}</td>
-                    <td class="captionright">{{ number_format($ppn,2,".",",") }}</td>
+                    <td class="captionright">{{ number_format($ppn,0,".",",") }}</td>
                 </tr>
                 @if ($dp > 0)
                 <tr>
                     <td colspan=4 class="captionleft">DP</td>
-                    <td class="captionright">{{ number_format($dp,2,".",",") }}</td>
+                    <td class="captionright">{{ number_format($dp,0,".",",") }}</td>
                 </tr>
                 @endif
                 <tr>
                     <td colspan=4 class="captionleft">Total</td>
-                    <td class="captionright">{{ number_format($data[0]->total,2,".",",") }}</td>
+                    <td class="captionright">{{ number_format($data[0]->total,0,".",",") }}</td>
                 </tr>
                 
                 <tr>
@@ -114,7 +117,8 @@
                 </tr>
             </tfoot>
         </table>
-        <table style="float:left;width:45%">
+        </div>
+        <table style="float:left;width:75%">
             <tr>
                 <td style="height:1em;text-align:left; width:30%">Pembayaran di Transfer Ke</td>
             </tr>
@@ -128,15 +132,15 @@
                 <td style="height:1em;text-align:left; width:30%" style="width:30%">{{ $data[0]->atas_nama }}</td>
             </tr>
         </table>
-        <table style="float:right;width:45%">
+        <table style="float:right;width:25%">
             <tr>
-                <td style="height:2em;text-align:right; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
+                <td style="height:2em;text-align:left; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
             </tr>
             <tr>
-                <td style="height:2em;text-align:right; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
+                <td style="height:2em;text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
             </tr>
             <tr>
-                <td style="height:8em;text-align:right; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
             </tr>
         </table>
     </body>

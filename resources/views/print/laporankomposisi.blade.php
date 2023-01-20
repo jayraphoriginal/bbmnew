@@ -39,9 +39,11 @@
         <h4 style="text-align:center">LAPORAN KOMPOSISI</h4>
         
         @if (count($data) > 0)
-        <table style="width: 100%;">
+        <table class="mytable" style="width: 100%;">
             <tr>
                 <td class="tdhead">Mutu Beton</td>
+                <td class="tdhead">Status</td>
+                <td class="tdhead">Admiture</td>
                 <td class="tdhead">Air</td>
                 <td class="tdhead">Batu Pecah 1/1</td>
                 <td class="tdhead">Batu Pecah 1/2</td>

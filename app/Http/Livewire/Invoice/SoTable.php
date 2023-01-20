@@ -49,7 +49,7 @@ final class SoTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         return MSalesorder::join('customers','m_salesorders.customer_id','customers.id')
-        ->select('m_salesorders.*','customers.nama_customer');
+        ->select('m_salesorders.*','customers.nama_customer','customers.sub_company');
     }
 
     /*
@@ -93,7 +93,8 @@ final class SoTable extends PowerGridComponent
                 return Carbon::parse($model->jatuh_tempo)->format('d/m/Y');
             })
             ->addColumn('customer_id')
-            ->addColumn('nama_customer');
+            ->addColumn('sub_company')
+            ->addColumn('nopo');
     }
 
     /*
@@ -130,6 +131,13 @@ final class SoTable extends PowerGridComponent
             Column::add()
                 ->title('CUSTOMER')
                 ->field('nama_customer')
+                ->searchable()
+                ->sortable()
+                ->makeInputText(),
+
+            Column::add()
+                ->title('SUB COMPANY')
+                ->field('sub_company')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),

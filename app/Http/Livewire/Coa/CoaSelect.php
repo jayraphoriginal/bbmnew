@@ -29,6 +29,7 @@ class CoaSelect extends Component
         $coa = Coa::find($id);
         $this->deskripsi = $coa->kode_akun.' - '.$coa->nama_akun;
         $this->emitTo('jurnal.jurnal-manual-detail-modal','selectcoa', $id);
+        $this->emitTo('laporan.jurnal-umum','selectcoa', $id);
     }
 
     public function selectDeskripsi($id){

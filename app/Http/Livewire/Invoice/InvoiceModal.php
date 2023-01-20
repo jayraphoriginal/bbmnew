@@ -293,7 +293,6 @@ class InvoiceModal extends ModalComponent
                 date_create($this->tgl_awal)->format('Y-m-d')."','".
                 date_create($this->tgl_akhir)->format('Y-m-d')."','".
                 $this->keterangan."'");
-
             }
             
 

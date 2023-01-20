@@ -229,7 +229,8 @@ final class PengeluaranBiayaTable extends PowerGridComponent
     {
        return [
             Button::add('buktikasbiaya')
-            ->caption(__('BuktiKas'))
+            ->caption('<span class="material-icons align-middle text-center">print</span>')
+            ->tooltip('Bukti Kas')
             ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
             ->target('_blank')
             ->method('get')

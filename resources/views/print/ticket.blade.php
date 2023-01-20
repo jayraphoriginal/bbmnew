@@ -4,12 +4,12 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             *{
-                font-family: Arial, Helvetica, sans-serif
+                font-family: Arial, Helvetica, sans-serif;
                 font-size:12px;
             }
 
             @page{
-                margin: 0.1in 0.2in 0.1in 0.3in;
+                margin: 0.3in 0.7in 0.1in 0.1in;
             }
             body{
                 margin:0;
@@ -67,6 +67,10 @@
         </div>
         <table class="table table-sm" style="margin-top:1rem">
             <tr>
+                <td class="kl1">No Urut Ticket</td>
+                <td class="kl2">: {{ $data[0]->nourut }}</td>
+            </tr>
+            <tr>
                 <td class="kl1">No Polisi</td>
                 <td class="kl2">: {{ $data[0]->nopol }}</td>
             </tr>
@@ -90,13 +94,17 @@
                 </tr>
                 <tr>
                     <td class="captionleft">Jam Pengiriman</td>
-                    <td class="captionleft">: {{ date_format(date_create($data[0]->created_at),'H:i:s') }}</td>
+                    @if(is_null($data[0]->jam_ticket))
+                        <td class="captionleft">: {{ date_format(date_create($data[0]->created_at),'H:i:s') }}</td>  
+                    @else
+                        <td class="captionleft">: {{ date_format(date_create($data[0]->jam_ticket),'H:i:s') }}</td>     
+                    @endif
                     <td class="captionleft borderleft">Jam Tiba Lokasi</td>
                     <td class="captionleft">: </td>
                 </tr>
                 <tr>
                     <td class="captionleft">Volume</td>
-                    <td class="captionleft">: {{ $data[0]->jumlah.' M'}}<sup>3</sup></td>
+                    <td class="captionleft">: {{ number_format($data[0]->jumlah,2,',','.').' M'}}<sup>3</sup></td>
                     <td class="captionleft borderleft">Jam Mulai Bongkar </td>
                     <td class="captionleft">: </td>
                 </tr>
@@ -111,14 +119,14 @@
 
         <table class="table table-sm" style="width:100%;">
             <tr>
-                <td style="height:4em;text-align:center; width:33%;font-weight:bold;">Dikirim Oleh</td>
+                <td style="height:6em;text-align:center; width:33%;font-weight:bold;">Dikirim Oleh</td>
                 <td class="border-left" style="text-align:center;width:33%;font-weight:bold">Dibawa Oleh</td>
                 <td class="border-left" style="text-align:center;font-weight:bold">Diterima Oleh</td>
             </tr>
 
             <tr>
                 <td class="text-align:center" style="width:33%"></td>
-                <td class="border-left" style="width:33%;text-align:center">{{$data[0]->driver}}</td>
+                <td class="border-left" style="width:33%;text-align:center">{{$data[0]->nama_driver}}</td>
                 <td class="text-align:center border-left"></td>
             </tr>
         </table>

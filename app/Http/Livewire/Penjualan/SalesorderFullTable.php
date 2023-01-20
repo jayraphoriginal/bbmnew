@@ -202,16 +202,20 @@ final class SalesorderFullTable extends PowerGridComponent
     {
        return [
             Button::add('Ticket')
-            ->caption(__('Ticket'))
+            ->caption('<svg class="h-5 w-5 text-white"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
+          </svg>')
             ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->tooltip('Ticket')
             ->openModal('penjualan.rekap-ticket-modal',[
                 'm_salesorder_id' => 'm_salesorder_id',
                 'mutubeton_id' => 'mutubeton_id'
             ]),
             Button::add('finish')
-            ->caption(__('Finish'))
+            ->caption('<svg class="h-5 w-5 text-white"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />  <line x1="4" y1="22" x2="4" y2="15" /></svg>')
             ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
             ->target('_blank')
+            ->tooltip('Finish Ticket')
             ->openModal('penjualan.finish-detail-so',[
                 'm_salesorder_id' => 'm_salesorder_id',
             ]),
