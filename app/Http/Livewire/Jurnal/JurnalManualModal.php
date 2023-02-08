@@ -22,6 +22,7 @@ class JurnalManualModal extends ModalComponent
     protected $rules=[
         'jurnalmanual.tanggal' => 'required',
         'jurnalmanual.keterangan' => 'required',
+        'jurnalmanual.bukti_kas' => 'required',
     ];
 
     public function mount(){

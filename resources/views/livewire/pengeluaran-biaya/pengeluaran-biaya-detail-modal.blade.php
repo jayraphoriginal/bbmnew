@@ -21,9 +21,10 @@
         <x-combobox
             wire:model="tmp.jenis_pembebanan"
         >
-            <option value="-"> - </option>
+            <option value="">-- Isi Pembebanan -- </option>
             <option value="Beban Alat">Beban Alat</option>
             <option value="Beban Kendaraan">Beban Kendaraan</option>
+            <option value="-">Non Beban</option>
         </x-combobox>
         @error('tmp.jenis_pembebanan')
         <x-error-form>{{ $message }}</x-error-form>

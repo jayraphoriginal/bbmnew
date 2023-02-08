@@ -101,6 +101,9 @@ final class InvoiceTable extends PowerGridComponent
             ->addColumn('dpp', function(VInvoiceHeader $model) {
                 return number_format($model->dpp,2,".",",");
             })
+            ->addColumn('sisa_invoice', function(VInvoiceHeader $model) {
+                return number_format($model->sisa_invoice,2,".",",");
+            })
             ->addColumn('status')
             ->addColumn('created_at_formatted', function(VInvoiceHeader $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
@@ -193,6 +196,11 @@ final class InvoiceTable extends PowerGridComponent
             ->sortable(),
 
             Column::add()
+            ->title('SISA INVOICE')
+            ->field('sisa_invoice')
+            ->sortable(),
+
+            Column::add()
                 ->title('CREATED AT')
                 ->field('created_at_formatted', 'created_at')
                 ->searchable()
@@ -246,12 +254,6 @@ final class InvoiceTable extends PowerGridComponent
                 'id' => 'id'
             ]),
 
-            Button::add('bayar')
-            ->caption('<span class="material-icons align-middle text-center">credit_card</span>')
-            ->class('bg-yellow-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-            ->openModal('penerimaan.penerimaan-modal',[
-                'invoice_id' => 'id'
-            ]),
         //    Button::add('edit')
         //        ->caption('Edit')
         //        ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
@@ -284,9 +286,9 @@ final class InvoiceTable extends PowerGridComponent
     public function actionRules(): array
     {
        return [
-            Rule::button('bayar')
-                ->when(fn(VInvoiceHeader $model) => $model->sisa_invoice <= 0)
-                ->hide(),
+            // Rule::button('bayar')
+            //     ->when(fn(VInvoiceHeader $model) => $model->sisa_invoice <= 0)
+            //     ->hide(),
         ];
     }
 

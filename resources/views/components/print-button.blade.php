@@ -4,5 +4,5 @@
         ])
     }}
 >
-    {{ $slot }}
+    <span class="material-icons align-middle text-center">print</span>
 </button>

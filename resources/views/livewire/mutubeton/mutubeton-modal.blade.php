@@ -57,6 +57,15 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Tanggal Berlaku">
+        <x-datepicker
+            wire:model="mutubeton.tgl_berlaku"
+        />
+        @error('mutubeton.tgl_berlaku')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-footer-modal>
         <x-secondary-button
             wire:click="$emit('closeModal')">

@@ -30,10 +30,10 @@
         <x-combobox 
             wire:model="pemakaian.jenis_pembebanan"
             >
-            <option value="-"> - </option>
+            <option value=""> -- Isi Jenis Pembebanan --</option>
             <option value="Beban Alat">Beban Alat</option>
             <option value="Beban Kendaraan">Beban Kendaraan</option>
-            
+            <option value="-">Non Beban</option>
             @error('pemakaian.jenis_pembebanan')
             <x-error-form>{{ $message }}</x-error-form>
             @enderror

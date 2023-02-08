@@ -6,10 +6,10 @@ use App\Models\Bank;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Rekening;
+use App\Models\VInvoiceHeader;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
 use Throwable;
 
@@ -18,24 +18,29 @@ class PenerimaanModal extends ModalComponent
     use LivewireAlert;
 
     public $tgl_bayar, $tipe_pembayaran, $jatuh_tempo, $nowarkat, $bank_asal_id, $bankasal,
-    $rekening_id, $rekening, $invoice_id, $jumlah, $keterangan;
+    $rekening_id, $rekening, $jumlah, $keterangan, $customer_id, $customer;
 
     protected $rules=[
-        'invoice_id' => 'required',
+        'customer_id' => 'required',
         'tgl_bayar' => 'required',
         'tipe_pembayaran' => 'required',
         'jatuh_tempo' => 'nullable',
         'nowarkat' => 'nullable',
         'bank_asal_id' => 'required',
         'rekening_id' => 'required',
-        'jumlah' => 'required',
+        'jumlah' => 'required|min:1',
         'keterangan' => 'nullable',
     ];
 
     protected $listeners = [
         'selectrekening' => 'selectrekening',
         'selectbankasal' => 'selectbankasal',
+        'selectcustomer' => 'selectcustomer'
     ];
+
+    public function selectcustomer($id){
+        $this->customer_id=$id;
+    }
 
     public function selectrekening($id){
         $this->rekening_id=$id;
@@ -53,8 +58,6 @@ class PenerimaanModal extends ModalComponent
 
         $this->jumlah = str_replace(',', '', $this->jumlah);
         $this->validate();
-
-        $customer_id = Invoice::find($this->invoice_id)->customer_id;
 
         DB::beginTransaction();
 
@@ -80,8 +83,7 @@ class PenerimaanModal extends ModalComponent
             DB::update("Exec SP_Penerimaan  '$nopembayaran',        '$this->tgl_bayar', 
                                             '$this->tipe_pembayaran', '$this->nowarkat', 
                                             '$this->jatuh_tempo',     $this->bank_asal_id,
-                                            $this->rekening_id,     $customer_id,
-                                            $this->invoice_id,
+                                            $this->rekening_id,     $this->customer_id,
                                             $this->jumlah,          '$this->keterangan'");
             
             DB::commit();

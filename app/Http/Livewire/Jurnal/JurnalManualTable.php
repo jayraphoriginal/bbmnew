@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Jurnal;
 
 use App\Models\ManualJournal;
+use App\Models\VJurnal;
 use App\Models\VJurnalManual;
 use App\Models\VTmpJurnalManual;
 use Illuminate\Support\Carbon;
@@ -90,6 +91,7 @@ final class JurnalManualTable extends PowerGridComponent
                 return Carbon::parse($model->tanggal)->format('d/m/Y');
             })
             ->addColumn('kode_akun')
+            ->addColumn('bukti_kas')
             ->addColumn('nama_akun')
             ->addColumn('debet', function(VJurnalManual $model) {
                 return number_format($model->debet,2,'.',',');
@@ -182,23 +184,29 @@ final class JurnalManualTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    /*
+    
     public function actions(): array
     {
        return [
-           Button::add('edit')
-               ->caption('Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('manual-journal.edit', ['manual-journal' => 'id']),
+            Button::add('destroy')
+            ->caption('<svg class="h-5 w-5 text-white"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <circle cx="12" cy="12" r="10" />  <line x1="15" y1="9" x2="9" y2="15" />  <line x1="9" y1="9" x2="15" y2="15" /></svg>')
+            ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
+            ->tooltip('delete')
+            ->openModal('batal.batal-jurnal-manual', [
+                'manual_journal_id' => 'id',
+            ]),
 
-           Button::add('destroy')
-               ->caption('Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('manual-journal.destroy', ['manual-journal' => 'id'])
-               ->method('delete')
+            Button::add('buktikas')
+            ->caption('<span class="material-icons align-middle text-center">payments</span>')
+            ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->target('_blank')
+            ->method('get')
+            ->route("printbuktikasmanual",[
+                'id' => 'id',
+            ]),
         ];
     }
-    */
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -214,18 +222,17 @@ final class JurnalManualTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
 
-    /*
+    
     public function actionRules(): array
     {
        return [
            
            //Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($manual-journal) => $manual-journal->id === 1)
-                ->hide(),
+           Rule::button('buktikas')
+           ->when(fn(VJurnalManual $model) => $model->bukti_kas == 'Lain-lain' || $model->bukti_kas == '')
+           ->hide(),
         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------

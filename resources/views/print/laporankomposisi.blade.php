@@ -43,6 +43,7 @@
             <tr>
                 <td class="tdhead">Mutu Beton</td>
                 <td class="tdhead">Status</td>
+                <td class="tdhead">Tgl Berlaku </td>
                 <td class="tdhead">Admiture</td>
                 <td class="tdhead">Air</td>
                 <td class="tdhead">Batu Pecah 1/1</td>

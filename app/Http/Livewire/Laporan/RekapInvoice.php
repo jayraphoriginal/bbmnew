@@ -7,7 +7,7 @@ use LivewireUI\Modal\ModalComponent;
 
 class RekapInvoice extends ModalComponent
 {
-    public $tgl_awal, $tgl_akhir;
+    public $tgl_awal, $tgl_akhir, $tipe;
     public function render()
     {
         return view('livewire.laporan.rekap-invoice');

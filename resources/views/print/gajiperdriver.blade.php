@@ -91,7 +91,7 @@
                 <tr>
                 @endif
                     <td>{{ ++$index }}</td>
-                    <td>{{ date_format(date_create($data->tanggal_ticket),'Y-m-d') }}</td>
+                    <td>{{ date_format(date_create($data->tanggal_ticket),'d-m-Y') }}</td>
                     <td>{{ $data->nama_customer }}</td>
                     <td>{{ $data->lokasi }}</td>
                     <td style="text-align:right;">{{ number_format($data->jarak,2,'.',',') }}</td>

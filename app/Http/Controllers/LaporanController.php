@@ -264,9 +264,31 @@ class LaporanController extends Controller
         }
         
         $data = VTicketHeaderAll::orderBy('V_TicketHeaderAll.noticket')
+        ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->get();
 
         $pdf = PDF::loadView('print.rekaptickettanggal', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','landscape')->stream();
+    }
+
+    public function laporanpengirimanbeton($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Pengiriman Beton')){
+            return abort(401);
+        }
+        
+        $data = VTicketHeader::orderBy('V_TicketHeader.noticket')
+        ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->get();
+
+        $pdf = PDF::loadView('print.laporanpengirimanbeton', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
@@ -281,7 +303,9 @@ class LaporanController extends Controller
             return abort(401);
         }
 
-        $data = VTicketHeaderAll::orderBy('noticket')->get();
+        $data = VTicketHeaderAll::where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->orderBy('noticket')->get();
 
         $datacustomer = VTicketHeaderAll::select('nama_customer','kode_mutu','tujuan','satuan',DB::raw('sum(jumlah) as total'))
         ->where('status','<>','cancel')
@@ -683,26 +707,6 @@ class LaporanController extends Controller
         return $pdf->setPaper('A4','potrait')->stream();
     }
 
-    public function laporankomposisi(){
-
-        $user = Auth::user();
-        if (!$user->hasPermissionTo('Laporan Komposisi')){
-            return abort(401);
-        }
-
-        DB::update('exec SP_pivotkomposisi');
-
-        $data = DB::table('tmppivot')->orderBy(DB::raw('left(deskripsi,4)'))->orderBy('status')->get();
-
-        //return $data;
-
-        $pdf = PDF::loadView('print.laporankomposisi', array(
-            'data' => $data,
-        ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
-    }
-
     public function rekapinvoice($tgl_awal,$tgl_akhir){
 
         $user = Auth::user();
@@ -711,12 +715,35 @@ class LaporanController extends Controller
         }
 
         $data = VInvoiceHeader::where('tgl_cetak','>=',$tgl_awal)
-        ->where('tgl_cetak','<=',$tgl_akhir)->get();
+        ->where('tgl_cetak','<=',$tgl_akhir)
+        ->where('tipe','<>','retail')->get();
 
         $pdf = PDF::loadView('print.rekapinvoice', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
-            'tgl_akhir' => $tgl_akhir
+            'tgl_akhir' => $tgl_akhir,
+            'tipe' => 'regular'
+        ));
+
+        return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function rekapinvoiceretail($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Rekap Invoice')){
+            return abort(401);
+        }
+
+        $data = VInvoiceHeader::where('tgl_cetak','>=',$tgl_awal)
+        ->where('tgl_cetak','<=',$tgl_akhir)
+        ->where('tipe','retail')->get();
+
+        $pdf = PDF::loadView('print.rekapinvoice', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir,
+            'tipe' => 'retail'
         ));
 
         return $pdf->setPaper('A4','potrait')->stream();
@@ -834,64 +861,6 @@ class LaporanController extends Controller
             'tgl_akhir' => $tgl_akhir
         ));
         return $pdf->setPaper('A4','potrait')->stream();
-    }
-
-    public function laporanstokall(){
-        $user = Auth::user();
-        if (!$user->hasPermissionTo('Laporan Stok All')){
-            return abort(401);
-        }
-
-        $data = VStok::all();
-
-        $pdf = PDF::loadView('print.laporanstokall', array(
-            'data' => $data,
-        ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
-
-    }
-
-    public function laporankartustok($tgl_awal,$tgl_akhir,$barang_id){
-        $user = Auth::user();
-        if (!$user->hasPermissionTo('Laporan Kartu Stok')){
-            return abort(401);
-        }
-
-        $data = VKartuStok::where('tanggal','>=',$tgl_awal)
-        ->where('tanggal','<=',$tgl_akhir)
-        ->where('barang_id',$barang_id)
-        ->orderBy('tanggal','asc')
-        ->orderBy('increase','desc')
-        ->orderBy('trans_id','asc')->get();
-
-        $pdf = PDF::loadView('print.laporankartustok', array(
-            'data' => $data,
-            'tgl_awal' => $tgl_awal,
-            'tgl_akhir' => $tgl_akhir
-        ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
-
-    }
-
-    public function laporankartustokharian($tgl_awal,$tgl_akhir,$barang_id){
-        $user = Auth::user();
-        if (!$user->hasPermissionTo('Laporan Kartu Stok')){
-            return abort(401);
-        }
-
-        DB::update("Exec SP_KartuStokHarian '".$tgl_awal."','".$tgl_akhir."',".$barang_id."");
-        $data = TmpKartuStok::orderBy('tanggal','asc')->get();
-
-        $pdf = PDF::loadView('print.laporankartustokharian', array(
-            'data' => $data,
-            'tgl_awal' => $tgl_awal,
-            'tgl_akhir' => $tgl_akhir
-        ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
-
     }
 
     public function laporanjtkendaraan($kriteria){

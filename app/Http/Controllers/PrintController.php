@@ -16,6 +16,7 @@ use App\Models\DSalesorder;
 use App\Models\GajiRate;
 use App\Models\Invoicedp;
 use App\Models\Kendaraan;
+use App\Models\ManualJournal;
 use App\Models\PemakaianBbm;
 use App\Models\PengisianBbm;
 use App\Models\PengisianBbmStok;
@@ -29,6 +30,7 @@ use App\Models\TmpPenjualanBulanan;
 use App\Models\TmpReportTicket;
 use App\Models\VConcretepump;
 use App\Models\VHutang;
+use App\Models\VJurnalManual;
 use App\Models\VPembayaran;
 use App\Models\VPembelianDetail;
 use App\Models\VPengeluaranBiaya;
@@ -177,18 +179,33 @@ class PrintController extends Controller
 
         $data = VPrintInvoice::where('id', $id)->get();
         $dp = Invoicedp::join('invoices','invoicedps.invoicedp_id','invoices.id')->where('invoice_id',$id)->sum('total');
-
+        $retail = '';
+        if (substr($data[0]->noinvoice,6,3) == 'IVR'){
+            $retail = 'retail';
+        }
         
         $terbilang = Terbilang::make($data[0]->total);
 
         //$customPaper = array(0,0,609.44,396.85);
 
-        $pdf = PDF::loadView('print.kwitansi', array(
-            'data' => $data,
-            'terbilang' => $terbilang,
-            'dp' => $dp
-        ));
-        return $pdf->setPaper('A4','Potrait')->stream();        
+        if ($data[0]->tipe == 'Retail'){
+            $pdf = PDF::loadView('print.kwitansiretail', array(
+                'data' => $data,
+                'terbilang' => $terbilang,
+                'dp' => $dp,
+                'retail' => $retail
+            ));
+        }
+        else{
+            $pdf = PDF::loadView('print.kwitansi', array(
+                'data' => $data,
+                'terbilang' => $terbilang,
+                'dp' => $dp,
+                'retail' => $retail
+            ));
+        }
+        return $pdf->setPaper('A4','Potrait')->stream(); 
+              
     }
 
     public function invoice($id){
@@ -204,13 +221,18 @@ class PrintController extends Controller
         $dp = Invoicedp::join('invoices','invoicedps.invoicedp_id','invoices.id')->where('invoice_id',$id)->sum('total');
 
         $terbilang = Terbilang::make($data[0]->total);
+        $retail = '';
+        if (substr($data[0]->noinvoice,6,3) == 'IVR'){
+            $retail = 'retail';
+        }
 
         //$customPaper = array(0,0,609.44,396.85);
 
         $pdf = PDF::loadView('print.invoice', array(
             'data' => $data,
             'terbilang' => $terbilang,
-            'dp' => $dp
+            'dp' => $dp,
+            'retail' => $retail
         ));
         return $pdf->setPaper('A4','potrait')->stream();
 
@@ -236,7 +258,7 @@ class PrintController extends Controller
 
         $detail = Timesheet::select('timesheets.*')
                 ->where('timesheets.d_so_id',$id)
-                ->orderBy('id','desc')
+                ->orderBy('tanggal','asc')
                 ->first();
 
         $customPaper = array(0,0,609.44,396.85);
@@ -262,6 +284,32 @@ class PrintController extends Controller
         $customPaper = array(0,0,391.1811,277.795);
 
         $pdf = PDF::loadView('print.buktikas', array(
+            'data' => $data,
+            'terbilang' => $terbilang
+        ))->setPaper($customPaper);
+        return $pdf->stream();
+    }
+
+    public function buktikasmanual($id){
+        
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Jurnal Manual')){
+            return abort(401);
+        }
+
+        $jurnalmanual = ManualJournal::find($id);
+        if ($jurnalmanual->bukti_kas == 'bukti penerimaan kas'){
+            $data = VJurnalManual::where('id',$id)->select('id','keterangan','tanggal',DB::raw('sum(debet) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti penerimaan kas',id) as tipe"))->groupBy('keterangan','tanggal','id')->first();
+        }else if($jurnalmanual->bukti_kas == 'bukti pengeluaran kas'){
+            $data = VJurnalManual::where('id',$id)->select('id','keterangan','tanggal',DB::raw('sum(kredit) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti penerimaan kas',id) as tipe"))->groupBy('keterangan','tanggal','id')->first();
+        }
+        $terbilang = Terbilang::make($data->jumlah);
+       
+        $customPaper = array(0,0,391.1811,277.795);
+
+        //return $data;
+
+        $pdf = PDF::loadView('print.buktikasmanual', array(
             'data' => $data,
             'terbilang' => $terbilang
         ))->setPaper($customPaper);
@@ -294,10 +342,15 @@ class PrintController extends Controller
             return abort(401);
         }
 
-        $data = VTimesheetSewa::where('m_salesorder_sewa_id',$so_id)->get();
+        $data = VTimesheetSewa::where('m_salesorder_sewa_id',$so_id)->orderBy('tanggal','asc')->get();
 
+        $tgl_awal = VTimesheetSewa::where('m_salesorder_sewa_id',$so_id)->orderBy('tanggal','asc')->first()->tanggal;
+        $tgl_akhir = VTimesheetSewa::where('m_salesorder_sewa_id',$so_id)->orderBy('tanggal','desc')->first()->tanggal;
+                
         $pdf = PDF::loadView('print.rekaptimesheet', array(
             'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
         ));
         return $pdf->setPaper('A4','portrait')->stream();
     }
@@ -315,7 +368,7 @@ class PrintController extends Controller
         $driver = Driver::find($driver_id);
 
         $kendaraan = Kendaraan::where('driver_id',$driver->id)->first();
-
+        
         if (!is_null($kendaraan)){
 
             $tickets = VTicketHeader::select('driver_id', 'jam_ticket',

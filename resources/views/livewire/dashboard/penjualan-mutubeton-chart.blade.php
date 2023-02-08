@@ -11,7 +11,8 @@
                 backgroundColor: ['rgb(0, 128, 0)',
                                 'rgb(255, 99, 132)',
                                 'rgb(54, 162, 235)',
-                                'rgb(255, 205, 86)'],
+                                'rgb(255, 205, 86)',
+                                'rgb(60, 106, 210)'],
                 borderColor: 'rgb(220, 220, 220)',
                 data: valuepenjualan,
             }]

@@ -17,8 +17,14 @@
                         <x-datarowtable title="Laporan Stok Barang All">
                             <a href="/laporanstokall" target="_blank"
                                 class='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'>
-                                Cetak
+                                <span class="material-icons align-middle text-center">print</span>
                             </a>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Stok Barang per Tanggal">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-stok-tanggal')">
+                                Cetak
+                            </x-print-button>
                         </x-datarowtable>
                         <x-datarowtable title="Laporan Kartu Stok">
                             <x-print-button
@@ -53,7 +59,7 @@
                         <x-datarowtable title="Laporan Komposisi">
                             <a href="/laporankomposisi" target="_blank"
                                 class='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'>
-                                Cetak
+                                <span class="material-icons align-middle text-center">print</span>
                             </a>
                         </x-datarowtable>
                     </tbody>
@@ -137,6 +143,12 @@
                         <x-datarowtable title="Laporan Penjualan per Mutubeton">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.penjualan-mutubeton')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Pengiriman Beton">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-pengiriman-beton')">
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>

@@ -44,8 +44,11 @@
     </head>
 
     <body style="height:40%;">
+       
         <div style="float:left;width:10%;border:solid 1px;padding:10px;overflow:auto;height:100%">
+            @if($data[0]->tipe <> 'Retail')
             <img src="{{ asset('/img/logobbm.jpeg') }}" width="70px" style="margin-top:40px;"/>
+            @endif
         </div>
         <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
             <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
@@ -59,7 +62,12 @@
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
+                    @if($data[0]->tipe == 'Retail')
+                    <td>{{ $data[0]->nama_pemilik }}</td>
+                    @else
                     <td>{{ $data[0]->nama_customer }}</td>
+                    @endif
+                    
                 </tr>
                 <tr>
                     <td>Uang Sejumlah</td>
@@ -77,12 +85,12 @@
                                 @else
                                     @if($jual->tipe_so=='Sewa')
                                     @else
-                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}} <br/>
                                     @endif
                                 @endif
                             </div>
                         @endforeach
-                            <div>{{ $data[0]->keterangan }}</div>
+                            <div>{!! $data[0]->keterangan !!}</div>
                     </td>
                 </tr>
             </table>
@@ -109,7 +117,9 @@
         <div class="page_break"></div>
 
         <div style="float:left;width:10%;border:solid 1px;padding:10px;overflow:auto;height:100%">
-            <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
+            @if($data[0]->tipe <> 'Retail')
+                <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
+            @endif
         </div>
         <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
             <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
@@ -123,7 +133,11 @@
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
+                    @if($data[0]->tipe == 'Retail')
+                    <td>{{ $data[0]->nama_pemilik }}</td>
+                    @else
                     <td>{{ $data[0]->nama_customer }}</td>
+                    @endif
                 </tr>
                 <tr>
                     <td>Uang Sejumlah</td>
@@ -141,12 +155,12 @@
                                 @else
                                     @if($jual->tipe_so=='Sewa')
                                     @else
-                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}} <br/>
                                     @endif
                                 @endif
                             </div>
                         @endforeach
-                            <div>{{ $data[0]->keterangan }}</div>
+                            <div>{!! $data[0]->keterangan !!}</div>
                     </td>
                 </tr>
             </table>
@@ -173,7 +187,9 @@
         <div class="page_break"></div>
 
         <div style="float:left;width:10%;border:solid 1px;padding:10px;overflow:auto;height:100%">
+            @if($data[0]->tipe <> 'Retail')
             <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
+            @endif
         </div>
         <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
             <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
@@ -187,7 +203,11 @@
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
+                    @if($data[0]->tipe == 'Retail')
+                    <td>{{ $data[0]->nama_pemilik }}</td>
+                    @else
                     <td>{{ $data[0]->nama_customer }}</td>
+                    @endif
                 </tr>
                 <tr>
                     <td>Uang Sejumlah</td>
@@ -199,18 +219,16 @@
                     <td style="padding-top: 18px;">:</td>
                     <td style="padding-top: 18px;">
                         @foreach($data as $jual)
-                            <div>
                                 @if( substr($jual->uraian,0,2) == 'DP' )
                                     {{ $jual->uraian }}
                                 @else
                                     @if($jual->tipe_so=='Sewa')
                                     @else
-                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}} <br/>
                                     @endif
                                 @endif
-                            </div>
                         @endforeach
-                            <div>{{ $data[0]->keterangan }}</div>
+                            <div>{!! $data[0]->keterangan !!}</div>
                     </td>
                 </tr>
             </table>
@@ -237,7 +255,9 @@
         <div class="page_break"></div>
 
         <div style="float:left;width:10%;border:solid 1px;padding:10px;overflow:auto;height:100%">
+            @if($data[0]->tipe <> 'Retail')
             <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
+            @endif
         </div>
         <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
             <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
@@ -251,7 +271,11 @@
                 <tr>
                     <td style="width: 150px;height:50px;">Telah diterima dari</td>
                     <td style="width:20px;">:</td>
+                    @if($data[0]->tipe == 'Retail')
+                    <td>{{ $data[0]->nama_pemilik }}</td>
+                    @else
                     <td>{{ $data[0]->nama_customer }}</td>
+                    @endif
                 </tr>
                 <tr>
                     <td>Uang Sejumlah</td>
@@ -269,12 +293,12 @@
                                 @else
                                     @if($jual->tipe_so=='Sewa')
                                     @else
-                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}}
+                                        {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}} <br/>
                                     @endif
                                 @endif
                             </div>
                         @endforeach
-                            <div>{{ $data[0]->keterangan }}</div>
+                            <div>{!! $data[0]->keterangan !!}</div>
                     </td>
                 </tr>
             </table>

@@ -51,6 +51,11 @@
                     <td> : </td>
                     <td>{{ $times[0]->nama_customer }}</td>
                 </tr>
+                <tr>
+                    <td style="width: 2rem;">Periode</td>
+                    <td> : </td>
+                    <td>{{ date_create($tgl_awal)->format('d/m/Y').' - '.date_create($tgl_akhir)->format('d/m/Y') }}</td>
+                </tr>
             </table>
 
             <table class="mytable" style="width:100%">
@@ -58,14 +63,14 @@
                     <td rowspan="2" class="tdhead">No</td>
                     <td rowspan="2" class="tdhead">Tanggal</td>
                     <td rowspan="2" class="tdhead">Operator</td>
-                    <td colspan="2" class="tdhead">Waktu Operasi</td>
-                    <td rowspan="2" class="tdhead">Istirahat</td>
-                    <td rowspan="2" class="tdhead">Jumlah Waktu Operasi</td>
+                    <td colspan="2" class="tdhead" style="text-align:center">Waktu Operasi</td>
+                    <td rowspan="2" class="tdhead" style="text-align:center">Istirahat</td>
+                    <td rowspan="2" class="tdhead" style="text-align:center">Jumlah Waktu Operasi</td>
                     <td rowspan="2" class="tdhead">Keterangan</td>
                 </tr>
                 <tr>
-                    <td>Awal</td>
-                    <td>Akhir</td>
+                    <td style="text-align:center">Awal</td>
+                    <td style="text-align:center">Akhir</td>
                 </tr>
                 @php
                     $jamtotal = 0;
@@ -73,13 +78,13 @@
             @foreach($times as $index => $time)
             <tr>
                 <td>{{ ++$index }}</td>
-                <td>{{ $time->tanggal }}</td>
+                <td>{{ date_create($time->tanggal)->format('d/m/Y') }}</td>
                 <td>{{ $time->nama_driver }}</td>
                 @if($time->tipe == 'Jam')
                 
-                    <td>{{ date_create($time->jam_awal)->format('h:i:s') }}</td>
-                    <td>{{ date_create($time->jam_akhir)->format('h:i:s') }}</td>
-                    <td>{{ $time->istirahat }}</td>
+                    <td style="text-align:center">{{ date_create($time->jam_awal)->format('H:i') }}</td>
+                    <td style="text-align:center">{{ date_create($time->jam_akhir)->format('H:i') }}</td>
+                    <td style="text-align:center">{{ $time->istirahat }}</td>
                 @php
                    $menit = $time->lama%60 <> 0 ? $time->lama%60 . ' Menit' : '';
                 @endphp

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\PengeluaranBiaya;
 
+use App\Models\VPembayaran;
 use App\Models\VPengeluaranBiaya;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
@@ -84,6 +85,10 @@ final class PengeluaranBiayaTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
+            ->addColumn('tgl_biaya')
+            ->addColumn('tgl_biaya_formatted', function(VPengeluaranBiaya $model) {
+                return Carbon::parse($model->tgl_biaya)->format('d/m/Y');
+            })
             ->addColumn('nama_supplier')
             ->addColumn('tipe_pembayaran')
             ->addColumn('jenis_ppn')
@@ -104,6 +109,7 @@ final class PengeluaranBiayaTable extends PowerGridComponent
                 return number_format($model->total,2,".",",");
             })
             ->addColumn('created_at')
+            ->addColumn('ket')
             ->addColumn('created_at_formatted', function(VPengeluaranBiaya $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             });
@@ -130,6 +136,13 @@ final class PengeluaranBiayaTable extends PowerGridComponent
                 ->title('ID')
                 ->field('id')
                 ->searchable()
+                ->sortable(),
+
+            Column::add()
+                ->title('Tanggal')
+                ->field('tgl_biaya_formatted', 'tgl_biaya')
+                ->searchable()
+                ->makeInputDatePicker()
                 ->sortable(),
 
             Column::add()
@@ -208,6 +221,13 @@ final class PengeluaranBiayaTable extends PowerGridComponent
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),
+
+            Column::add()
+                ->title('KETERANGAN')
+                ->field('ket')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
         ];
     }
 
@@ -254,18 +274,15 @@ final class PengeluaranBiayaTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
 
-    /*
+    
     public function actionRules(): array
     {
        return [
-           
-           //Hide button edit for ID 1
-            Rule::button('edit')
-                ->when(fn($v-pengeluaran-biaya) => $v-pengeluaran-biaya->id === 1)
+            Rule::button('buktikasbiaya')
+                ->when(fn(VPengeluaranBiaya $model) => $model->tipe_pembayaran == 'kredit')
                 ->hide(),
         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------

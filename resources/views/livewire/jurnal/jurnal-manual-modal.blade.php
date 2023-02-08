@@ -20,6 +20,19 @@
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
+
+    <x-form-group caption="Bukti Kas">
+        <x-combobox
+            wire:model="jurnalmanual.bukti_kas">
+            <option value="">-- Isi Bukti Kas</option>
+            <option value="bukti penerimaan kas">Bukti Penerimaan Kas</option>
+            <option value="bukti pengeluaran kas">Bukti Pengeluaran Kas</option>
+            <option value="lain-lain">Lain-Lain</option>
+        </x-combobox>
+        @error('jurnalmanual.bukti_kas')
+            <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
    
     <x-button
     class="mt-2"

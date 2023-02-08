@@ -291,7 +291,7 @@ class PurchaseorderModal extends ModalComponent
     public function render()
     {
         return view('livewire.pembelian.purchaseorder-modal',[
-            'coa' => Coa::where('header_akun','601000')->get()
+            'coa' => Coa::where(DB::raw('left(kode_akun,1)'),'6')->where('level',5)->orderBy('kode_akun')->get()
         ]);
     }
 

@@ -57,7 +57,11 @@
         </table>
 
         <p>Kepada </p>
+        @if($data[0]->tipe == 'Retail')
+        <p style="font-weight:bold;">{{ $data[0]->nama_pemilik }}</p>
+        @else
         <p style="font-weight:bold;">{{ $data[0]->nama_customer }}</p>
+        @endif
         <p>di - Tempat</p>
 
         <table class="mytable" style="margin-top:2em; margin-bottom:1em;width:100%">
@@ -137,10 +141,16 @@
                 <td style="height:2em;text-align:left; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
             </tr>
             <tr>
+                @if($data[0]->tipe <> 'Retail')
                 <td style="height:2em;text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
+                @endif
             </tr>
             <tr>
-                <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                @if($data[0]->tipe <> 'Retail')
+                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                @else
+                    <td style="height:14em;text-align:left; width:30%" style="width:30%">Karno</td>
+                @endif
             </tr>
         </table>
     </body>

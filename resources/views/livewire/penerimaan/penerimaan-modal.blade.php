@@ -1,7 +1,14 @@
 <div>
     <x-header-modal>
-        Input Pembayaran Invoice
+        Input Penerimaan
     </x-header-modal>
+
+    <x-form-group caption="Customer">
+        <livewire:customer.customer-select :deskripsi="$customer"/>
+        @error('customer_id')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
 
     <x-form-group caption="Tanggal bayar">
         <x-datepicker

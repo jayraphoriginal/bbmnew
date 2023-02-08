@@ -232,6 +232,15 @@ final class SalesorderSewaTable extends PowerGridComponent
                 ->route("timesheetso",[
                     'so_id' => 'id'
                 ]),
+
+            Button::add('export')
+                ->caption(__('Export'))
+                ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->target('_blank')
+                ->method('get')
+                ->route("exporttimesheetso",[
+                    'so_id' => 'id'
+                ]),
         ];
     }
     
