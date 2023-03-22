@@ -56,7 +56,7 @@
                     <td style="width: 45em;"></td>
                     <td>Tanggal</td>
                     <td> : </td>
-                    <td style="text-align:right;">{{ date_create($drv[0]->tanggal_awal)->format('d m Y').' - '.date_create($drv[0]->tanggal_akhir)->format('d m Y') }}</td>
+                    <td style="text-align:right;">{{ date_create($tgl_awal)->format('d m Y').' - '.date_create($tgl_akhir)->format('d m Y') }}</td>
                 </tr>
                 <tr>
                     <td style="width: 10em;">Nomor Polisi</td>
@@ -65,7 +65,7 @@
                     <td style="width: 45em;"></td>
                     <td>Periode</td>
                     <td> : </td>
-                    <td style="text-align:right;">{{ $drv[0]->periode+1 }} Hari</td>
+                    <td style="text-align:right;">{{ date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a Hari") }} </td>
                 </tr>
             </table>
 

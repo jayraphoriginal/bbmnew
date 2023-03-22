@@ -26,6 +26,9 @@
             @can('Pemakaian Barang')
             <x-menu-item route="pemakaianbarang">Pemakaian Barang</x-menu-item>
             @endcan
+            @can('Opname')
+            <x-menu-item route="opname">Opname Stok</x-menu-item>
+            @endcan
         </div>
         <li class="relative px-2 py-3">
             <a @click="persediaan = false, master = !master, penjualan = false, sewa=false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
@@ -137,8 +140,14 @@
             @can('Pembayaran Pembelian')
                 <x-menu-item route="pembayaranpembelian">Pembayaran Pembelian</x-menu-item>
             @endcan
+            @can('Pencairan Warkat Keluar')
+                <x-menu-item route="pencairanwarkatkeluar">Pencairan Warkat Keluar</x-menu-item>
+            @endcan
             @can('Penerimaan Pembayaran')
                 <x-menu-item route="penerimaanpembayaran">Penerimaan Pembayaran</x-menu-item>
+            @endcan
+            @can('Pencairan Warkat Masuk')
+                <x-menu-item route="pencairanwarkatmasuk">Pencairan Warkat Masuk</x-menu-item>
             @endcan
         </div>
         <li class="relative px-2 py-3">

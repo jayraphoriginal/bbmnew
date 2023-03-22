@@ -84,7 +84,7 @@
             @endforeach 
             <tr>
                 <td colspan="5" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,1,',','.').' '.$data[0]->satuan }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.').' '.$data[0]->satuan }}</td>
                 <td colspan="2"></td>
             </tr>
         </table>

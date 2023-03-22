@@ -52,7 +52,6 @@ final class PenjualanTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         return MPenjualan::join('customers','m_penjualans.customer_id','customers.id')
-        ->orderBy('m_penjualans.id','desc')
         ->select('m_penjualans.*','customers.nama_customer');
     }
 

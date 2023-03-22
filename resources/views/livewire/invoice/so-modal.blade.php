@@ -8,11 +8,14 @@
             <option value=""></option>
             <option value="Ready Mix">Ready Mix</option>
             <option value="Sewa">Sewa</option>
+            <option value="Penjualan">Penjualan Barang</option>
         </x-combobox>
     </x-form-group>
 
     @if($tipe=='Sewa')
         <livewire:invoice.so-sewa-table/>
+    @elseif($tipe=='Penjualan')
+        <livewire:invoice.penjualan-table/>
     @else
         <livewire:invoice.so-table/>
     @endif

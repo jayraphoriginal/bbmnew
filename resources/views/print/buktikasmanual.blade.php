@@ -26,12 +26,16 @@
     </head>
 
     <body style="padding:2em">
-        <h3 style="text-align:center; font-size:16px">BUKTI KAS</h3>
-        <p style="float:right">D/C No.</p>
+        @if($data->tipe == 'cash retail')
+            <h3 style="font-size:16px">BUKTI KAS (R)</h3>
+        @else
+            <h3 style="text-align:center; font-size:16px">BUKTI KAS</h3>
+        @endif
+        <p style="float:right;margin-right:40px">D/C No.</p>
         <p style="font-style:italic;margin-bottom:5px;">Sudah Diterima Dari :</p>
         <hr style="margin-bottom:8px;">
         <div style="display:inline-block;margin-right:8px;">
-            <input type="checkbox" {{ $data->tipe=='cash' ? 'checked' : '' }}>
+            <input type="checkbox" {{ $data->tipe=='cash' || $data->tipe=='cash retail' ? 'checked' : '' }}>
             <label >TUNAI</label>
         </div>
         <div style="display:inline-block;margin-right:8px;">

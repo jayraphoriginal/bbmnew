@@ -59,13 +59,13 @@
 
 
     <body>
-        <div style="border: 2px solid; margin:auto; padding-left:1rem; margin-top:1rem;">
+        <div style="border: 2px solid; margin:auto; padding-left:1rem; margin-top:0;padding:top:0.5rem">
             <h3 style="text-align:center;">Ticket Material</h3>
             <p style="text-align:center">No Ticket : {{ $data[0]->noticket }}</p>
             <p>Pekerjaan</p>
             <p style="font-weight:bold;">{{ $data[0]->nama_customer}}</p>
         </div>
-        <table class="table table-sm" style="margin-top:1rem">
+        <table class="table table-sm" style="margin-top:0.5rem">
             <tr>
                 <td class="kl1">No Urut Ticket</td>
                 <td class="kl2">: {{ $data[0]->nourut }}</td>
@@ -80,7 +80,7 @@
             </tr>
         </table>
         
-        <table class="table table-sm" style="margin-top:1em;">
+        <table class="table table-sm" style="margin-top:0.5em;">
             <tbody>
                 <tr>
                     <td class="captionleft">Tanggal Pengiriman</td>

@@ -1,6 +1,6 @@
 <div>
     <x-header-modal>
-       Laporan Saldo Kas/Bank
+       Laporan Saldo COA
     </x-header-modal>
 
     <x-form-group caption="Tanggal Awal">
@@ -29,5 +29,8 @@
         <x-link-button
             href="/laporanjurnalumum/{{$tgl_awal}}/{{$tgl_akhir}}/{{$coa_id}}" target="__blank"
             >Print</x-link-button>
+            <x-link-button
+            href="/exportjurnalumum/{{$tgl_awal}}/{{$tgl_akhir}}/{{$coa_id}}" target="__blank"
+            >Export</x-link-button>
     </x-footer-modal>
 </div>

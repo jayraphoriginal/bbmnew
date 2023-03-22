@@ -50,18 +50,18 @@
             <img src="{{ asset('/img/logobbm.jpeg') }}" width="70px" style="margin-top:40px;"/>
             @endif
         </div>
-        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
-            <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
-            <table style="float:right">
+        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:8px">
+            <h4 style="margin-top:1em; text-align:center; text-decoration:underline;margin-bottom:5px">KWITANSI</h4>
+            <table style="float:right;">
                 <tr>
                     <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
-            <table style="width:80%;height:45%">
+            <table style="width:100%;height:45%">
                 <tr>
-                    <td style="width: 150px;height:50px;">Telah diterima dari</td>
-                    <td style="width:20px;">:</td>
+                    <td style="width: 130px;height:30px;">Telah diterima dari</td>
+                    <td style="width:20px">:</td>
                     @if($data[0]->tipe == 'Retail')
                     <td>{{ $data[0]->nama_pemilik }}</td>
                     @else
@@ -70,14 +70,14 @@
                     
                 </tr>
                 <tr>
-                    <td>Uang Sejumlah</td>
+                    <td style="height:30px;"">Uang Sejumlah</td>
                     <td>:</td>
                     <td style="background-color:#ccc;font-weight:bold;font-style:italic;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
-                    <td style="padding-top: 18px;">Untuk Pembayaran</td>
-                    <td style="padding-top: 18px;">:</td>
-                    <td style="padding-top: 18px;">
+                    <td style="padding-top: 3px;">Untuk Pembayaran</td>
+                    <td style="padding-top: 3px;">:</td>
+                    <td style="padding-top: 3px;vertical-align:top;">
                         @foreach($data as $jual)
                             <div>
                                 @if( substr($jual->uraian,0,2) == 'DP' )
@@ -97,7 +97,7 @@
              <table style="float:left;width:40%;">
                 <tr>
                     <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
-                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,2,',','.') }}</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,0,',','.') }}</td>
                 </tr>
             </table>
             <table style="float:right;width:30%;margin-top:2rem;">
@@ -121,33 +121,34 @@
                 <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
             @endif
         </div>
-        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
-            <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
-            <table style="float:right">
+        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:8px">
+            <h4 style="margin-top:1em; text-align:center; text-decoration:underline;margin-bottom:5px">KWITANSI</h4>
+            <table style="float:right;">
                 <tr>
                     <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
-            <table style="width:80%;height:45%">
+            <table style="width:100%;height:45%">
                 <tr>
-                    <td style="width: 150px;height:50px;">Telah diterima dari</td>
-                    <td style="width:20px;">:</td>
+                    <td style="width: 130px;height:30px;">Telah diterima dari</td>
+                    <td style="width:20px">:</td>
                     @if($data[0]->tipe == 'Retail')
                     <td>{{ $data[0]->nama_pemilik }}</td>
                     @else
                     <td>{{ $data[0]->nama_customer }}</td>
                     @endif
+                    
                 </tr>
                 <tr>
-                    <td>Uang Sejumlah</td>
+                    <td style="height:30px;"">Uang Sejumlah</td>
                     <td>:</td>
                     <td style="background-color:#ccc;font-weight:bold;font-style:italic;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
-                    <td style="padding-top: 18px;">Untuk Pembayaran</td>
-                    <td style="padding-top: 18px;">:</td>
-                    <td style="padding-top: 18px;">
+                    <td style="padding-top: 3px;">Untuk Pembayaran</td>
+                    <td style="padding-top: 3px;">:</td>
+                    <td style="padding-top: 3px;vertical-align:top;">
                         @foreach($data as $jual)
                             <div>
                                 @if( substr($jual->uraian,0,2) == 'DP' )
@@ -164,10 +165,10 @@
                     </td>
                 </tr>
             </table>
-            <table style="float:left;width:40%;">
+             <table style="float:left;width:40%;">
                 <tr>
                     <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
-                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,2,',','.') }}</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,0,',','.') }}</td>
                 </tr>
             </table>
             <table style="float:right;width:30%;margin-top:2rem;">
@@ -191,34 +192,36 @@
             <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
             @endif
         </div>
-        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
-            <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
-            <table style="float:right">
+        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:8px">
+            <h4 style="margin-top:1em; text-align:center; text-decoration:underline;margin-bottom:5px">KWITANSI</h4>
+            <table style="float:right;">
                 <tr>
                     <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
-            <table style="width:80%;height:45%">
+            <table style="width:100%;height:45%">
                 <tr>
-                    <td style="width: 150px;height:50px;">Telah diterima dari</td>
-                    <td style="width:20px;">:</td>
+                    <td style="width: 130px;height:30px;">Telah diterima dari</td>
+                    <td style="width:20px">:</td>
                     @if($data[0]->tipe == 'Retail')
                     <td>{{ $data[0]->nama_pemilik }}</td>
                     @else
                     <td>{{ $data[0]->nama_customer }}</td>
                     @endif
+                    
                 </tr>
                 <tr>
-                    <td>Uang Sejumlah</td>
+                    <td style="height:30px;"">Uang Sejumlah</td>
                     <td>:</td>
                     <td style="background-color:#ccc;font-weight:bold;font-style:italic;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
-                    <td style="padding-top: 18px;">Untuk Pembayaran</td>
-                    <td style="padding-top: 18px;">:</td>
-                    <td style="padding-top: 18px;">
+                    <td style="padding-top: 3px;">Untuk Pembayaran</td>
+                    <td style="padding-top: 3px;">:</td>
+                    <td style="padding-top: 3px;vertical-align:top;">
                         @foreach($data as $jual)
+                            <div>
                                 @if( substr($jual->uraian,0,2) == 'DP' )
                                     {{ $jual->uraian }}
                                 @else
@@ -227,15 +230,16 @@
                                         {{ $jual->uraian.' '.number_format($jual->jumlah,1,',','.').' '.$jual->satuan}} <br/>
                                     @endif
                                 @endif
+                            </div>
                         @endforeach
                             <div>{!! $data[0]->keterangan !!}</div>
                     </td>
                 </tr>
             </table>
-            <table style="float:left;width:40%;">
+             <table style="float:left;width:40%;">
                 <tr>
                     <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
-                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,2,',','.') }}</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,0,',','.') }}</td>
                 </tr>
             </table>
             <table style="float:right;width:30%;margin-top:2rem;">
@@ -259,33 +263,34 @@
             <img src="{{ asset('/img/logobbmblackwhite.jpg') }}" width="70px" style="margin-top:40px;"/>
             @endif
         </div>
-        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:10px">
-            <h4 style="margin-top:1em; text-align:center; text-decoration:underline">KWITANSI</h4>
-            <table style="float:right">
+        <div style="float:right;width:82%;border:solid 1px;overflow:auto;height:100%;padding:8px">
+            <h4 style="margin-top:1em; text-align:center; text-decoration:underline;margin-bottom:5px">KWITANSI</h4>
+            <table style="float:right;">
                 <tr>
                     <td class="captioncenter">{{ "No Kwitansi. ".$data[0]->nokwitansi }}</td>
                 </tr>
             </table>
 
-            <table style="width:80%;height:45%">
+            <table style="width:100%;height:45%">
                 <tr>
-                    <td style="width: 150px;height:50px;">Telah diterima dari</td>
-                    <td style="width:20px;">:</td>
+                    <td style="width: 130px;height:30px;">Telah diterima dari</td>
+                    <td style="width:20px">:</td>
                     @if($data[0]->tipe == 'Retail')
                     <td>{{ $data[0]->nama_pemilik }}</td>
                     @else
                     <td>{{ $data[0]->nama_customer }}</td>
                     @endif
+                    
                 </tr>
                 <tr>
-                    <td>Uang Sejumlah</td>
+                    <td style="height:30px;"">Uang Sejumlah</td>
                     <td>:</td>
-                    <td style="background-color:#ccc;font-weight:bold;font-style:italic">{{ ucwords($terbilang).' Rupiah' }}</td>
+                    <td style="background-color:#ccc;font-weight:bold;font-style:italic;">{{ ucwords($terbilang).' Rupiah' }}</td>
                 </tr>
                 <tr>
-                    <td style="padding-top: 18px;">Untuk Pembayaran</td>
-                    <td style="padding-top: 18px;">:</td>
-                    <td style="padding-top: 18px;">
+                    <td style="padding-top: 3px;">Untuk Pembayaran</td>
+                    <td style="padding-top: 3px;">:</td>
+                    <td style="padding-top: 3px;vertical-align:top;">
                         @foreach($data as $jual)
                             <div>
                                 @if( substr($jual->uraian,0,2) == 'DP' )
@@ -302,10 +307,10 @@
                     </td>
                 </tr>
             </table>
-            <table style="float:left;width:40%;">
+             <table style="float:left;width:40%;">
                 <tr>
                     <td style="width:5%;background-color:#ccc;font-weight:bold;">Rp</td>
-                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,2,',','.') }}</td>
+                    <td style="height:2em;text-align:right; width:30%;background-color:#ccc;font-weight:bold;font-style:italic;">{{ number_format($data[0]->total,0,',','.') }}</td>
                 </tr>
             </table>
             <table style="float:right;width:30%;margin-top:2rem;">

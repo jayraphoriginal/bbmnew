@@ -6,7 +6,9 @@ use App\Models\Barang;
 use App\Models\Customer;
 use App\Models\DBarang;
 use App\Models\DPenjualan;
+use App\Models\Journal;
 use App\Models\Kartustok;
+use App\Models\Kategori;
 use App\Models\Mpajak;
 use App\Models\MPenjualan;
 use App\Models\TmpPenjualan;
@@ -142,6 +144,7 @@ class PenjualanModal extends ModalComponent
                                 $dpenjualan->save();
 
                                 $kartustok = new Kartustok();
+                                $kartustok['tanggal'] = date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
                                 $kartustok['barang_id']=$tmpbarang->barang_id;
                                 $kartustok['tipe']='Penjualan';
                                 $kartustok['trans_id']=$this->MPenjualan->id;
@@ -153,6 +156,27 @@ class PenjualanModal extends ModalComponent
                                 $kartustok['modal']=$stok->hpp;
                                 $kartustok->save();
 
+                                $databarang = Barang::find($tmpbarang->barang_id);
+                                $kategori = Kategori::find($databarang->kategori_id);
+
+                                $journal = new Journal();
+                                $journal['tipe']='Penjualan';
+                                $journal['trans_id']=$this->MPenjualan->id;
+                                $journal['tanggal_transaksi']=date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
+                                $journal['coa_id']=$kategori->coa_hpp_id;
+                                $journal['debet']=round($stok->hpp*$pengurangan,4);
+                                $journal['kredit']=0;
+                                $journal->save();
+
+                                $journal = new Journal();
+                                $journal['tipe']='Penjualan';
+                                $journal['trans_id']=$this->MPenjualan->id;
+                                $journal['tanggal_transaksi']=date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
+                                $journal['coa_id']=$kategori->coa_asset_id;
+                                $journal['debet']=0;
+                                $journal['kredit']=round($stok->hpp*$pengurangan,4);
+                                $journal->save();
+
                             }else{
 
                                 $stok = DBarang::find($barang->id);
@@ -162,17 +186,18 @@ class PenjualanModal extends ModalComponent
                                 $jumlahstok = DBarang::where('barang_id',$tmpbarang->barang_id)
                                     ->sum('jumlah');
 
-                                    $dpenjualan = New DPenjualan();
-                                    $dpenjualan['m_penjualan_id']=$this->MPenjualan->id;
-                                    $dpenjualan['barang_id']=$tmpbarang->barang_id;
-                                    $dpenjualan['jumlah']=$pemakaianmaterial;
-                                    $dpenjualan['sisa']=$pemakaianmaterial;
-                                    $dpenjualan['satuan_id']=$tmpbarang->satuan_id;
-                                    $dpenjualan['harga_intax']=$tmpbarang->harga_intax;
-                                    $dpenjualan['status_detail']='Open';
-                                    $dpenjualan->save();
+                                $dpenjualan = New DPenjualan();
+                                $dpenjualan['m_penjualan_id']=$this->MPenjualan->id;
+                                $dpenjualan['barang_id']=$tmpbarang->barang_id;
+                                $dpenjualan['jumlah']=$pemakaianmaterial;
+                                $dpenjualan['sisa']=$pemakaianmaterial;
+                                $dpenjualan['satuan_id']=$tmpbarang->satuan_id;
+                                $dpenjualan['harga_intax']=$tmpbarang->harga_intax;
+                                $dpenjualan['status_detail']='Open';
+                                $dpenjualan->save();
 
                                 $kartustok = new Kartustok();
+                                $kartustok['tanggal'] = date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
                                 $kartustok['barang_id']=$tmpbarang->barang_id;
                                 $kartustok['tipe']='Penjualan';
                                 $kartustok['trans_id']=$this->MPenjualan->id;
@@ -183,6 +208,27 @@ class PenjualanModal extends ModalComponent
                                 $kartustok['qty']=$jumlahstok;
                                 $kartustok['modal']=$stok->hpp;
                                 $kartustok->save();
+
+                                $databarang = Barang::find($tmpbarang->barang_id);
+                                $kategori = Kategori::find($databarang->kategori_id);
+
+                                $journal = new Journal();
+                                $journal['tipe']='Penjualan';
+                                $journal['trans_id']=$this->MPenjualan->id;
+                                $journal['tanggal_transaksi']=date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
+                                $journal['coa_id']=$kategori->coa_hpp_id;
+                                $journal['debet']=round($stok->hpp*$pemakaianmaterial,4);
+                                $journal['kredit']=0;
+                                $journal->save();
+
+                                $journal = new Journal();
+                                $journal['tipe']='Penjualan';
+                                $journal['trans_id']=$this->MPenjualan->id;
+                                $journal['tanggal_transaksi']=date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
+                                $journal['coa_id']=$kategori->coa_asset_id;
+                                $journal['debet']=0;
+                                $journal['kredit']=round($stok->hpp*$pemakaianmaterial,4);
+                                $journal->save();
 
                                 $pemakaianmaterial = 0;
 
@@ -217,6 +263,7 @@ class PenjualanModal extends ModalComponent
     {
         return '7xl';
     }
+
     public function render()
     {
         return view('livewire.penjualan.penjualan-modal');

@@ -30,7 +30,7 @@ class PurchaseorderDetailModal extends ModalComponent
 
     protected $rules=[
         'tmp.barang_id'=> 'required',
-        'tmp.jumlah'=> 'required',
+        'tmp.jumlah'=> 'required|min:1',
         'tmp.satuan_id'=> 'required',
         'tmp.harga'=> 'required',
     ];
@@ -58,10 +58,13 @@ class PurchaseorderDetailModal extends ModalComponent
 
     public function save(){
 
-        
         $this->tmp->harga = str_replace(',', '', $this->tmp->harga);
-
         $this->tmp->jumlah = str_replace(',', '', $this->tmp->jumlah);
+
+        if ($this->tmp->jumlah <= 0){
+            $this->addError('tmp.jumlah','Jumlah minimal 1');
+            return;
+        }
 
         $this->tmp->status_detail = 'Open';
 
@@ -73,6 +76,15 @@ class PurchaseorderDetailModal extends ModalComponent
             
             $this->tmp->save();
 
+            $this->closeModal();
+
+            $this->alert('success', 'Save Success', [
+                'position' => 'center'
+            ]);
+    
+            $this->emitTo('pembelian.purchaseorder-detail-table', 'pg:eventRefresh-default');
+            $this->emitTo('pembelian.purchaseorder-table', 'pg:eventRefresh-default');
+
         }
         catch(Throwable $e){
             $this->alert('error', $e->getMessage(), [
@@ -81,14 +93,7 @@ class PurchaseorderDetailModal extends ModalComponent
             return;
         }
        
-        $this->closeModal();
-
-        $this->alert('success', 'Save Success', [
-            'position' => 'center'
-        ]);
-
-        $this->emitTo('pembelian.purchaseorder-detail-table', 'pg:eventRefresh-default');
-        $this->emitTo('pembelian.purchaseorder-table', 'pg:eventRefresh-default');
+       
 
     }
 

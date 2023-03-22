@@ -149,7 +149,7 @@ class TicketModal extends ModalComponent
                 $this->alert('error', 'Stok '.$barang->nama_barang.' tidak mencukupi', [
                     'position' => 'center'
                 ]);
-                return;
+                $this->addError('stok', 'Stok '.$barang->nama_barang.' tidak mencukupi');
             }
         }
 

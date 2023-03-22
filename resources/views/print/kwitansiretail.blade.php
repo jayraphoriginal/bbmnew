@@ -62,25 +62,28 @@
                     <td style="padding-top: 18px;">Untuk Pembayaran</td>
                     <td style="padding-top: 18px;">:</td>
                     <td style="padding-top: 18px;">
-                        @foreach($data as $jual)
-                            <div>
-                                @if( substr($jual->uraian,0,2) == 'DP' )
-                                    {{ $jual->uraian }}
-                                @else
-                                    @if($jual->tipe_so=='Sewa')
+                        @if($data[0]->keterangan == '')
+                            @foreach($data as $jual)
+                                <div>
+                                    @if( substr($jual->uraian,0,2) == 'DP' )
+                                        {{ $jual->uraian }}
                                     @else
-                                        {{ $jual->uraian.' '.number_format($jual->jumlah,0,',','.').' '.$jual->satuan}}
+                                        @if($jual->tipe_so=='Sewa')
+                                        @else
+                                            {{ $jual->uraian.' '.number_format($jual->jumlah,0,',','.').' '.$jual->satuan}}
+                                        @endif
                                     @endif
-                                @endif
-                            </div>
-                        @endforeach
+                                </div>
+                            @endforeach
+                        @else
                             <div>{!! $data[0]->keterangan !!}</div>
+                        @endif
                     </td>
                 </tr>
             </table>
              <table style="float:left;width:68%;">
                 <tr>
-                    <td colspan=3 style="height:5em;font-weight:bold;text-decoration:underline;">Rp {{ number_format($data[0]->total,2,',','.') }}</td>
+                    <td colspan=3 style="height:5em;font-weight:bold;text-decoration:underline;">Rp {{ number_format($data[0]->total,0,',','.') }}</td>
                 </tr>
                 <tr>
                     <td style="width:30%;">Uang Sejumlah</td>

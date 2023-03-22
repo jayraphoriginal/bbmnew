@@ -170,7 +170,7 @@ class LaporanController extends Controller
                     $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
                     $tmp['nopol'] = $kendaraan->nopol;
                     $tmp['nama_driver'] = $driver->nama_driver;
-                    $tmp['tanggal_ticket'] = date_format(date_create($pengisianbbm->tanggal_penambahan),'Y-m-d');
+                    $tmp['tanggal_ticket'] = date_format(date_create($tambahanbbm->tanggal_penambahan),'Y-m-d');
                     $tmp['nama_customer'] = $tambahanbbm->keterangan;
                     $tmp['lokasi'] = '-';
                     $tmp['jarak'] = 0;
@@ -196,7 +196,9 @@ class LaporanController extends Controller
 
         $pdf = PDF::loadView('print.gajidriver', array(
             'data' => $data,
-            'bbm' => $bbm
+            'bbm' => $bbm,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
         ));
         return $pdf->setPaper('A4','Landscape')->stream();
 
@@ -268,12 +270,35 @@ class LaporanController extends Controller
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->get();
 
+        //return $data;
+
         $pdf = PDF::loadView('print.rekaptickettanggal', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
         return $pdf->setPaper('A4','landscape')->stream();
+    }
+
+    public function rekapticketsotanggal($tgl_awal,$tgl_akhir,$so_id){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Rekap Ticket')){
+            return abort(401);
+        }
+        
+        $data = VTicketHeader::orderBy('V_TicketHeader.noticket')
+        ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->where('so_id',$so_id)
+        ->get();
+
+        $pdf = PDF::loadView('print.rekapticketmaterial', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','potrait')->stream();
     }
 
     public function laporanpengirimanbeton($tgl_awal,$tgl_akhir){
@@ -313,7 +338,7 @@ class LaporanController extends Controller
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->groupBy('nama_customer','kode_mutu','tujuan','satuan')->get();
 
-        DB::update("Exec SP_PenjualanPerBulan ".date('Y').",' ".$tgl_akhir."'");
+        DB::statement("SET NOCOUNT ON; Exec SP_PenjualanPerBulan ".date('Y').",' ".$tgl_akhir."'");
         $penjualanbulan = TmpPenjualanBulanan::all();
        // return $penjualanbulan;
 
@@ -341,7 +366,7 @@ class LaporanController extends Controller
         ->where(DB::raw('convert(date,jam_ticket)'),date_create($tgl)->format('Y-m-d'))
         ->groupBy('nama_customer','kode_mutu','tujuan','satuan')->get();
 
-        DB::update("Exec SP_PenjualanPerBulan ".date('Y').",' ".$tgl."'");
+        DB::statement("SET NOCOUNT ON; Exec SP_PenjualanPerBulan ".date('Y').",' ".$tgl."'");
         $penjualanbulan = TmpPenjualanBulanan::all();
        // return $penjualanbulan;
 
@@ -361,7 +386,7 @@ class LaporanController extends Controller
             return abort(401);
         }
         
-        DB::update("Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
+        DB::statement("SET NOCOUNT ON; Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
 
         $datacustomer = TmpReportTicket::select('nama_customer','kode_mutu',DB::raw('harga_intax / (1+(pajak/100)) as harga'),'tujuan','satuan',DB::raw('sum(jumlah) as total'))
         ->groupBy('nama_customer',DB::raw('harga_intax / (1+(pajak/100))'),'kode_mutu','tujuan','satuan')->get();
@@ -491,7 +516,7 @@ class LaporanController extends Controller
                 $customer = Customer::find($msalesorder->customer_id);
 
                 $kendaraanticket = Kendaraan::find($ticket->kendaraan_id);
-
+                $lembur = 0;
                 if($ticket->driver_id==$driver->id){
                     $gajis = GajiRate::where('muatan',$kendaraanticket->muatan)
                                     ->where('batas_bawah_jarak','<=',$rate->estimasi_jarak)
@@ -504,6 +529,7 @@ class LaporanController extends Controller
                     else{
                         $gaji = $gajis->gaji;
                     }
+                    $lembur = $ticket->lembur;
                 }
                 else
                 {
@@ -521,7 +547,7 @@ class LaporanController extends Controller
                 $tmp['lokasi'] = $rate->tujuan;
                 $tmp['jarak'] = $rate->estimasi_jarak;
                 $tmp['pemakaian_bbm'] = $pemakaianbbm;
-                $tmp['lembur'] = $ticket->lembur;
+                $tmp['lembur'] = $lembur;
                 $tmp['gaji'] = $gaji;
                 $tmp['pengisian_bbm'] =0;
                 $tmp['loading'] = $loading;
@@ -617,7 +643,9 @@ class LaporanController extends Controller
 
         $pdf = PDF::loadView('print.gajiperdriver', array(
             'data' => $data,
-            'bbm' => $bbm
+            'bbm' => $bbm,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
         ));
         return $pdf->setPaper('A4','Landscape')->stream();
 
@@ -769,7 +797,7 @@ class LaporanController extends Controller
             return abort(401);
         }
         
-        DB::update("Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
+        DB::statement("SET NOCOUNT ON; Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
         $data = TmpReportTicket::where('kendaraan_id',$kendaraan_id)->orderBy('jam_ticket')->get();
 
         $pdf = PDF::loadView('print.rekappenjualanbetonpermobil', array(
@@ -824,12 +852,14 @@ class LaporanController extends Controller
 
         $rekening = Rekening::join('banks','rekenings.bank_id','banks.id')
         ->where('rekenings.id',$rekening_id)->get();
-        
-        DB::update("Exec SP_SaldoKasBank '".$tgl_awal."','".$tgl_akhir."',".$rekening_id."");
+    
+        //return "Exec SP_SaldoKasBank '".$tgl_awal."','".$tgl_akhir."',".$rekening_id;
+
+        DB::statement("SET NOCOUNT ON; Exec SP_SaldoKasBank '".$tgl_awal."','".$tgl_akhir."',".$rekening_id."");
         $data = VSaldoRekening::where('tanggal','>=',$tgl_awal)
         ->where('tanggal','<=',$tgl_akhir)
         ->where('tipe','<>','Saldo Awal')
-        ->orderBy('tanggal')->get();
+        ->orderBy('tanggal')->get();   
 
         $pdf = PDF::loadView('print.laporansaldorekening', array(
             'data' => $data,
@@ -848,7 +878,7 @@ class LaporanController extends Controller
 
         $coa = Coa::find($coa_id);
         
-        DB::update("Exec SP_GL '".$tgl_awal."','".$tgl_akhir."',".$coa_id."");
+        DB::statement("SET NOCOUNT ON; Exec SP_GL '".$tgl_awal."','".$tgl_akhir."',".$coa_id."");
         $data = VJurnalUmum::where('tanggal','>=',$tgl_awal)
         ->where('tanggal','<=',$tgl_akhir)
         ->where('tipe','<>','Saldo Awal')

@@ -223,6 +223,14 @@ final class SalesorderTable extends PowerGridComponent
                     'soid' => 'id'
                 ]),
 
+            Button::add('rekaptanggal')
+                ->caption('<span class="material-icons align-middle text-center">confirmation_number</span>')
+                ->tooltip('ticket per tanggal')
+                ->class('bg-teal-500 cursor-pointer text-white rounded text-sm px-3 py-1')
+                ->openModal('laporan.laporan-ticket-so',[
+                    'so_id' => 'id'
+                ]),
+
             Button::add('rekapall')
                 ->caption('<span class="material-icons align-middle text-center">local_activity</span>')
                 ->tooltip('ticket all')

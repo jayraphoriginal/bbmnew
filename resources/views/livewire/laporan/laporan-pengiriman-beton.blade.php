@@ -22,5 +22,8 @@
         <x-link-button
             href="/laporanpengirimanbeton/{{$tgl_awal}}/{{$tgl_akhir}}" target="__blank"
             >Print</x-link-button>
+        <x-link-button
+            href="/exportrekapticket/{{$tgl_awal}}/{{$tgl_akhir}}" target="__blank"
+            >Export</x-link-button>
     </x-footer-modal>
 </div>

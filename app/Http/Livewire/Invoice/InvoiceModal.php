@@ -5,12 +5,16 @@ namespace App\Http\Livewire\Invoice;
 use App\Models\Concretepump;
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\MPenjualan;
 use App\Models\MSalesorder;
 use App\Models\MSalesorderSewa;
 use App\Models\PenjualanRetail;
+use App\Models\Timesheet;
+use App\Models\VPenjualan;
 use App\Models\VSalesOrder;
 use App\Models\VSalesOrderSewa;
 use App\Models\VTicketHeader;
+use App\Models\VTimesheetConcretepump;
 use App\Models\VTimesheetSewa;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -58,6 +62,15 @@ class InvoiceModal extends ModalComponent
             $this->pajak = $msalesorder->pajak;
             $customers = Customer::find($msalesorder->customer_id);
             $this->customer = $customers->nama_customer;
+        }
+        elseif($this->tipe_so=='Penjualan'){
+            $penjualan = MPenjualan::find($this->so_id);
+            $this->pembayaran = $penjualan->pembayaran;
+            $this->customer_id = $penjualan->customer_id;
+            $this->noso = $penjualan->nopenjualan;
+            $this->pajak = $penjualan->pajak;
+            $customers = Customer::find($penjualan->customer_id);
+            $this->customer = $customers->nama_customer;
         }else{
             $msalesorder = MSalesorderSewa::find($this->so_id);
             $this->customer_id = $msalesorder->customer_id;
@@ -74,6 +87,11 @@ class InvoiceModal extends ModalComponent
             if ($this->tipe_so=='Sewa'){
                 $this->jumlah_total = VSalesOrderSewa::where('id',$this->so_id)
                 ->where('status_so','Open')->sum(DB::raw('lama*harga_intax'));
+                $this->dp = "Reg";
+            }
+            elseif($this->tipe_so =='Penjualan'){
+                $this->jumlah_total = VPenjualan::where('m_penjualan_id',$this->so_id)
+                ->where('status','Open')->sum(DB::raw('jumlah*harga_intax'));
                 $this->dp = "Reg";
             }else{
                 $this->jumlah_total = VSalesOrder::where('id',$this->so_id)
@@ -153,6 +171,10 @@ class InvoiceModal extends ModalComponent
                 $this->jumlah_penjualan_retail = $mobdemob + $totalsewa;
             }
         }
+        elseif($this->tipe_so=='Penjualan'){
+            $this->jumlah_total = VPenjualan::where('m_penjualan_id',$this->so_id)
+                ->where('status','Open')->sum(DB::raw('jumlah*harga_intax'));
+        }
         else{
             
             $jumlah_ticket = VTicketHeader::where('so_id', $this->so_id)
@@ -173,11 +195,14 @@ class InvoiceModal extends ModalComponent
             ->whereBetween(DB::raw('convert(date,jam_ticket)'),array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum('tambahan_biaya');
 
+            $overtimeconcretepump = VTimesheetConcretepump::where('tipe','include mixer')->where('m_salesorder_id',$this->so_id)
+            ->sum('biaya_overtime');
+
             $penjualanretail = PenjualanRetail::where('m_salesorder_id', $this->so_id)
             ->where('status_detail','Open')
             ->sum(DB::raw('jumlah * harga'));
 
-            $this->jumlah_penjualan_retail = $tambahanbiaya + $penjualanretail;
+            $this->jumlah_penjualan_retail = $tambahanbiaya + $penjualanretail + $overtimeconcretepump;
 
         }
         if ($this->jumlah_total + $this->jumlah_penjualan_retail > 0) {

@@ -184,7 +184,7 @@ class PrintController extends Controller
             $retail = 'retail';
         }
         
-        $terbilang = Terbilang::make($data[0]->total);
+        $terbilang = Terbilang::make(round($data[0]->total,0));
 
         //$customPaper = array(0,0,609.44,396.85);
 
@@ -299,9 +299,9 @@ class PrintController extends Controller
 
         $jurnalmanual = ManualJournal::find($id);
         if ($jurnalmanual->bukti_kas == 'bukti penerimaan kas'){
-            $data = VJurnalManual::where('id',$id)->select('id','keterangan','tanggal',DB::raw('sum(debet) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti penerimaan kas',id) as tipe"))->groupBy('keterangan','tanggal','id')->first();
+            $data = VJurnalManual::where('id',$id)->where('debet','>',0)->select('id','keterangan','tanggal',DB::raw('sum(debet) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti penerimaan kas',id) as tipe"))->groupBy('keterangan','tanggal','id')->first();
         }else if($jurnalmanual->bukti_kas == 'bukti pengeluaran kas'){
-            $data = VJurnalManual::where('id',$id)->select('id','keterangan','tanggal',DB::raw('sum(kredit) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti penerimaan kas',id) as tipe"))->groupBy('keterangan','tanggal','id')->first();
+            $data = VJurnalManual::where('id',$id)->where('kredit','>',0)->select('id','keterangan','tanggal',DB::raw('sum(kredit) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti pengeluaran kas',id) as tipe"))->groupBy('keterangan','tanggal','id')->first();
         }
         $terbilang = Terbilang::make($data->jumlah);
        

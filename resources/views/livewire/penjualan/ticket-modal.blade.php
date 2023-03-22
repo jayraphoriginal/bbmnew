@@ -41,6 +41,9 @@
                 @error('jumlah')
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
+                @error('stok')
+                <x-error-form>{{ $message }}</x-error-form>
+                @enderror
             </x-form-group>
 
             <x-form-group caption="Satuan">

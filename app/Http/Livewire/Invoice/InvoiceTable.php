@@ -200,20 +200,6 @@ final class InvoiceTable extends PowerGridComponent
             ->field('sisa_invoice')
             ->sortable(),
 
-            Column::add()
-                ->title('CREATED AT')
-                ->field('created_at_formatted', 'created_at')
-                ->searchable()
-                ->sortable()
-                ->makeInputDatePicker('created_at'),
-
-            Column::add()
-                ->title('UPDATED AT')
-                ->field('updated_at_formatted', 'updated_at')
-                ->searchable()
-                ->sortable()
-                ->makeInputDatePicker('updated_at'),
-
         ]
 ;
     }

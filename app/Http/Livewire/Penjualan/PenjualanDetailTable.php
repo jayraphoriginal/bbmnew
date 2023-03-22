@@ -133,7 +133,7 @@ final class PenjualanDetailTable extends PowerGridComponent
         return [
 
             Column::add()
-                ->title('KOMPOSISI')
+                ->title('NAMA BARANG')
                 ->field('nama_barang')
                 ->sortable()
                 ->searchable()

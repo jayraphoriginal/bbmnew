@@ -8,11 +8,12 @@
             labels: labels,
             datasets: [{
                 label: 'Penjualan Mutubeton (m3)',
-                backgroundColor: ['rgb(0, 128, 0)',
-                                'rgb(255, 99, 132)',
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 205, 86)',
-                                'rgb(60, 106, 210)'],
+                backgroundColor: ['rgb(7, 243, 1)',
+                                'rgb(243, 7, 185)',
+                                'rgb(7, 11, 243)',
+                                'rgb(235, 243, 7)',
+                                'rgb(243, 169, 7)',
+                                'rgb(243, 7, 61)'],
                 borderColor: 'rgb(220, 220, 220)',
                 data: valuepenjualan,
             }]

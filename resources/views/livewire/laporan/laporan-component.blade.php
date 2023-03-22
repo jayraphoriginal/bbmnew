@@ -92,6 +92,12 @@
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>
+                        <x-datarowtable title="Laporan Pembelian per Barang">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-pembelian-barang')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
                         <x-datarowtable title="Laporan Pengisian BBM">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.laporan-pengisian-bbm-modal')">
@@ -239,6 +245,18 @@
                         <x-datarowtable title="Laporan Saldo Kas / Bank">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.laporan-saldo-rekening')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Rekap Piutang">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-piutang-all')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Rekap Hutang">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-hutang-all')">
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>

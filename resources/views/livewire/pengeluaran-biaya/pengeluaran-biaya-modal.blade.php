@@ -20,20 +20,33 @@
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
-
-            <x-form-group caption="Tipe Pembayaran">
+            @can('Pengeluaran Biaya Finance')
+                <x-form-group caption="Tipe Pembayaran">
+                    <x-combobox
+                        wire:model="pengeluaran.tipe_pembayaran"
+                    >
+                        <option value="">-- Isi Tipe Pembayaran --</option>
+                        <option value="cash">Cash</option>
+                        <option value="transfer">Transfer</option>
+                        <option value="kredit">Kredit</option>
+                    </x-combobox>
+                    @error('pengeluaran.tipe_pembayaran')
+                    <x-error-form>{{ $message }}</x-error-form>
+                    @enderror
+                </x-form-group>
+            @else
+                <x-form-group caption="Tipe Pembayaran">
                 <x-combobox
                     wire:model="pengeluaran.tipe_pembayaran"
                 >
                     <option value="">-- Isi Tipe Pembayaran --</option>
-                    <option value="cash">Cash</option>
-                    <option value="transfer">Transfer</option>
                     <option value="kredit">Kredit</option>
                 </x-combobox>
                 @error('pengeluaran.tipe_pembayaran')
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
             </x-form-group>
+            @endcan
             <x-form-group caption="Keterangan">
                 <x-textbox
                     wire:model="pengeluaran.ket"

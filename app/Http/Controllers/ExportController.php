@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\JurnalExport;
+use App\Exports\PembelianExport;
 use App\Exports\RekapInvoiceExport;
+use App\Exports\RekapTicketExport;
 use App\Exports\TimesheetExport;
 use App\Http\Livewire\Laporan\RekapInvoice;
 use Illuminate\Http\Request;
@@ -20,4 +23,15 @@ class ExportController extends Controller
     public function ExportRekapInvoiceRetail($tgl_awal,$tgl_akhir){
         return Excel::download(new RekapInvoiceExport('retail',$tgl_awal,$tgl_akhir), 'rekapinvoiceretail.xlsx');
     }
+    public function exportjurnalumum($tgl_awal,$tgl_akhir,$coa_id){
+        return Excel::download(new JurnalExport($coa_id,$tgl_awal,$tgl_akhir), 'exportjurnal.xlsx');
+    }
+    public function exportpembelianbarang($tgl_awal,$tgl_akhir,$barang_id){
+        return Excel::download(new PembelianExport($barang_id,$tgl_awal,$tgl_akhir), 'exportpembelian.xlsx');
+    }
+    public function exportrekapticket($tgl_awal,$tgl_akhir){
+        return Excel::download(new RekapTicketExport($tgl_awal,$tgl_akhir), 'exportrekapticket.xlsx');
+    }
+
+    
 }
