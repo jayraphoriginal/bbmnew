@@ -247,6 +247,7 @@ class LaporanController extends Controller
         ->get()->first();
         
         $data = VTicketHeaderAll::where('so_id',$soid)
+        ->orderBy('V_TicketHeaderAll.kode_mutu')
         ->orderBy('V_TicketHeaderAll.noticket')
         ->get();
 

@@ -23,6 +23,7 @@ class JurnalManualModal extends ModalComponent
         'jurnalmanual.tanggal' => 'required',
         'jurnalmanual.keterangan' => 'required',
         'jurnalmanual.bukti_kas' => 'required',
+        'jurnalmanual.nobuktikas' => 'nullable',
     ];
 
     public function mount(){

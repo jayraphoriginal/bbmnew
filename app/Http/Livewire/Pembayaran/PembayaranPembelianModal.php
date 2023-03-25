@@ -17,7 +17,7 @@ class PembayaranPembelianModal extends ModalComponent
     use LivewireAlert;
 
     public $supplier_id, $supplier, $tgl_bayar, $tipe_pembayaran, $jatuh_tempo, $nowarkat, 
-    $rekening_id, $rekening, $jumlah, $keterangan;
+    $rekening_id, $rekening, $jumlah, $keterangan, $nobuktikas;
 
     protected $rules=[
         'supplier_id' => 'required',
@@ -28,6 +28,7 @@ class PembayaranPembelianModal extends ModalComponent
         'rekening_id' => 'required',
         'jumlah' => 'required',
         'keterangan' => 'nullable',
+        'nobuktikas' => 'required'
     ];
 
     protected $listeners = [
@@ -79,7 +80,8 @@ class PembayaranPembelianModal extends ModalComponent
                                             '$this->tipe_pembayaran', '$this->nowarkat', 
                                             '$this->jatuh_tempo',     $rekening->bank_id,
                                             $this->rekening_id,     $this->supplier_id,
-                                            $this->jumlah,          '$this->keterangan'");
+                                            $this->jumlah,          '$this->keterangan',
+                                            '$this->nobuktikas'");
             
             DB::commit();
 

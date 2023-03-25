@@ -137,9 +137,8 @@
                     <td style="text-align:center;width:33%;font-weight:bold">Diperiksa Oleh</td>
                     <td style="text-align:center;font-weight:bold">Dibuat Oleh</td>
                 </tr>
-
                 <tr>
-                    <td style="height:4em;text-align:center; width:33%;" style="width:33%">( Ir. Juliano )</td>
+                    <td style="height:4em;text-align:center; width:33%;">( Ir. Juliano )</td>
                     <td style="width:33%;text-align:center">( Sony Suherman )</td>
                     <td style="text-align:center border-left"></td>
                 </tr>

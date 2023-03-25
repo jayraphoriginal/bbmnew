@@ -33,6 +33,14 @@
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
+
+    <x-form-group caption="No Bukti Kas">
+        <x-textbox
+            wire:model="jurnalmanual.nobuktikas"/>
+        @error('jurnalmanual.nobuktikas')
+            <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
    
     <x-button
     class="mt-2"

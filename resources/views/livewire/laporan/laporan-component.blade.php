@@ -254,6 +254,12 @@
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>
+                        <x-datarowtable title="Laporan Rekap Piutang Karyawan">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-piutang-karyawan')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
                         <x-datarowtable title="Laporan Rekap Hutang">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.laporan-hutang-all')">

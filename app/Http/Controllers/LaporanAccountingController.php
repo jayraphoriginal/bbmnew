@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TmpSaldoHutang;
 use App\Models\TmpSaldoPiutang;
+use App\Models\TmpSaldoPiutangKaryawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,23 @@ class LaporanAccountingController extends Controller
         $data = TmpSaldoPiutang::get();
 
         $pdf = PDF::loadView('print.piutangall', array(
+            'data' => $data,
+            'tanggal' => $tanggal
+        ));
+        return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function piutangkaryawan($tanggal){
+    
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Rekap Piutang Karyawan')){
+            return abort(401);
+        }
+        DB::statement("SET NOCOUNT ON; Exec SP_PiutangKaryawan '".$tanggal."'");
+
+        $data = TmpSaldoPiutangKaryawan::get();
+
+        $pdf = PDF::loadView('print.piutangkaryawan', array(
             'data' => $data,
             'tanggal' => $tanggal
         ));

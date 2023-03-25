@@ -150,5 +150,6 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('laporanjurnalpengeluaranbiaya/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'laporanjurnalpengeluaranbiaya'])->name('laporanjurnalpengeluaranbiaya');
     Route::get('laporanjtkendaraan/{kriteria}', [LaporanController::class,'laporanjtkendaraan'])->name('laporanjtkendaraan');
     Route::get('laporanpiutangall/{tanggal}', [LaporanAccountingController::class,'piutang'])->name('laporanpiutangall');
+    Route::get('laporanpiutangkaryawan/{tanggal}', [LaporanAccountingController::class,'piutangkaryawan'])->name('laporanpiutangkaryawan');
     Route::get('laporanhutangall/{tanggal}', [LaporanAccountingController::class,'hutang'])->name('laporanhutangall');
 });
