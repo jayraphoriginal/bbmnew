@@ -130,10 +130,10 @@
                 <td style="height:1em;text-align:left; font-weight:bold; width:30%">Rekening {{ $data[0]->nama_bank }}</td>
             </tr>
             <tr>
-                <td style="height:1em;text-align:left; width:30%" style="width:30%">{{ $data[0]->norek }}</td>
+                <td style="height:1em;text-align:left; width:30%">{{ $data[0]->norek }}</td>
             </tr>
             <tr>
-                <td style="height:1em;text-align:left; width:30%" style="width:30%">{{ $data[0]->atas_nama }}</td>
+                <td style="height:1em;text-align:left; width:30%">{{ $data[0]->atas_nama }}</td>
             </tr>
         </table>
         <table style="float:right;width:25%">
@@ -147,9 +147,9 @@
             </tr>
             <tr>
                 @if($data[0]->tipe <> 'Retail')
-                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                    <td style="height:14em;text-align:left; width:30%">{{ $data[0]->tanda_tangan }}</td>
                 @else
-                    <td style="height:14em;text-align:left; width:30%" style="width:30%">Karno</td>
+                    <td style="height:14em;text-align:left; width:30%">Karno</td>
                 @endif
             </tr>
         </table>

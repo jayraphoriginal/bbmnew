@@ -8,6 +8,8 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\GiveAllPermissionController;
 use App\Http\Controllers\LaporanAccountingController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\LaporanFinanceController;
+use App\Http\Controllers\LaporanPajakController;
 use App\Http\Controllers\LaporanPembelianController;
 use App\Http\Controllers\LaporanPersediaanController;
 use App\Http\Livewire\AccessComponent;
@@ -46,6 +48,8 @@ Route::get('/', function () {
 
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+    //Route::get('backupdatabase', [BackupController::class,'index'])->name('backupdatabase');
+
     Route::get('dashboard', DashboardComponent::class)->name('dashboard');
     Route::get('register', [RegisteredUserController::class,'create'])->name('register');
     Route::get('access', AccessComponent::class)->name('access');
@@ -123,6 +127,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('laporanhutang/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'rekaphutang'])->name('rekaphutang');
     Route::get('laporanpenjualanbeton/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'penjualanbeton'])->name('laporanpenjualanbeton');
     Route::get('laporanpenjualanbetonharian/{tgl}', [LaporanController::class,'penjualanbetonharian'])->name('laporanpenjualanbetonharian');
+    Route::get('laporanproduksibetonharian/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'laporanproduksibetonperhari'])->name('laporanproduksibetonharian');
+    Route::get('laporanproduksicustomer/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'laporanproduksicustomer'])->name('laporanproduksicustomer');
     Route::get('laporanpenjualanbetonmobil/{tgl_awal}/{tgl_akhir}/{kendaraan_id}', [LaporanController::class,'laporanpenjualanpermobil'])->name('laporanpenjualanbetonmobil');
     Route::get('laporanpenjualanbetoncustomer/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'penjualanbetoncustomer'])->name('laporanpenjualanbetoncustomer');
     Route::get('penjualanmutubeton/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'penjualanmutubeton'])->name('penjualanmutubeton');
@@ -140,6 +146,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('laporankartustok/{tgl_awal}/{tgl_akhir}/{id_barang}', [LaporanPersediaanController::class,'laporankartustok'])->name('laporankartustok');
     Route::get('laporankartustokharian/{tgl_awal}/{tgl_akhir}/{id_barang}', [LaporanPersediaanController::class,'laporankartustokharian'])->name('laporankartustokharian');
     Route::get('laporansaldorekening/{tgl_awal}/{tgl_akhir}/{rekening_id}', [LaporanController::class,'laporansaldorekening'])->name('laporansaldorekening');
+    Route::get('laporanrekapsaldokasbank/{tgl_awal}/{tgl_akhir}', [LaporanFinanceController::class,'laporanrekapsaldokasbank'])->name('laporanrekapsaldokasbank');
     Route::get('laporanjurnalumum/{tgl_awal}/{tgl_akhir}/{coa_id}', [LaporanController::class,'laporanjurnalumum'])->name('laporanjurnalumum');
     Route::get('exportjurnalumum/{tgl_awal}/{tgl_akhir}/{coa_id}', [ExportController::class,'exportjurnalumum'])->name('exportjurnalumum');
     Route::get('rekapinvoice/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'rekapinvoice'])->name('rekapinvoice');
@@ -149,7 +156,16 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('rekappengeluaranbiaya/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'rekappengeluaranbiaya'])->name('rekappengeluaranbiaya');
     Route::get('laporanjurnalpengeluaranbiaya/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'laporanjurnalpengeluaranbiaya'])->name('laporanjurnalpengeluaranbiaya');
     Route::get('laporanjtkendaraan/{kriteria}', [LaporanController::class,'laporanjtkendaraan'])->name('laporanjtkendaraan');
-    Route::get('laporanpiutangall/{tanggal}', [LaporanAccountingController::class,'piutang'])->name('laporanpiutangall');
-    Route::get('laporanpiutangkaryawan/{tanggal}', [LaporanAccountingController::class,'piutangkaryawan'])->name('laporanpiutangkaryawan');
-    Route::get('laporanhutangall/{tanggal}', [LaporanAccountingController::class,'hutang'])->name('laporanhutangall');
+    Route::get('laporanpiutangall/{tgl_awal}/{tgl_akhir}', [LaporanAccountingController::class,'piutang'])->name('laporanpiutangall');
+    Route::get('laporanpiutangkaryawan/{tgl_awal}/{tgl_akhir}', [LaporanAccountingController::class,'piutangkaryawan'])->name('laporanpiutangkaryawan');
+    Route::get('laporanhutangall/{tgl_awal}/{tgl_akhir}', [LaporanAccountingController::class,'hutang'])->name('laporanhutangall');
+    Route::get('laporanrekaphutangpajak/{tgl_awal}/{tgl_akhir}', [LaporanPajakController::class,'laporanhutangpajak'])->name('laporanrekaphutangpajak');
+    Route::get('laporanrekapuangmukapajak/{tgl_awal}/{tgl_akhir}', [LaporanPajakController::class,'laporanuangmukapajak'])->name('laporanrekapuangmukapajak');
+    Route::get('laporantrialbalance/{tahun}/{bulan}', [LaporanAccountingController::class,'trialbalance'])->name('laporantrialbalance');
+    Route::get('laporanneraca/{tanggal}', [LaporanAccountingController::class,'neraca'])->name('laporanneraca');
+    Route::get('laporanlabarugi/{tgl_awal}/{tgl_akhir}', [LaporanAccountingController::class,'labarugi'])->name('laporanlabarugi');
+    Route::get('laporanjurnaltanggal/{tgl_awal}/{tgl_akhir}', [LaporanAccountingController::class,'laporanjurnaltanggal'])->name('laporanjurnaltanggal');
+    Route::get('laporansaldopersediaan/{tgl_awal}/{tgl_akhir}', [LaporanPersediaanController::class,'laporansaldopersediaan'])->name('laporansaldopersediaan');
+    Route::get('laporanrekapbiaya/{tgl_awal}/{tgl_akhir}', [LaporanFinanceController::class,'laporanrekapbiaya'])->name('laporanrekapbiaya');
+    Route::get('exportjurnaltanggal/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportjurnaltanggal'])->name('exportjurnaltanggal');
 });

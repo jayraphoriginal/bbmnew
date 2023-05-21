@@ -1,14 +1,18 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <title>Penjualan Mutu Beton</title>
+       <title>Penjualan Mutu Beton</title>
     </head>
 
     <style>
-        .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+        .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>th {
             padding: 5px;
             vertical-align: middle;
+            border:1px solid;
+            margin:0;
+        }
+        table{
+            border-collapse: collapse;
         }
         *{
             font-size:13px;
@@ -32,7 +36,7 @@
         <h4 style="text-align:center">Laporan Penjualan Per Mutu Beton</h4>
         @if (count($data) > 0)
         <h5 style="margin-bottom: 3rem;text-align:center">Periode : {{ date_format(date_create($tgl_awal),'d/M/Y').' - '.date_format(date_create($tgl_akhir),'d/M/Y') }}</h5>
-        <table class="table table-striped table-bordered mytable">
+        <table class="mytable" style="width:100%">
             <tr>
                 <td class="tdhead">No</td>
                 <td class="tdhead">Kode Mutu</td>

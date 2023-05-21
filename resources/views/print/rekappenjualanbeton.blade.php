@@ -108,6 +108,27 @@
                             <td class="text-right" style="margin-top: 10px;border-top:3px solid;font-weight:bold;">{{ number_format($totalmutu,1,',','.').' '.$datacustomer[0]->satuan}}</td>
                         </tr>
                     </table>
+                    <p style="font-weight:bold;">Concretepump :</p>
+                @php
+                    $totalconcretepump = 0;
+                @endphp
+                <table style="width:100%">
+                    @foreach($concretepumps as $concretepump)
+                        <tr>
+                            <td>{{ $concretepump->nama_customer.
+                            ' - ('.date_format(date_create($concretepump->jam_awal),'H:i').
+                            ' - '.date_format(date_create($concretepump->jam_akhir),'H:i').')' }}</td>
+                            <td class="text-right">{{ ' = '.number_format($concretepump->harga_sewa)  }}</td>
+                        </tr>
+                        @php
+                            $totalconcretepump = $totalconcretepump + $concretepump->harga_sewa;
+                        @endphp
+                    @endforeach
+                    <tr style="height: 20px;">
+                        <td>Total :</td>
+                        <td class="text-right" style="margin-top: 10px;border-top:3px solid;font-weight:bold;">{{ number_format($totalconcretepump,0,',','.')}}</td>
+                    </tr>
+                </table>
                 </td>
                 <td valign="top" style="width:40%">
                     <table style="width:100% ;">

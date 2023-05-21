@@ -275,7 +275,7 @@ class InvoiceModal extends ModalComponent
                     $totalinvoice = $this->jumlah_total;
                 }
 
-                DB::update("exec SP_Invoice '".$noinvoice."', '".
+                DB::statement("SET NOCOUNT ON; exec SP_Invoice '".$noinvoice."', '".
                 $nokwitansi."', '".
                 date_create($this->tgl_cetak)->format('Y-m-d')."','".
                 $this->tipe_so."',".
@@ -311,7 +311,7 @@ class InvoiceModal extends ModalComponent
                     }
                 }
 
-                $sql = "exec SP_Invoice_Retail '".$noinvoice."', '".
+                $sql = "SET NOCOUNT ON; exec SP_Invoice_Retail '".$noinvoice."', '".
                 $nokwitansi."', '".
                 date_create($this->tgl_cetak)->format('Y-m-d')."','".
                 $this->tipe_so."',".
@@ -329,7 +329,7 @@ class InvoiceModal extends ModalComponent
                     'datasql' => $sql
                 ]);
                 
-                DB::update($sql);
+                DB::statement($sql);
             }
             
 

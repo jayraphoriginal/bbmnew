@@ -27,7 +27,7 @@ class JurnalExport implements FromView
         }
 
         $coa = Coa::find($this->coa_id);
-        DB::update("Exec SP_GL '".$this->tgl_awal."','".$this->tgl_akhir."',".$this->coa_id."");
+        DB::statement("SET NOCOUNT ON; Exec SP_GL '".$this->tgl_awal."','".$this->tgl_akhir."',".$this->coa_id."");
         $data = VJurnalUmum::where('tanggal','>=',$this->tgl_awal)
         ->where('tanggal','<=',$this->tgl_akhir)
         ->where('tipe','<>','Saldo Awal')

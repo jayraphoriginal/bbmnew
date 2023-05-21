@@ -108,7 +108,7 @@
                     <td style="text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
-                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                    <td style="height:14em;text-align:left; width:30%">{{ $data[0]->tanda_tangan }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:13rem;text-align:right">I</p>
@@ -179,7 +179,7 @@
                     <td style="text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
-                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                    <td style="height:14em;text-align:left; width:30%">{{ $data[0]->tanda_tangan }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:13rem;text-align:right">II</p>
@@ -250,7 +250,7 @@
                     <td style="text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
-                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                    <td style="height:14em;text-align:left; width:30%">{{ $data[0]->tanda_tangan }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:13rem;text-align:right">III</p>
@@ -321,7 +321,7 @@
                     <td style="text-align:left; font-weight:bold; width:30%">PT. Bintang Beton Mandala</td>
                 </tr>
                 <tr>
-                    <td style="height:14em;text-align:left; width:30%" style="width:30%">{{ $data[0]->tanda_tangan }}</td>
+                    <td style="height:14em;text-align:left; width:30%">{{ $data[0]->tanda_tangan }}</td>
                 </tr>
             </table>
             <p style="float:right;margin-top:13rem;text-align:right">IV</p>

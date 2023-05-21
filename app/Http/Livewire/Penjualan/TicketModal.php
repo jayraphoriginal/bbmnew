@@ -150,6 +150,7 @@ class TicketModal extends ModalComponent
                     'position' => 'center'
                 ]);
                 $this->addError('stok', 'Stok '.$barang->nama_barang.' tidak mencukupi');
+                return;
             }
         }
 
@@ -157,7 +158,7 @@ class TicketModal extends ModalComponent
 
         try{
 
-            DB::update("Exec SP_CreateTicket ".$this->m_salesorder_id.",".
+            DB::statement("SET NOCOUNT ON; Exec SP_CreateTicket ".$this->m_salesorder_id.",".
             $this->mutubeton_id.",".
             $this->kendaraan_id.",".
             $this->driver_id.",".

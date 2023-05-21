@@ -80,7 +80,7 @@ class PenerimaanModal extends ModalComponent
                     }
                 }
 
-            DB::update("Exec SP_Penerimaan  '$nopembayaran',        '$this->tgl_bayar', 
+            DB::statement("SET NOCOUNT ON; Exec SP_Penerimaan  '$nopembayaran',        '$this->tgl_bayar', 
                                             '$this->tipe_pembayaran', '$this->nowarkat', 
                                             '$this->jatuh_tempo',     $this->bank_asal_id,
                                             $this->rekening_id,     $this->customer_id,

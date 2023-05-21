@@ -92,7 +92,7 @@ class PrintController extends Controller
             return abort(401);
         }
 
-        DB::update("Exec SP_ReportTicket ".$id);
+        DB::statement("SET NOCOUNT ON; Exec SP_ReportTicket ".$id);
         $data = TmpReportTicket::where('id',$id)->get();
 
         $customPaper = array(0,0,609.44,396.85);
@@ -175,7 +175,7 @@ class PrintController extends Controller
             return abort(401);
         }
 
-        DB::update("exec SP_DetailInvoice '".$id."'");
+        DB::statement("SET NOCOUNT ON; exec SP_DetailInvoice '".$id."'");
 
         $data = VPrintInvoice::where('id', $id)->get();
         $dp = Invoicedp::join('invoices','invoicedps.invoicedp_id','invoices.id')->where('invoice_id',$id)->sum('total');
@@ -215,7 +215,7 @@ class PrintController extends Controller
             return abort(401);
         }
     
-        DB::update("exec SP_DetailInvoice '".$id."'");
+        DB::statement("SET NOCOUNT ON; exec SP_DetailInvoice '".$id."'");
 
         $data = VPrintInvoice::where('id', $id)->get();
         $dp = Invoicedp::join('invoices','invoicedps.invoicedp_id','invoices.id')->where('invoice_id',$id)->sum('total');

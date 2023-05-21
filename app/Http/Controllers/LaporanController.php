@@ -322,6 +322,45 @@ class LaporanController extends Controller
         return $pdf->setPaper('A4','landscape')->stream();
     }
 
+    public function laporanproduksibetonperhari($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Produksi Beton Per Hari')){
+            return abort(401);
+        }
+        
+        $data = DB::table('V_ProduksiHarian')
+        ->where('tanggal','>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where('tanggal','<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->orderBy('tanggal')
+        ->get();
+
+        $max = DB::table('V_ProduksiHarian')
+        ->select('tanggal', DB::raw('max(jumlah) as jumlah_max'))
+        ->where('tanggal','>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where('tanggal','<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->groupBy('tanggal')
+        ->OrderBy(DB::raw('max(jumlah)'),'desc')
+        ->first();
+
+        $min = DB::table('V_ProduksiHarian')
+        ->select('tanggal', DB::raw('min(jumlah) as jumlah_min'))
+        ->where('tanggal','>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where('tanggal','<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->groupBy('tanggal')
+        ->OrderBy(DB::raw('min(jumlah)'),'asc')
+        ->first();
+
+        $pdf = PDF::loadView('print.laporanproduksibetonharian', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir,
+            'max' => $max,
+            'min' => $min,
+        ));
+        return $pdf->setPaper('A4','potrait')->stream();
+    }
+
     public function penjualanbeton($tgl_awal,$tgl_akhir){
 
         $user = Auth::user();
@@ -339,6 +378,11 @@ class LaporanController extends Controller
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->groupBy('nama_customer','kode_mutu','tujuan','satuan')->get();
 
+        $concretepumps= VConcretepump::select('nama_customer', 'jam_awal', 'jam_akhir', 'harga_sewa')
+        ->where(DB::raw('tanggal'),'>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where(DB::raw('tanggal'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->get();
+
         DB::statement("SET NOCOUNT ON; Exec SP_PenjualanPerBulan ".date('Y').",' ".$tgl_akhir."'");
         $penjualanbulan = TmpPenjualanBulanan::all();
        // return $penjualanbulan;
@@ -347,6 +391,7 @@ class LaporanController extends Controller
             'data' => $data,
             'datacustomer' => $datacustomer,
             'penjualanbulanan' => $penjualanbulan,
+            'concretepumps' => $concretepumps,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
@@ -371,10 +416,15 @@ class LaporanController extends Controller
         $penjualanbulan = TmpPenjualanBulanan::all();
        // return $penjualanbulan;
 
+       $concretepumps= VConcretepump::select('nama_customer', 'jam_awal', 'jam_akhir', 'harga_sewa')
+        ->where(DB::raw('tanggal'),'>=',date_create($tgl)->format('Y-m-d'))
+        ->get();
+
         $pdf = PDF::loadView('print.rekappenjualanbetonharian', array(
             'data' => $data,
             'datacustomer' => $datacustomer,
             'penjualanbulanan' => $penjualanbulan,
+            'concretepumps' => $concretepumps,
             'tgl' => $tgl
         ));
         return $pdf->setPaper('A4','potrait')->stream();
@@ -398,6 +448,29 @@ class LaporanController extends Controller
             'tgl_akhir' => $tgl_akhir
         ));
         return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function laporanproduksicustomer($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Produksi Customer')){
+            return abort(401);
+        }
+        
+        DB::statement("SET NOCOUNT ON; Exec SP_PivotKomposisiCustomer");
+
+        $datacustomer = DB::table('tmpcustomerpivot')
+                    ->where('tanggal','>=',date_create($tgl_awal)->format('Y-m-d'))
+                    ->where('tanggal','<=',date_create($tgl_akhir)->format('Y-m-d'))
+                    ->orderBy('tanggal','asc')
+                    ->orderBy('nama_customer','asc')->get();
+
+        $pdf = PDF::loadView('print.laporanproduksicustomer', array(
+            'datacustomer' => $datacustomer,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function rekapconcretepump($soid){

@@ -1,6 +1,6 @@
 <div>
     <x-header-modal>
-        Input Bahan Bakar
+        Input COA
     </x-header-modal>
 
     <x-form-group caption="Kode Akun">

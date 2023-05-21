@@ -3,9 +3,15 @@
        Laporan Saldo Hutang
     </x-header-modal>
 
-    <x-form-group caption="Per Tanggal">
+    <x-form-group caption="Tanggal Awal">
         <x-datepicker
-            wire:model="tanggal"
+            wire:model="tgl_awal"
+        />
+    </x-form-group>
+
+    <x-form-group caption="Tanggal Akhir">
+        <x-datepicker
+            wire:model="tgl_akhir"
         />
     </x-form-group>
 
@@ -14,7 +20,7 @@
             wire:click="$emit('closeModal')"
         >Cancel</x-secondary-button>
         <x-link-button
-            href="/laporanhutangall/{{$tanggal}}" target="__blank"
+            href="/laporanhutangall/{{$tgl_awal}}/{{$tgl_akhir}}" target="__blank"
             >Print</x-link-button>
     </x-footer-modal>
 </div>

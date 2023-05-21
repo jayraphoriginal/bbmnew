@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\JurnalExport;
+use App\Exports\JurnalTanggalExport;
 use App\Exports\PembelianExport;
 use App\Exports\RekapInvoiceExport;
 use App\Exports\RekapTicketExport;
@@ -31,6 +32,9 @@ class ExportController extends Controller
     }
     public function exportrekapticket($tgl_awal,$tgl_akhir){
         return Excel::download(new RekapTicketExport($tgl_awal,$tgl_akhir), 'exportrekapticket.xlsx');
+    }
+    public function exportjurnaltanggal($tgl_awal,$tgl_akhir){
+        return Excel::download(new JurnalTanggalExport($tgl_awal,$tgl_akhir), 'exportjurnal.xlsx');
     }
 
     

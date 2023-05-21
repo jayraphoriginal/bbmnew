@@ -79,7 +79,7 @@ class PengeluaranBiayaModal extends ModalComponent
         if ($this->pengeluaran->ppn_id!=0){
             $datappn = Mpajak::find($this->pengeluaran->ppn_id);
             $this->pengeluaran->persen_ppn = $datappn->persen;
-            $dpp = $this->pengeluaran->total / (1 + $this->pengeluaran->persen_ppn);
+            $dpp = $this->pengeluaran->total / (1 + ($this->pengeluaran->persen_ppn/100));
             $this->pengeluaran->ppn = $this->pengeluaran->total - $dpp;
         }else{
             $this->pengeluaran->persen_ppn = 0;
@@ -90,13 +90,10 @@ class PengeluaranBiayaModal extends ModalComponent
         if ($this->pengeluaran->pajaklain_id!=0){
             $datapajak = Mpajak::find($this->pengeluaran->pajaklain_id);
             $this->pengeluaran->persen_pajaklain = $datapajak->persen;
-            $nettbiaya = $dpp / (1 + $this->pengeluaran->persen_pajaklain);
         }
         else{
             $this->pengeluaran->persen_pajaklain = 0;
-            $nettbiaya = $dpp;
-        }
-
+         }
         $this->validate();
 
         if ($this->pengeluaran->tipe_pembayaran == 'cash' || $this->pengeluaran->tipe_pembayaran == 'transfer'){
@@ -123,24 +120,25 @@ class PengeluaranBiayaModal extends ModalComponent
 
             foreach($tmps as $tmp){
                 $dpp =0;
-                $nettbiaya=0;
                 $ppn = 0;
                 if ($this->pengeluaran->ppn_id!=0){
                     $datappn = Mpajak::find($this->pengeluaran->ppn_id);
-                    $dpp = $tmp->jumlah / (1 + $datappn->persen);
+                    $dpp = $tmp->jumlah / (1 + ($datappn->persen/100));
                     $ppn = $tmp->jumlah - $dpp;
                 }else{
                     $dpp = $tmp->jumlah;
                     $ppn = $tmp->jumlah - $dpp;
                 }
 
-                if ($this->pengeluaran->pajaklain_id!=0){
+                $pajaklain = 0;
+
+                 if ($this->pengeluaran->pajaklain_id!=0){
                     $datapajak = Mpajak::find($this->pengeluaran->pajaklain_id);
-                    $nettbiaya = $dpp / (1 + $datapajak->persen);
+                    $pajaklain = $dpp * $datapajak->persen/100;
                 }
                 else{
                     $this->pengeluaran->persen_pajaklain = 0;
-                    $nettbiaya = $dpp;
+                    $pajaklain = 0;
                 }
 
                 $pengeluaran_detail = new PengeluaranBiayaDetail();
@@ -159,7 +157,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal['trans_id']=$this->pengeluaran->id;
                 $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                 $journal['coa_id']=$coabiaya->coa_id;
-                $journal['debet']=$nettbiaya;
+                $journal['debet']=$dpp;
                 $journal['kredit']=0;
                 $journal->save();
 
@@ -173,15 +171,15 @@ class PengeluaranBiayaModal extends ModalComponent
                     $journal['kredit']=0;
                     $journal->save();
                 }
-    
+
                 if ($this->pengeluaran->pajaklain_id!=0){
                     $journal = new Journal();
                     $journal['tipe']='Pengeluaran Biaya';
                     $journal['trans_id']=$this->pengeluaran->id;
                     $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
-                    $journal['coa_id']=$datapajak->coa_id_debet;
-                    $journal['debet']=$dpp - $nettbiaya ;
-                    $journal['kredit']=0;
+                    $journal['coa_id']=$datapajak->coa_id_kredit;
+                    $journal['debet']=0;
+                    $journal['kredit']=$pajaklain;
                     $journal->save();
                 }
             }
@@ -196,7 +194,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                 $journal['coa_id']=$rekening->coa_id;
                 $journal['debet']=0;
-                $journal['kredit']=$this->pengeluaran->total;
+                $journal['kredit']=$this->pengeluaran->total-$pajaklain;
                 $journal->save();
 
             }else{
@@ -209,7 +207,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                 $journal['coa_id']=$supplier->coa_id;
                 $journal['debet']=0;
-                $journal['kredit']=$this->pengeluaran->total;
+                $journal['kredit']=$this->pengeluaran->total-$pajaklain;
                 $journal->save();
             }
 
