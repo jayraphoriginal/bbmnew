@@ -43,7 +43,11 @@
             <label>CEK/GIRO No.{{ $data->nowarkat }}</label>
         </div>
         <div style="float:right;display:inline-block">TGL {{ date_create($data->tgl_bayar)->format('d F Y')}}</div>
-        <div style="margin-left:10em">BANK {{ $data->tipe== 'transfer' ? $data->nama_bank.' '.$data->norek : ''}}</div>
+        @if ($data->tipe!='cash')
+            <div>BANK {{ $data->nama_bank.' '.$data->norek}}</div>
+        @else
+            <div>BANK</div>
+        @endif
         <p>Rp. {{ number_format($data->jumlah,2,',','.') }}</p>
         <table style="margin-top:5px;margin-bottom:6em;width:100%">
             <tr>

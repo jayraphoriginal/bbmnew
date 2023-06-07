@@ -15,13 +15,14 @@ class PencairanWarkatMasuk extends ModalComponent
 
     use LivewireAlert;
  
-    public $penerimaan_id, $tgl_cair, $jatuh_tempo, $nowarkat, $jumlah, $rekening_id;
+    public $penerimaan_id, $tgl_cair, $jatuh_tempo, $nowarkat, $jumlah, $rekening_id, $nama_customer;
  
     public function mount($penerimaan_id){
         $this->penerimaan_id = $penerimaan_id;
         $penerimaan = VPenerimaan::find($penerimaan_id);
         $this->jatuh_tempo = $penerimaan->jatuh_tempo;
         $this->nowarkat = $penerimaan->nowarkat;
+        $this->nama_customer = $penerimaan->nama_customer;
         $this->jumlah = $penerimaan->jumlah;
     }
 

@@ -1,13 +1,14 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             *{
-                font-family: Arial, Helvetica, sans-serif
+                font-family: Arial, Helvetica, sans-serif;
                 font-size:14px;
             }
-
+            table{
+                border-collapse: collapse;
+            }
             @page{
                 margin: 0.1in 0.2in 0.1in 0.3in;
             }
@@ -66,7 +67,7 @@
             <h6 style="text-align:center; text-decoration:underline">LAPORAN OPERASI MESIN</h6>
             <h6 style="text-align:center">MACHINE OPERATION REPORT</h6>
         </div>
-        <table style="margin-top:1rem">
+        <table class="mytable" style="margin-top:1rem">
             <tr>
                 <td class="kl1">NOPOL</td>
                 <td class="kl2">: {{ $header->nopol }}</td>

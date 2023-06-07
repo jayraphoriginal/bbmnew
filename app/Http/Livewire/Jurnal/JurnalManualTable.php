@@ -229,7 +229,7 @@ final class JurnalManualTable extends PowerGridComponent
            
            //Hide button edit for ID 1
            Rule::button('buktikas')
-           ->when(fn(VJurnalManual $model) => $model->bukti_kas == 'Lain-lain' || $model->bukti_kas == '')
+           ->when(fn(VJurnalManual $model) => $model->bukti_kas == 'lain-lain' || $model->bukti_kas == '')
            ->hide(),
         ];
     }

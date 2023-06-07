@@ -30,6 +30,8 @@ class AlatSelect extends Component
         $this->emitTo('pembelian.purchaseorder-modal','selectalat', $id);
         $this->emitTo('pengeluaran-biaya.pengeluaran-biaya-detail-modal','selectalat', $id);
         $this->emitTo('pemakaian-barang.pemakaian-barang-modal','selectalat', $id);
+        $this->emitTo('laporan.laporan-pemakaianper-beban','selectalat', $id);
+        $this->emitTo('laporan.laporan-pemakaian-barang-beban','selectalat', $id);
     }
 
     public function selectDeskripsi($id){

@@ -70,8 +70,8 @@
             @endforeach 
             <tr>
                 <td colspan="3" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalincrease,2,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totaldecrease,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalincrease,4,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totaldecrease,4,',','.') }}</td>
                 <td></td>
             </tr>
         </table>

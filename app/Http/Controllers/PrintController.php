@@ -518,10 +518,10 @@ class PrintController extends Controller
         }
         $data = TmpGajiDriver::select('nama_driver',DB::raw('sum(loading) as loading'),'nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm',
         DB::raw('count(*) as rate'),DB::raw('sum(pemakaian_bbm) as total_liter'),
-        DB::raw('sum(lembur) as lembur'),'gaji',DB::raw('sum(gaji) as total_gaji'),'pengisian_bbm')
+        DB::raw('sum(lembur) as lembur'),'gaji',DB::raw('sum(gaji) as total_gaji'),DB::raw('sum(pengisian_bbm) as pengisian_bbm'))
         ->orderBy('nopol','asc')
         ->orderBy('tanggal_ticket','asc')
-        ->groupby('nama_driver','nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm','gaji','pengisian_bbm')
+        ->groupby('nama_driver','nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm','gaji')
         ->get();
         $bbm = BahanBakar::orderby('id', 'desc')->first();
 

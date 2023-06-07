@@ -212,7 +212,7 @@ class LaporanController extends Controller
         }
         
         $tgl_awals = VTicketHeader::where('so_id',$soid)
-        ->orderBy('V_TicketHeader.jam_ticket','asc')
+        ->orderBy('V_TicketHeader.noticket','asc')
         ->get()->first();
 
         $tgl_akhirs = VTicketHeader::where('so_id',$soid)
@@ -220,6 +220,7 @@ class LaporanController extends Controller
         ->get()->first();
         
         $data = VTicketHeader::where('so_id',$soid)
+        ->orderBy('V_TicketHeader.jam_ticket','asc')
         ->orderBy('V_TicketHeader.noticket')
         ->get();
 
@@ -417,7 +418,7 @@ class LaporanController extends Controller
        // return $penjualanbulan;
 
        $concretepumps= VConcretepump::select('nama_customer', 'jam_awal', 'jam_akhir', 'harga_sewa')
-        ->where(DB::raw('tanggal'),'>=',date_create($tgl)->format('Y-m-d'))
+        ->where(DB::raw('tanggal'),'=',date_create($tgl)->format('Y-m-d'))
         ->get();
 
         $pdf = PDF::loadView('print.rekappenjualanbetonharian', array(
@@ -660,6 +661,8 @@ class LaporanController extends Controller
                             ->where(DB::raw('convert(date,tgl_pengisian)'),'<=',$tgl_akhir)
                             ->get();
 
+            
+
             foreach($pengisianbbmstoks as $pengisianbbmstok){
 
                 $tmp = new TmpGajiDriver();
@@ -680,6 +683,8 @@ class LaporanController extends Controller
                 $tmp->save();
 
             }
+
+           // return $pengisianbbmstoks;
 
             $tambahanbbms = TambahanBbm::where('kendaraan_id', $kendaraan->id)
                             ->where(DB::raw('convert(date,tanggal_penambahan)'),'>=',$tgl_awal)
@@ -706,12 +711,12 @@ class LaporanController extends Controller
                 $tmp->save();
             }
         }
-        $data = TmpGajiDriver::select('nama_driver',DB::raw('sum(loading) as loading'),'nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm',
+        $data = TmpGajiDriver::select('nama_driver',DB::raw('sum(loading) as loading'),'nopol','tanggal_ticket','nama_customer','lokasi','jarak',
         DB::raw('count(*) as rate'),DB::raw('sum(pemakaian_bbm) as total_liter'),
-        DB::raw('sum(lembur) as lembur'),'gaji',DB::raw('sum(gaji) as total_gaji'),'pengisian_bbm')
+        DB::raw('sum(lembur) as lembur'),'gaji',DB::raw('sum(gaji) as total_gaji'),DB::raw('sum(pengisian_bbm) as pengisian_bbm'))
         ->orderBy('nopol','asc')
         ->orderBy('tanggal_ticket','asc')
-        ->groupby('nama_driver','nopol','tanggal_ticket','nama_customer','lokasi','jarak','pemakaian_bbm','gaji','pengisian_bbm')
+        ->groupby('nama_driver','nopol','tanggal_ticket','nama_customer','lokasi','jarak','gaji')
         ->get();
         $bbm = BahanBakar::orderby('id', 'desc')->first();
 
@@ -852,6 +857,12 @@ class LaporanController extends Controller
     }
 
     public function rekappengeluaranbiaya($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Rekap Pengeluaran Biaya')){
+            return abort(401);
+        }
+
         $data = VPengeluaranBiayaDetail::where('tgl_biaya','>=',$tgl_awal)
         ->where('tgl_biaya','<=',$tgl_akhir)->get();
 
@@ -866,7 +877,6 @@ class LaporanController extends Controller
 
     public function laporanpenjualanpermobil($tgl_awal,$tgl_akhir,$kendaraan_id){
         $user = Auth::user();
-
         if (!$user->hasPermissionTo('Laporan Penjualan Beton per Mobil')){
             return abort(401);
         }

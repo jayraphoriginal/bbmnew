@@ -29,5 +29,8 @@
         <x-link-button
             href="/laporansaldorekening/{{$tgl_awal}}/{{$tgl_akhir}}/{{$rekening_id}}" target="__blank"
             >Print</x-link-button>
+        <x-link-button-export
+            href="/exportsaldorekening/{{$tgl_awal}}/{{$tgl_akhir}}/{{$rekening_id}}" target="__blank"
+            >Export</x-link-button-export>
     </x-footer-modal>
 </div>

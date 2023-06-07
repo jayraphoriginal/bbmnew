@@ -22,5 +22,8 @@
         <x-link-button
             href="/laporanjurnalpengeluaranbiaya/{{$tgl_awal}}/{{$tgl_akhir}}" target="__blank"
             >Print</x-link-button>
+        <x-link-button-export
+            href="/exportjurnalpengeluaranbiaya/{{$tgl_awal}}/{{$tgl_akhir}}" target="__blank"
+            >Export</x-link-button-export>
     </x-footer-modal>
 </div>

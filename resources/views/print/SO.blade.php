@@ -1,10 +1,18 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             *{
                 font-size:13px;
+            }
+            .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+                padding: 5px;
+                vertical-align: middle;
+                margin:0;
+                border:1px solid;
+            }
+            table{
+                border-collapse: collapse;
             }
 
             @page{
@@ -47,7 +55,7 @@
 
         <h1>{{ $data[0]->nama_customer }} </h1>
         <p> {{ $data[0]->alamat }}</p>
-        <table>
+        <table style="width:100%">
             <tr>
                 <td class="kl1">Telp</td>
                 <td>{{ $data[0]->notelp }}</td>
@@ -59,14 +67,13 @@
         </table>
 
         <p class="tglkanan">Tanggal Order : {{ date_format(date_create($data[0]->tgl_so),'d M Y') }}</p>
-
-        <h2 style="margin-top:1em; text-align:center; text-decoration:underline">Purchase Order</h2>
+        <h2 style="margin-top:2em; text-align:center; text-decoration:underline">Purchase Order</h2>
         <p style="text-align:center">{{ $data[0]->noso }}</p>
 
         <p>Kepada Yang Terhormat Bapak / Ibu</p>
         <p style="font-weight:bold;">PT. Bintang Beton Mandala</p>
         <p>Jl. Soekarno Hatta No. 1C RT.006 RW 009 Siring Agung Ilir Barat 1 Palembang</p>
-        <table>
+        <table >
             <tr>
                 <td class="kl1">Telp</td>
                 <td>+62711 - 418331</td>
@@ -99,7 +106,7 @@
             </tr>
         </table>
 
-        <table class="table table-sm table-bordered" style="margin-top:7em; margin-bottom:1em">
+        <table class="mytable" style="margin-top:7em; margin-bottom:1em; width:100%">
             <thead>
                 <tr>
                     <td class="captioncenter">No</td>
@@ -165,7 +172,7 @@
         </table>
 
         <p style="margin:2rem 0 1rem 0">Keterangan</p>
-        <table class="table table-sm table-bordered" style="font-size:13px; margin-bottom:4rem">
+        <table class="mytable" style="font-size:13px; margin-bottom:4rem;width:100%">
             <tr>
                 <td rowspan=2 class="captioncenter">No</td>
                 <td rowspan=2 class="captioncenter">Mutu Beton</td>

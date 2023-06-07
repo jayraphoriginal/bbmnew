@@ -81,7 +81,7 @@ class PengisianBbmModal extends ModalComponent
 
         $this->pengisian->save();
 
-        $biaya = MBiaya::where('nama_biaya','Biaya Kendaraan')->first();
+        $biaya = MBiaya::where('nama_biaya','Biaya Bahan Bakar Minyak')->first();
 
         $journal = new Journal();
         $journal['tipe']='Pengisian BBM';

@@ -29,6 +29,16 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="Nama Customer">
+        <x-textbox
+            readonly
+            wire:model="nama_customer"
+        />
+        @error('nama_customer')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-form-group caption="Rekening">
         <x-combobox
             wire:model="rekening_id"
@@ -58,6 +68,7 @@
             wire:click="$emit('closeModal')"
         >Tutup</x-secondary-button>
         <x-button
+            wire:loading.attr="disabled"
             wire:click="save">
             Save
         </x-button>

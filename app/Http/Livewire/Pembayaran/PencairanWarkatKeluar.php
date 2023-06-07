@@ -14,13 +14,14 @@ class PencairanWarkatKeluar extends ModalComponent
 {
     use LivewireAlert;
  
-    public $pembayaran_id, $tgl_cair, $jatuh_tempo, $nowarkat, $jumlah, $rekening_id;
+    public $pembayaran_id, $tgl_cair, $jatuh_tempo, $nowarkat, $jumlah, $rekening_id, $nama_supplier;
  
     public function mount($pembayaran_id){
         $this->pembayaran_id = $pembayaran_id;
         $pembayaran = VPembayaran::find($pembayaran_id);
         $this->jatuh_tempo = $pembayaran->jatuh_tempo;
         $this->nowarkat = $pembayaran->nowarkat;
+        $this->nama_supplier = $pembayaran->nama_supplier;
         $this->jumlah = $pembayaran->jumlah;
     }
 

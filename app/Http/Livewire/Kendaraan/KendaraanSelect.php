@@ -37,6 +37,8 @@ class KendaraanSelect extends Component
         $this->emitTo('pemakaian-barang.pemakaian-barang-modal','selectkendaraan', $id);
         $this->emitTo('bbm.pengisian-bbm-stok-modal','selectkendaraan', $id);
         $this->emitTo('laporan.laporan-penjualan-per-mobil','selectkendaraan', $id);
+        $this->emitTo('laporan.laporan-pemakaianper-beban','selectkendaraan', $id);
+        $this->emitTo('laporan.laporan-pemakaian-barang-beban','selectkendaraan', $id);
     }
 
     public function selectDeskripsi($id){

@@ -1,10 +1,18 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             *{
                 font-size:13px;
+            }
+            .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+            padding: 5px;
+            vertical-align: middle;
+            margin:0;
+            border:1px solid;
+            }
+            table{
+            border-collapse: collapse;
             }
 
             @page{
@@ -62,9 +70,8 @@
         </table>
         @if (count($data) > 0)
         <p class="tglkanan">Tanggal Order : {{ date_format(date_create($data[0]->tgl_so),'d M Y') }}</p>
-
-        <h2 style="margin-top:1em; text-align:center; text-decoration:underline">Sales Order</h2>
-        <p style="text-align:center">{{ $data[0]->noso }}</p>
+        <h2 style="margin-top:2em; text-align:center; text-decoration:underline;width:100%">Sales Order</h2>
+        <p style="text-align:center;width:100%">{{ $data[0]->noso }}</p>
 
         <p>Kepada Yang Terhormat Bapak / Ibu</p>
         <p style="font-weight:bold;">{{ $data[0]->nama_customer }}</p>
@@ -98,7 +105,7 @@
             </tr>
         </table>
 
-        <table class="table table-sm table-bordered" style="margin-top:7em; margin-bottom:1em">
+        <table class="mytable" style="margin-top:7em; margin-bottom:1em; width:100%">
             <thead>
                 <tr>
                     <td class="captioncenter">No</td>

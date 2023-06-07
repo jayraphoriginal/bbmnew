@@ -73,7 +73,7 @@ class PengisianBbmStokModal extends ModalComponent
         $this->validate();
         $this->pengisian->jenis_pembebanan = 'Beban Kendaraan';
 
-        $biaya = MBiaya::where('nama_biaya','Biaya Kendaraan')->first();
+        $biaya = MBiaya::where('nama_biaya','Biaya Bahan Bakar Minyak')->first();
         $this->pengisian->m_biaya_id = $biaya->id;
 
         $total = 0;

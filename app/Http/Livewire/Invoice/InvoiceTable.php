@@ -87,6 +87,7 @@ final class InvoiceTable extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('noinvoice')
             ->addColumn('noso')
+            ->addColumn('tgl_cetak')
             ->addColumn('tipe_so')
             ->addColumn('nama_customer')
             ->addColumn('sub_company')
@@ -110,6 +111,9 @@ final class InvoiceTable extends PowerGridComponent
             })
             ->addColumn('updated_at_formatted', function(VInvoiceHeader $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
+            })
+            ->addColumn('tgl_cetak_formatted', function(VInvoiceHeader $model) { 
+                return Carbon::parse($model->tgl_cetak)->format('d/m/Y');
             });
     }
 
@@ -146,6 +150,13 @@ final class InvoiceTable extends PowerGridComponent
             ->makeInputText(),
 
             Column::add()
+            ->title('TGL INVOICE')
+            ->field('tgl_cetak_formatted', 'tgl_cetak')
+            ->searchable()
+            ->sortable()
+            ->makeInputDatePicker(),
+
+            Column::add()
             ->title('TIPE SO')
             ->field('tipe_so')
             ->searchable()
@@ -162,13 +173,6 @@ final class InvoiceTable extends PowerGridComponent
         Column::add()
             ->title('SUB COMPANY')
             ->field('sub_company')
-            ->searchable()
-            ->sortable()
-            ->makeInputText(),
-
-            Column::add()
-            ->title('NO REKENING')
-            ->field('norek')
             ->searchable()
             ->sortable()
             ->makeInputText(),

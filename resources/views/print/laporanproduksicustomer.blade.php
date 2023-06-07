@@ -102,13 +102,13 @@
             @endforeach
             <tr>
                 <td colspan="3">Total :</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalkubik,1,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalkubik,2,',','.') }}</td>
                 <td></td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalbatu11,1,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalbatu12,1,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalbatu23,1,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalsemen,1,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalsemen,1,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalbatu11,4,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalbatu12,4,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalbatu23,4,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalpasir,4,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalsemen,4,',','.') }}</td>
             </tr>
         </table>
         @endif

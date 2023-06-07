@@ -32,4 +32,26 @@ class LaporanPembelianController extends Controller
 
         return $pdf->setPaper('A4','landscape')->stream();
     }
+
+    public function laporanpembelianppn($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Pembelian PPN')){
+            return abort(401);
+        }
+
+        $data = VPembelianDetail::where(DB::raw('convert(date,tgl_masuk)'),'>=',$tgl_awal)
+        ->where(DB::raw('convert(date,tgl_masuk)'),'<=',$tgl_akhir)
+        ->where('ppn','>',0)
+        ->orderBy('V_PembelianDetail.tgl_masuk')
+        ->get();
+
+        $pdf = PDF::loadView('print.laporanpembelian', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','landscape')->stream();
+    }
 }

@@ -127,10 +127,11 @@ class OpnameModal extends ModalComponent
                                     $dopname['satuan_id']=$tmpbarang->satuan_id;
                                     $dopname['hpp']=$stok->hpp;
                                     $dopname['status_detail']='Open';
+                                    $dopname['user_id']=Auth::user()->id;
                                     $dopname->save();
 
                                     $kartustok = new Kartustok();
-                                    $kartustok['tanggal'] = date_create($this->MOpanme->tgl_opname)->format('Y-m-d');
+                                    $kartustok['tanggal'] = date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                                     $kartustok['barang_id']=$tmpbarang->barang_id;
                                     $kartustok['tipe']='Stok Opname';
                                     $kartustok['trans_id']=$this->MOpname->id;
@@ -148,7 +149,7 @@ class OpnameModal extends ModalComponent
                                     $journal = new Journal();
                                     $journal['tipe']='Stok Opname';
                                     $journal['trans_id']=$this->MOpname->id;
-                                    $journal['tanggal_transaksi']=date_create($this->MOpanme->tgl_opname)->format('Y-m-d');
+                                    $journal['tanggal_transaksi']=date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                                     $journal['coa_id']=$kategori->coa_hpp_id;
                                     $journal['debet']=round($stok->hpp*$pengurangan,4);
                                     $journal['kredit']=0;
@@ -157,7 +158,7 @@ class OpnameModal extends ModalComponent
                                     $journal = new Journal();
                                     $journal['tipe']='Stok Opname';
                                     $journal['trans_id']=$this->MOpname->id;
-                                    $journal['tanggal_transaksi']=date_create($this->MOpanme->tgl_opname)->format('Y-m-d');
+                                    $journal['tanggal_transaksi']=date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                                     $journal['coa_id']=$kategori->coa_asset_id;
                                     $journal['debet']=0;
                                     $journal['kredit']=round($stok->hpp*$pengurangan,4);
@@ -179,10 +180,11 @@ class OpnameModal extends ModalComponent
                                     $dopname['satuan_id']=$tmpbarang->satuan_id;
                                     $dopname['hpp']=$stok->hpp;
                                     $dopname['status_detail']='Open';
+                                    $dopname['user_id']=Auth::user()->id;
                                     $dopname->save();
 
                                     $kartustok = new Kartustok();
-                                    $kartustok['tanggal'] = date_create($this->MOpanme->tgl_opname)->format('Y-m-d');
+                                    $kartustok['tanggal'] = date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                                     $kartustok['barang_id']=$tmpbarang->barang_id;
                                     $kartustok['tipe']='Stok Opname';
                                     $kartustok['trans_id']=$this->MOpname->id;
@@ -200,7 +202,7 @@ class OpnameModal extends ModalComponent
                                     $journal = new Journal();
                                     $journal['tipe']='Stok Opname';
                                     $journal['trans_id']=$this->MOpname->id;
-                                    $journal['tanggal_transaksi']=date_create($this->MOpanme->tgl_opname)->format('Y-m-d');
+                                    $journal['tanggal_transaksi']=date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                                     $journal['coa_id']=$kategori->coa_hpp_id;
                                     $journal['debet']=round($stok->hpp*$pemakaianmaterial,4);
                                     $journal['kredit']=0;
@@ -209,7 +211,7 @@ class OpnameModal extends ModalComponent
                                     $journal = new Journal();
                                     $journal['tipe']='Stok Opname';
                                     $journal['trans_id']=$this->MOpname->id;
-                                    $journal['tanggal_transaksi']=date_create($this->MOpanme->tgl_opname)->format('Y-m-d');
+                                    $journal['tanggal_transaksi']=date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                                     $journal['coa_id']=$kategori->coa_asset_id;
                                     $journal['debet']=0;
                                     $journal['kredit']=round($stok->hpp*$pemakaianmaterial,4);
@@ -247,10 +249,11 @@ class OpnameModal extends ModalComponent
                     $dopname['satuan_id']=$tmpbarang->satuan_id;
                     $dopname['hpp']=$stok->hpp;
                     $dopname['status_detail']='Open';
+                    $dopname['user_id']=Auth::user()->id;
                     $dopname->save();
 
                     $kartustok = new Kartustok();
-                    $kartustok['tanggal'] = date_create($this->MOpanme->tgl_opname)->format('Y-m-d');
+                    $kartustok['tanggal'] = date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                     $kartustok['barang_id']=$tmpbarang->barang_id;
                     $kartustok['tipe']='Stok Opname';
                     $kartustok['trans_id']=$this->MOpname->id;
@@ -268,7 +271,7 @@ class OpnameModal extends ModalComponent
                     $journal = new Journal();
                     $journal['tipe']='Stok Opname';
                     $journal['trans_id']=$this->MOpname->id;
-                    $journal['tanggal_transaksi']=date_create($this->MOpanme->tgl_opname)->format('Y-m-d');
+                    $journal['tanggal_transaksi']=date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                     $journal['coa_id']=$kategori->coa_asset_id;
                     $journal['debet']=round($stok->hpp*$lebihstok,4);
                     $journal['kredit']=0;
@@ -279,13 +282,14 @@ class OpnameModal extends ModalComponent
                     $journal = new Journal();
                     $journal['tipe']='Stok Opname';
                     $journal['trans_id']=$this->MOpname->id;
-                    $journal['tanggal_transaksi']=date_create($this->MOpanme->tgl_opname)->format('Y-m-d');
+                    $journal['tanggal_transaksi']=date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                     $journal['coa_id']=$coa->id;
                     $journal['debet']=0;
                     $journal['kredit']=round($stok->hpp*$lebihstok,4);
                     $journal->save();
 
                     $pemakaianmaterial = 0;
+                    DB::commit();
                 }
             }
         }

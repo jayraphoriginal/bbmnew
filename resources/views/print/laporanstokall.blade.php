@@ -54,15 +54,26 @@
                 $total= 0;
             @endphp
             @foreach($data as $index => $item)
-            <tr>
-                <td>{{ ++$index }}</td>
-                <td>{{ $item->nama_barang }}</td>
-                <td>{{ $item->merk }}</td>
-                <td>{{ $item->satuan }}</td>
-                <td class="text-right">{{ number_format($item->stok_minimum,2,'.',',') }}</td>
-                <td class="text-right">{{ number_format($item->stok,2,'.',',') }}</td>
-                <td class="text-right">{{ number_format($item->saldo,2,'.',',') }}</td>
-            </tr>
+                @if($item->stok_minimum > $item->stok)
+                    <tr>
+                        <td style="color:crimson">{{ ++$index }}</td>
+                        <td style="color:crimson">{{ $item->nama_barang }}</td>
+                        <td style="color:crimson">{{ $item->merk }}</td>
+                        <td style="color:crimson">{{ $item->satuan }}</td>
+                        <td class="text-right" style="color:crimson">{{ number_format($item->stok_minimum,2,'.',',') }}</td>
+                        <td class="text-right" style="color:crimson">{{ number_format($item->stok,2,'.',',') }}</td>
+                        <td class="text-right" style="color:crimson">{{ number_format($item->saldo,2,'.',',') }}</td>        
+                @else
+                    <tr>
+                        <td>{{ ++$index }}</td>
+                        <td>{{ $item->nama_barang }}</td>
+                        <td>{{ $item->merk }}</td>
+                        <td>{{ $item->satuan }}</td>
+                        <td class="text-right">{{ number_format($item->stok_minimum,2,'.',',') }}</td>
+                        <td class="text-right">{{ number_format($item->stok,2,'.',',') }}</td>
+                        <td class="text-right">{{ number_format($item->saldo,2,'.',',') }}</td>        
+                @endif
+                    </tr>
                 @php
                     $total=$total+$item->saldo;
                 @endphp

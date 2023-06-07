@@ -58,11 +58,13 @@
                 <td class="tdhead">Harga</td>
                 <td class="tdhead">DPP</td>
                 <td class="tdhead">PPN</td>
+                <td class="tdhead">Subtotal PPN</td>
                 <td class="tdhead">Subtotal</td>
             </tr>
             
             @php
                 $total= 0;
+                $totalppn=0;
             @endphp
             @foreach($data as $index => $item)
             <tr>
@@ -77,15 +79,18 @@
                 <td class="text-right">{{ number_format($item->harga,2,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->harga/(1+ ($item->pajak/100)),2,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->harga - ($item->harga/(1+ ($item->pajak/100))),2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->jumlah*($item->harga - ($item->harga/(1+ ($item->pajak/100)))),2,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->jumlah*$item->harga,2,'.',',') }}</td>
             </tr>
                 @php
                     $total=$total+$item->jumlah*$item->harga;
+                    $totalppn=$totalppn+($item->jumlah*($item->harga - ($item->harga/(1+ ($item->pajak/100)))));
                 @endphp
             @endforeach 
             <tr>
                 <td colspan="11" style="font-weight:bold">Total</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalppn,2,',','.') }}</td>
             </tr>
         </table>
         @endif

@@ -25,14 +25,14 @@ class LaporanAccountingController extends Controller
         }
         DB::statement("SET NOCOUNT ON; Exec SP_Piutang '".$tgl_awal."','".$tgl_akhir."'");
 
-        $data = TmpSaldoPiutang::get();
+        $data = TmpSaldoPiutang::orderBy('nama_customer')->get();
 
         $pdf = PDF::loadView('print.piutangall', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        return $pdf->setPaper('A4','potrait')->stream();
+        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function piutangkaryawan($tgl_awal, $tgl_akhir){
@@ -61,7 +61,7 @@ class LaporanAccountingController extends Controller
         }
         DB::statement("SET NOCOUNT ON; Exec SP_Hutang '".$tgl_awal."','".$tgl_akhir."'");
 
-        $data = TmpSaldoHutang::get();
+        $data = TmpSaldoHutang::orderBy('nama_supplier')->get();
 
         $pdf = PDF::loadView('print.hutangall', array(
             'data' => $data,
@@ -142,5 +142,24 @@ class LaporanAccountingController extends Controller
         ));
         
         return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+
+    public function laporanclosing($tahun,$bulan){
+    
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Closing')){
+            return abort(401);
+        }
+        DB::statement("SET NOCOUNT ON; Exec SP_LaporanClosing ".$tahun.",".$bulan."");
+
+        $data = DB::table('tmp_jurnal_tanggal')->get();
+
+        $pdf = PDF::loadView('print.laporanclosing', array(
+            'data' => $data,
+            'tahun' => $tahun,
+            'bulan' => $bulan
+        ));
+        return $pdf->setPaper('A4','landscape')->stream();
     }
 }

@@ -1,11 +1,18 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
+            .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+            padding: 5px;
+            vertical-align: middle;
+            margin:0;
+            }
             *{
                 font-family: Arial, Helvetica, sans-serif;
                 font-size:12px;
+            }
+            table{
+            border-collapse: collapse;
             }
 
             @page{
@@ -51,7 +58,10 @@
                 outline-width: 2px;
             }
             .borderleft{
-                border-left: 2px solid;
+                border-left: 1px solid;
+            }
+            .bordertop{
+                border-top: 1px solid;
             }
         </style>
         <title>{{ $data[0]->noso }}</title>
@@ -59,28 +69,28 @@
 
 
     <body>
-        <div style="border: 2px solid; margin:auto; padding-left:1rem; margin-top:0;padding:top:0.5rem">
+        <div style="border: 2px solid; margin:auto; padding-left:1rem; margin-top:0;padding:top-0.5rem;padding-bottom:0.5rem">
             <h3 style="text-align:center;">Ticket Material</h3>
             <p style="text-align:center">No Ticket : {{ $data[0]->noticket }}</p>
             <p>Pekerjaan</p>
             <p style="font-weight:bold;">{{ $data[0]->nama_customer}}</p>
         </div>
-        <table class="table table-sm" style="margin-top:0.5rem">
+        <table class="mytable" style="margin-top:0.5rem; width:100%;border:2px solid"">
             <tr>
                 <td class="kl1">No Urut Ticket</td>
-                <td class="kl2">: {{ $data[0]->nourut }}</td>
+                <td class="kl2 borderleft">: {{ $data[0]->nourut }}</td>
             </tr>
             <tr>
                 <td class="kl1">No Polisi</td>
-                <td class="kl2">: {{ $data[0]->nopol }}</td>
+                <td class="kl2 borderleft">: {{ $data[0]->nopol }}</td>
             </tr>
             <tr>
                 <td class="kl1">Mutu Beton</td>
-                <td class="kl2">: {{ $data[0]->kode_mutu }}</td>
+                <td class="kl2 borderleft">: {{ $data[0]->kode_mutu }}</td>
             </tr>
         </table>
         
-        <table class="table table-sm" style="margin-top:0.5em;">
+        <table class="mytable" style="margin-top:0.5em;width:100%;border:2px solid">
             <tbody>
                 <tr>
                     <td class="captionleft">Tanggal Pengiriman</td>
@@ -117,17 +127,17 @@
             </tbody>
         </table>
 
-        <table class="table table-sm" style="width:100%;">
+        <table class="mytable" style="margin-top:0.5em;width:100%;border:2px solid"">
             <tr>
-                <td style="height:6em;text-align:center; width:33%;font-weight:bold;">Dikirim Oleh</td>
-                <td class="border-left" style="text-align:center;width:33%;font-weight:bold">Dibawa Oleh</td>
-                <td class="border-left" style="text-align:center;font-weight:bold">Diterima Oleh</td>
+                <td style="height:6em;text-align:center; width:33%;font-weight:bold;vertical-align:top">Dikirim Oleh</td>
+                <td class="borderleft" style="text-align:center;width:33%;font-weight:bold;vertical-align:top">Dibawa Oleh</td>
+                <td class="borderleft" style="text-align:center;font-weight:bold;vertical-align:top">Diterima Oleh</td>
             </tr>
 
             <tr>
-                <td class="text-align:center" style="width:33%"></td>
-                <td class="border-left" style="width:33%;text-align:center">{{$data[0]->nama_driver}}</td>
-                <td class="text-align:center border-left"></td>
+                <td class="bordertop" style="width:33%"></td>
+                <td class="borderleft bordertop" style="width:33%;text-align:center">{{$data[0]->nama_driver}}</td>
+                <td class="borderleft bordertop"></td>
             </tr>
         </table>
 

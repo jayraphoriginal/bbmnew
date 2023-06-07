@@ -1,7 +1,7 @@
 <div class="w-full mx-auto my-6 flex flex-col md:flex-row">
-        <div class="px-3 lg:w-3/12">
+        <div class="px-3 lg:w-2/12">
         </div>
-        <div class="lg:w-5/12">
+        <div class="lg:w-6/12">
             <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4 w-full">
                 <x-card title="Total Penjualan" value="{{ number_format($totalpenjualan,0,'.',',') }}" link="/laporanpenjualanbetoncustomer/{{$tgl_awal}}/{{$tgl_akhir}}">
                     <svg class="h-8 w-8 text-green-400"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -27,6 +27,26 @@
                 </x-card>
                 <x-card title="STNK Jatuh Tempo" value="{{ number_format($stnk,0,'.',',') }}" link="laporanjtkendaraan/stnk">
                     <svg class="h-8 w-8 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="5" cy="17" r="2" />  <circle cx="17" cy="17" r="2" />  <path d="M7 18h8m4 0h2v-6a5 5 0 0 0 -5 -5h-1l1.5 5h4.5" />  <path d="M12 18v-11h3" />  <polyline points="3 17 3 12 12 12" />  <line x1="3" y1="9" x2="21" y2="3" />  <line x1="6" y1="12" x2="6" y2="8" /></svg>
+                </x-card>
+                <x-card title="Stok Minimum Material" value="{{ number_format($stokmaterial,0,'.',',') }}" link="stokmaterial">
+                    <svg class="h-8 w-8 text-purple-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="3" />  <line x1="12" y1="5" x2="12" y2="5.01" />  <line x1="17" y1="7" x2="17" y2="7.01" />  <line x1="19" y1="12" x2="19" y2="12.01" />  <line x1="17" y1="17" x2="17" y2="17.01" />  <line x1="12" y1="19" x2="12" y2="19.01" />  <line x1="7" y1="17" x2="7" y2="17.01" />  <line x1="5" y1="12" x2="5" y2="12.01" />  <line x1="7" y1="7" x2="7" y2="7.01" /></svg>
+                </x-card>
+            </div>
+            <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4 w-full">
+                <x-card title="Hutang" value="{{ number_format($hutang,0,'.',',') }}" link="laporanhutangall/2023-01-01/{{date('Y-m-d')}}">
+                    <svg class="h-8 w-8 text-red-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </x-card>
+                <x-card title="Piutang" value="{{ number_format($piutang,0,'.',',') }}" link="laporanhutangall/2023-01-01/{{date('Y-m-d')}}">
+                    <svg class="h-8 w-8 text-yellow-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg></x-card>
+                <x-card title="Warkat Masuk Belum Cair" value="{{ number_format($warkatmasuk,0,'.',',') }}" link="laporanwarkatmasuk/2023-01-01/{{date('Y-m-d')}}">
+                    <svg class="h-8 w-8 text-blue-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M4 10v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1 -1v-3" /></svg>
+                </x-card>
+                <x-card title="Warkat Keluar Belum Cair" value="{{ number_format($warkatkeluar,0,'.',',') }}" link="laporanwarkatkeluar/2023-01-01/{{date('Y-m-d')}}">
+                    <svg class="h-8 w-8 text-green-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M4 10v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1 -1v-3" /></svg>
                 </x-card>
             </div>
         </div>

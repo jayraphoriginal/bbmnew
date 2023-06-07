@@ -162,7 +162,7 @@ final class WarkatMasukTable extends PowerGridComponent
 
             Column::add()   
                 ->title('NO WARKAT')
-                ->field('no_warkat')
+                ->field('nowarkat')
                 ->searchable()
                 ->makeInputText()
                 ->sortable(),

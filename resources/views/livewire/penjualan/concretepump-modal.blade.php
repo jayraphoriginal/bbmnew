@@ -71,6 +71,7 @@
             Cancel
         </x-secondary-button>
         <x-button
+            wire:loading.attr="disabled"
             wire:click="save">
             Save
         </x-button>

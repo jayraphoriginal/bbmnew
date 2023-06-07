@@ -1,7 +1,7 @@
 <html>
 
     <head>
-        <title>Laporan Jurnal Pengeluaran Biaya</title>
+        <title>Laporan Jurnal Biaya</title>
     </head>
 
     <style>

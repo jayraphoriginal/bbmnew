@@ -30,7 +30,7 @@ class InvoiceModal extends ModalComponent
     public $noso, $so_id, $tipe_so, $customer;
     public Invoice $invoice;    
     public $pembayaran;
-    public $tgl_awal, $tgl_akhir, $jumlah_total, $dp, $jumlah_dp, $jumlah_penjualan_retail;
+    public $tgl_awal, $tgl_akhir, $jumlah_total, $dp, $jumlah_dp, $jumlah_penjualan_retail, $jumlah_concrete;
     public $rekening, $dp_sebelum, $pajak, $customer_id, $rekening_id, $tgl_cetak, $tanda_tangan, $keterangan;
 
     protected $listeners = ['selectrekening' => 'selectrekening'];
@@ -187,6 +187,8 @@ class InvoiceModal extends ModalComponent
             ->where('concretepumps.status','Open')
             ->whereBetween('concretepumps.tgl_sewa',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
             ->sum('concretepumps.harga_sewa');
+
+            $this->jumlah_concrete = $jumlah_concrete;
 
             $this->jumlah_total = $jumlah_ticket + $jumlah_concrete;
 

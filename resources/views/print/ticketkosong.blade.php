@@ -1,11 +1,18 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
+            .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+            padding: 5px;
+            vertical-align: middle;
+            margin:0;
+            }
             *{
                 font-family: Arial, Helvetica, sans-serif;
                 font-size:12px;
+            }
+            table{
+            border-collapse: collapse;
             }
 
             @page{
@@ -51,7 +58,10 @@
                 outline-width: 2px;
             }
             .borderleft{
-                border-left: 2px solid;
+                border-left: 1px solid;
+            }
+            .bordertop{
+                border-top: 1px solid;
             }
         </style>
         <title></title>
@@ -59,40 +69,44 @@
 
 
     <body>
-        <div style="border: 2px solid; margin:auto; padding-left:1rem; margin-top:1rem;">
+        <div style="border: 2px solid; margin:auto; padding-left:1rem; margin-top:0;padding-top:0.5rem;padding-bottom:0.5rem">
             <h3 style="text-align:center;">Ticket Material</h3>
             <p style="text-align:center">No Ticket : </p>
-            <p style="margin-bottom:30px;">Pekerjaan</p>
+            <p>Pekerjaan</p>
             <p style="font-weight:bold;"></p>
         </div>
-        <table class="table table-sm" style="margin-top:1rem">
+        <table class="mytable" style="margin-top:0.5rem; width:100%;border:2px solid"">
+            <tr>
+                <td class="kl1">No Urut Ticket</td>
+                <td class="kl2 borderleft">: </td>
+            </tr>
             <tr>
                 <td class="kl1">No Polisi</td>
-                <td class="kl2">: </td>
+                <td class="kl2 borderleft">: </td>
             </tr>
             <tr>
                 <td class="kl1">Mutu Beton</td>
-                <td class="kl2">: </td>
+                <td class="kl2 borderleft">: </td>
             </tr>
         </table>
         
-        <table class="table table-sm" style="margin-top:1em;">
+        <table class="mytable" style="margin-top:0.5em;width:100%;border:2px solid">
             <tbody>
                 <tr>
                     <td class="captionleft">Tanggal Pengiriman</td>
-                    <td class="captionleft">: </td>  
+                    <td class="captionleft">: {{ date_format(date_create(now()),'d M Y') }}</td>  
                     <td class="captionleft borderleft">Tanggal Penerimaan </td>
                     <td class="captionleft">: </td>
                 </tr>
                 <tr>
                     <td class="captionleft">Jam Pengiriman</td>
-                    <td class="captionleft">: </td>
+                    <td class="captionleft">: {{ date_format(date_create(now()),'H:i:s') }}</td>
                     <td class="captionleft borderleft">Jam Tiba Lokasi</td>
                     <td class="captionleft">: </td>
                 </tr>
                 <tr>
                     <td class="captionleft">Volume</td>
-                    <td class="captionleft">: </td>
+                    <td class="captionleft">:  </td>
                     <td class="captionleft borderleft">Jam Mulai Bongkar </td>
                     <td class="captionleft">: </td>
                 </tr>
@@ -105,19 +119,20 @@
             </tbody>
         </table>
 
-        <table class="table table-sm" style="width:100%;">
+        <table class="mytable" style="margin-top:0.5em;width:100%;border:2px solid"">
             <tr>
-                <td style="height:6em;text-align:center; width:33%;font-weight:bold;">Dikirim Oleh</td>
-                <td class="border-left" style="text-align:center;width:33%;font-weight:bold">Dibawa Oleh</td>
-                <td class="border-left" style="text-align:center;font-weight:bold">Diterima Oleh</td>
+                <td style="height:6em;text-align:center; width:33%;font-weight:bold;vertical-align:top">Dikirim Oleh</td>
+                <td class="borderleft" style="text-align:center;width:33%;font-weight:bold;vertical-align:top">Dibawa Oleh</td>
+                <td class="borderleft" style="text-align:center;font-weight:bold;vertical-align:top">Diterima Oleh</td>
             </tr>
 
             <tr>
-                <td class="text-align:center" style="width:33%"></td>
-                <td class="border-left" style="width:33%;text-align:center"></td>
-                <td class="text-align:center border-left"></td>
+                <td class="bordertop" style="width:33%;height:15px"></td>
+                <td class="borderleft bordertop" style="width:33%;text-align:center"></td>
+                <td class="borderleft bordertop"></td>
             </tr>
         </table>
 
     </body>
+
 </html>
