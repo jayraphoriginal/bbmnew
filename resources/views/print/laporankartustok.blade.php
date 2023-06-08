@@ -64,8 +64,8 @@
                 <td class="text-right">{{ number_format($item->increase,4,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->decrease,4,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->qty,2,'.',',') }}</td>
-                <td class="text-right">{{ number_format($item->harga_debet,2,'.',',') }}</td>
-                <td class="text-right">{{ number_format($item->harga_kredit,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->increase*$item->harga_debet,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->decrease*$item->harga_kredit,2,'.',',') }}</td>
             </tr>
                 @php
                     $totalincrease = $totalincrease + $item->increase;
