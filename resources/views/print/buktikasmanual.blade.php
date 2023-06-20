@@ -31,7 +31,7 @@
         @else
             <h3 style="text-align:center; font-size:16px">BUKTI KAS</h3>
         @endif
-        <p style="float:right;margin-right:40px">D/C No.</p>
+        <p style="float:right">D/C No. {{ $data->nobuktikas }}</p>
         <p style="font-style:italic;margin-bottom:5px;">Sudah Diterima Dari :</p>
         <hr style="margin-bottom:8px;">
         <div style="display:inline-block;margin-right:8px;">

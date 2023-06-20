@@ -62,8 +62,8 @@
                 <td class="text-right">{{ $item->jumlah_customer }}</td>
                 <td class="text-right">{{ $item->jumlah_mutubeton }}</td>
                 <td class="text-right">{{ $item->jumlah_ticket }}</td>
-                <td class="text-right">{{ number_format($item->jumlah,1,',','.').' M'}}<sup>3</sup></td>
-                <td class="text-right">{{ number_format($item->jumlah_penjualan,1,',','.') }}</td>
+                <td class="text-right">{{ number_format($item->jumlah,2,',','.').' M'}}<sup>3</sup></td>
+                <td class="text-right">{{ number_format($item->jumlah_penjualan,2,',','.') }}</td>
             </tr>
                 @php
                         $total = $total + $item->jumlah;
@@ -74,7 +74,7 @@
             <tr>
                 <td colspan="4" style="font-weight:bold">Total</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalticket,0,',','.')}}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,1,',','.').' M'}}<sup>3</sup></td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.').' M'}}<sup>3</sup></td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalpenjualan,0,',','.')}}</td>
             </tr>
         </table>
@@ -88,17 +88,17 @@
             <tr>
                 <td style="width:70%;">Rata Produksi per Hari</td>
                 <td style="width:5%">=</td>
-                <td style="width:25%" class="text-right">{{ number_format($total/$index,1,',','.') }} M<sup>3</sup></td>
+                <td style="width:25%" class="text-right">{{ number_format($total/$index,2,',','.') }} M<sup>3</sup></td>
             </tr>
             <tr>
                 <td style="width:70%;">Tanggal Produksi Tertinggi - {{ $max->tanggal }}</td>
                 <td style="width:5%">=</td>
-                <td style="width:25%" class="text-right">{{ number_format($max->jumlah_max,1,',','.').' M3' }}</td>
+                <td style="width:25%" class="text-right">{{ number_format($max->jumlah_max,2,',','.').' M3' }}</td>
             </tr>
             <tr>
                 <td style="width:70%;">Tanggal Produksi Terendah - {{ $min->tanggal }}</td>
                 <td style="width:5%">=</td>
-                <td style="width:25%" class="text-right">{{ number_format($min->jumlah_min,1,',','.').' M3' }}</td>
+                <td style="width:25%" class="text-right">{{ number_format($min->jumlah_min,2,',','.').' M3' }}</td>
             </tr>
             
         </table>

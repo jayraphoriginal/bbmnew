@@ -62,7 +62,7 @@
                 <td>{{ $item->nama_driver }}</td>
                 <td>{{ $item->noticket }}</td>
                 <td>{{ $item->kode_mutu }}</td>
-                <td class="text-right">{{ number_format($item->jumlah,1,',','.').' '.$item->satuan }}</td>
+                <td class="text-right">{{ number_format($item->jumlah,2,',','.').' '.$item->satuan }}</td>
                 <td>{{ $item->tujuan }} </td>
             </tr>
                 @php
@@ -71,7 +71,7 @@
             @endforeach 
             <tr>
                 <td colspan="7" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,1,',','.').' '.$data[0]->satuan }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.').' '.$data[0]->satuan }}</td>
                 <td></td>
             </tr>
         </table>

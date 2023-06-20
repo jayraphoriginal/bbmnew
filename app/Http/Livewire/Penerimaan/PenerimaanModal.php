@@ -18,7 +18,7 @@ class PenerimaanModal extends ModalComponent
     use LivewireAlert;
 
     public $tgl_bayar, $tipe_pembayaran, $jatuh_tempo, $nowarkat, $bank_asal_id, $bankasal,
-    $rekening_id, $rekening, $jumlah, $keterangan, $customer_id, $customer;
+    $rekening_id, $rekening, $jumlah, $keterangan, $customer_id, $customer, $nobuktikas;
 
     protected $rules=[
         'customer_id' => 'required',
@@ -30,6 +30,7 @@ class PenerimaanModal extends ModalComponent
         'rekening_id' => 'required',
         'jumlah' => 'required|min:1',
         'keterangan' => 'nullable',
+        'nobuktikas' => 'nullable'
     ];
 
     protected $listeners = [
@@ -84,7 +85,8 @@ class PenerimaanModal extends ModalComponent
                                             '$this->tipe_pembayaran', '$this->nowarkat', 
                                             '$this->jatuh_tempo',     $this->bank_asal_id,
                                             $this->rekening_id,     $this->customer_id,
-                                            $this->jumlah,          '$this->keterangan'");
+                                            $this->jumlah,          '$this->keterangan',
+                                            '$this->nobuktikas'");
             
             DB::commit();
 

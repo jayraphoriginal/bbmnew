@@ -28,9 +28,9 @@
         <x-link-button
             href="/laporanclosing/{{$tahun}}/{{$bulan}}" target="__blank"
             >Print</x-link-button>
-            <x-link-button
+            <x-link-button-export
             href="/exportclosing/{{$tahun}}/{{$bulan}}" target="__blank"
-            >Export</x-link-button>
+            >Export</x-link-button-export>
     </x-footer-modal>
 
 </div>

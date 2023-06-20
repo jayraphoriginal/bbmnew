@@ -67,7 +67,7 @@
                     <td>{{ $item->nama_customer }}</td>
                     <td>{{ $item->tujuan.'(Cancel)'}}</td>
                 @else
-                    <td class="text-right">{{ number_format($item->jumlah,1,',','.').' '.$item->satuan }}</td>
+                    <td class="text-right">{{ number_format($item->jumlah,2,',','.').' '.$item->satuan }}</td>
                     <td>{{ $item->nama_customer }}</td>
                     <td>{{ $item->tujuan}}</td>
                 @endif

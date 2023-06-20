@@ -85,6 +85,7 @@ final class PengeluaranBiayaTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
+            ->addColumn('nobuktikas')
             ->addColumn('tgl_biaya')
             ->addColumn('tgl_biaya_formatted', function(VPengeluaranBiaya $model) {
                 return Carbon::parse($model->tgl_biaya)->format('d/m/Y');
@@ -143,6 +144,13 @@ final class PengeluaranBiayaTable extends PowerGridComponent
                 ->field('tgl_biaya_formatted', 'tgl_biaya')
                 ->searchable()
                 ->makeInputDatePicker()
+                ->sortable(),
+
+            Column::add()
+                ->title('NO BUKTI KAS')
+                ->field('nobuktikas')
+                ->searchable()
+                ->makeInputText()
                 ->sortable(),
 
             Column::add()

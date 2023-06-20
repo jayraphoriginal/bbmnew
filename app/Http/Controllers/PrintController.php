@@ -33,6 +33,7 @@ use App\Models\VHutang;
 use App\Models\VJurnalManual;
 use App\Models\VPembayaran;
 use App\Models\VPembelianDetail;
+use App\Models\VPenerimaan;
 use App\Models\VPengeluaranBiaya;
 use App\Models\VPengeluaranBiayaDetail;
 use App\Models\VPengisianBbm;
@@ -284,6 +285,26 @@ class PrintController extends Controller
         $customPaper = array(0,0,391.1811,277.795);
 
         $pdf = PDF::loadView('print.buktikas', array(
+            'data' => $data,
+            'terbilang' => $terbilang
+        ))->setPaper($customPaper);
+        return $pdf->stream();
+    }
+
+    public function buktikaspenerimaan($id){
+        
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Penerimaan Pembayaran')){
+            return abort(401);
+        }
+
+        $data = VPenerimaan::find($id);
+
+        $terbilang = Terbilang::make($data->jumlah);
+       
+        $customPaper = array(0,0,391.1811,277.795);
+
+        $pdf = PDF::loadView('print.buktikaspenerimaan', array(
             'data' => $data,
             'terbilang' => $terbilang
         ))->setPaper($customPaper);

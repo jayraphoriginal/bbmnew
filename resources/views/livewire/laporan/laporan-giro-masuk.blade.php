@@ -22,5 +22,8 @@
         <x-link-button
             href="/laporanwarkatmasuk/{{$tgl_awal}}/{{$tgl_akhir}}" target="__blank"
             >Print</x-link-button>
+        <x-link-button-export
+            href="/exportwarkatmasuk/{{$tgl_awal}}/{{$tgl_akhir}}" target="__blank"
+            >Export</x-link-button-export>
     </x-footer-modal>
 </div>

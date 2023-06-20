@@ -55,7 +55,7 @@
 
     <x-button
         class="mt-2"
-        wire:click.prevent="$emit('openModal', 'penjualan.penjualan-detail-modal')">
+        wire:click.prevent="$emit('openModal', 'produksi.produksi-detail-modal')">
         Tambah Detail
     </x-button>
 

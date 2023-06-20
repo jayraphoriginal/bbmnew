@@ -16,5 +16,9 @@
         <x-link-button
             href="/laporanneraca/{{$tanggal}}" target="__blank"
             >Print</x-link-button>
+
+        <x-link-button-export
+            href="/exportneraca/{{$tanggal}}" target="__blank"
+            >Export</x-link-button-export>
     </x-footer-modal>
 </div>

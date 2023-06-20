@@ -65,7 +65,7 @@
                 <td>{{ date_format(date_create($item->jam_ticket),'d/m/Y') }}</td>
                 <td>{{ date_format(date_create($item->jam_ticket),'h:i:s') }}</td>
                 <td>{{ $item->kode_mutu }}</td>
-                <td class="text-right">{{ number_format($item->jumlah,1,',','.').' '.$item->satuan }}</td>
+                <td class="text-right">{{ number_format($item->jumlah,2,',','.').' '.$item->satuan }}</td>
                 <td>{{ $item->tujuan}}</td>
                 <td>{{ $item->nama_driver}}</td>
             </tr>
@@ -75,7 +75,7 @@
             @endforeach 
             <tr>
                 <td colspan="7" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,0,',','.').' '.$data[0]->satuan }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.').' '.$data[0]->satuan }}</td>
                 <td colspan="2"></td>
             </tr>
         </table>

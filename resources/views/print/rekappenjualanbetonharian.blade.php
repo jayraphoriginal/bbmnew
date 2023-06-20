@@ -67,7 +67,7 @@
                     <td>{{ $item->nama_customer }}</td>
                     <td>{{ $item->tujuan.' (Cancel)'}}</td>
                 @else
-                    <td class="text-right">{{ number_format($item->jumlah,1,',','.').' '.$item->satuan }}</td>
+                    <td class="text-right">{{ number_format($item->jumlah,2,',','.').' '.$item->satuan }}</td>
                     <td>{{ $item->nama_customer }}</td>
                     <td>{{ $item->tujuan}}</td>
                 @endif
@@ -80,7 +80,7 @@
             @endforeach 
             <tr>
                 <td colspan="4" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,1,',','.').' '.$data[0]->satuan }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.').' '.$data[0]->satuan }}</td>
                 <td colspan="2"></td>
             </tr>
         </table>
@@ -94,7 +94,7 @@
                 @foreach($datacustomer as $customer)
                     <tr>
                         <td>{{ $customer->nama_customer.' - '.$customer->tujuan.' ('.$customer->kode_mutu.')' }}</td>
-                        <td class="text-right">{{ number_format($customer->total,1,',','.').' '.$customer->satuan }}</td>
+                        <td class="text-right">{{ number_format($customer->total,2,',','.').' '.$customer->satuan }}</td>
                     </tr>
                     @php
                         $totalmutu = $totalmutu + $customer->total;
@@ -102,7 +102,7 @@
                 @endforeach
                     <tr style="height: 20px;">
                         <td></td>
-                        <td class="text-right" style="margin-top: 10px;border-top:3px solid;font-weight:bold;">{{ number_format($totalmutu,1,',','.').' '.$datacustomer[0]->satuan}}</td>
+                        <td class="text-right" style="margin-top: 10px;border-top:3px solid;font-weight:bold;">{{ number_format($totalmutu,2,',','.').' '.$datacustomer[0]->satuan}}</td>
                     </tr>
                 </table>
                 <p style="font-weight:bold;">Concretepump :</p>
@@ -136,7 +136,7 @@
                         <tr>
                             <td style="width:70%;">Produksi Bulan {{ $penjualan->bulan }}</td>
                             <td style="width:5%">=</td>
-                            <td style="width:25%" class="text-right">{{ number_format($penjualan->jumlah,1,',','.').' M3' }}</td>
+                            <td style="width:25%" class="text-right">{{ number_format($penjualan->jumlah,2,',','.').' M3' }}</td>
                         </tr>
                         @php
                             $totalpenjualan = $totalpenjualan + $penjualan->jumlah;
@@ -145,7 +145,7 @@
                     <tr style="height: 20px;">
                         <td style="margin-top: 10px;border-top:3px solid;font-weight:bold;">TOTAL</td>
                         <td style="margin-top: 10px;border-top:3px solid;font-weight:bold;">=</td>
-                        <td class="text-right" style="margin-top: 10px;border-top:3px solid;font-weight:bold;">{{ number_format($totalpenjualan,1,',','.').' M3'}}</td>
+                        <td class="text-right" style="margin-top: 10px;border-top:3px solid;font-weight:bold;">{{ number_format($totalpenjualan,2,',','.').' M3'}}</td>
                     </tr>
                 </table>
             </div>

@@ -84,6 +84,15 @@
         @enderror
     </x-form-group>
 
+    <x-form-group caption="No Bukti Kas">
+        <x-textbox
+            wire:model="nobuktikas"
+        />
+        @error('nobuktikas')
+        <x-error-form>{{ $message }}</x-error-form>
+        @enderror
+    </x-form-group>
+
     <x-footer-modal>
         <x-secondary-button
             wire:click="$emit('closeModal')"

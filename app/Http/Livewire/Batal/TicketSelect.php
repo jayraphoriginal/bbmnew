@@ -42,6 +42,7 @@ class TicketSelect extends Component
     {
         $this->ticket = VTicket::where('nama_customer', 'like', '%' . $this->search . '%')
             ->orwhere('noticket','like', '%' . $this->search . '%')
+            ->take(200)
             ->get();
     }
 

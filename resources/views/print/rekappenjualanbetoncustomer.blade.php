@@ -57,7 +57,7 @@
                 <td>{{ ++$index }}</td>
                 <td>{{ $item->nama_customer }}</td>
                 <td>{{ $item->kode_mutu }}</td>
-                <td class="text-right">{{ number_format($item->total,1,',','.').' '.$item->satuan }}</td>
+                <td class="text-right">{{ number_format($item->total,2,',','.').' '.$item->satuan }}</td>
                 <td class="text-right">{{ number_format($item->harga,2,',','.') }}</td>
                 <td class="text-right">{{ number_format($item->harga*$item->total,2,',','.') }}</td>
                 <td>{{ $item->tujuan}}</td>
@@ -69,7 +69,7 @@
             @endforeach 
             <tr>
                 <td colspan="3" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,1,',','.').' '.$datacustomer[0]->satuan }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.').' '.$datacustomer[0]->satuan }}</td>
                 <td></td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalpenjualan,2,',','.') }}</td>
                 <td></td>

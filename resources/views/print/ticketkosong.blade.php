@@ -94,13 +94,13 @@
             <tbody>
                 <tr>
                     <td class="captionleft">Tanggal Pengiriman</td>
-                    <td class="captionleft">: {{ date_format(date_create(now()),'d M Y') }}</td>  
+                    <td class="captionleft">: </td>  
                     <td class="captionleft borderleft">Tanggal Penerimaan </td>
                     <td class="captionleft">: </td>
                 </tr>
                 <tr>
                     <td class="captionleft">Jam Pengiriman</td>
-                    <td class="captionleft">: {{ date_format(date_create(now()),'H:i:s') }}</td>
+                    <td class="captionleft">: </td>
                     <td class="captionleft borderleft">Jam Tiba Lokasi</td>
                     <td class="captionleft">: </td>
                 </tr>

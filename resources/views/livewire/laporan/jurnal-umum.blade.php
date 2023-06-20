@@ -29,8 +29,8 @@
         <x-link-button
             href="/laporanjurnalumum/{{$tgl_awal}}/{{$tgl_akhir}}/{{$coa_id}}" target="__blank"
             >Print</x-link-button>
-            <x-link-button
+            <x-link-button-export
             href="/exportjurnalumum/{{$tgl_awal}}/{{$tgl_akhir}}/{{$coa_id}}" target="__blank"
-            >Export</x-link-button>
+            >Export</x-link-button-export>
     </x-footer-modal>
 </div>

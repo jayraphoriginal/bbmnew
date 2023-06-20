@@ -84,6 +84,7 @@ final class PembayaranPembelianTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('nopembayaran')
+            ->addColumn('nobuktikas')
             ->addColumn('tgl_bayar')
             ->addColumn('tgl_bayar_formatted', function(VPembayaran $model) {
                 return Carbon::parse($model->tgl_bayar)->format('d/m/Y');
@@ -144,6 +145,13 @@ final class PembayaranPembelianTable extends PowerGridComponent
                 ->field('tgl_bayar_formatted','tgl_bayar')
                 ->searchable()
                 ->makeInputDatePicker()
+                ->sortable(),
+
+            Column::add()   
+                ->title('NO BUKTI KAS')
+                ->field('nobuktikas')
+                ->searchable()
+                ->makeInputText()
                 ->sortable(),
 
             Column::add()   

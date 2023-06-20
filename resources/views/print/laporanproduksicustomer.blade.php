@@ -75,7 +75,7 @@
                     @if($kolom ==1)
                         <td style="width:7%">{{ $td }}</td>
                     @elseif($kolom == 4)
-                        <td class="text-right">{{ number_format($td,1,',','.') }} M<sup>3</sup></td>
+                        <td class="text-right">{{ number_format($td,2,',','.') }} M<sup>3</sup></td>
                     @elseif($kolom >= 6)
                         <td class="text-right">{{ number_format($td,4,',','.') }}</td>
                     @else

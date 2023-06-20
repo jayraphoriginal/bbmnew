@@ -87,6 +87,7 @@ final class JurnalManualTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('tanggal')
+            ->addColumn('nobuktikas')
             ->addColumn('tanggal_formatted', function(VJurnalManual $model) {
                 return Carbon::parse($model->tanggal)->format('d/m/Y');
             })
@@ -129,6 +130,13 @@ final class JurnalManualTable extends PowerGridComponent
                 ->field('tanggal_formatted','tanggal')
                 ->makeInputDatePicker()
                 ->searchable()
+                ->sortable(),
+
+            Column::add()
+                ->title('NO BUKTI KAS')
+                ->field('nobuktikas')
+                ->searchable()
+                ->makeInputText()
                 ->sortable(),
 
             Column::add()

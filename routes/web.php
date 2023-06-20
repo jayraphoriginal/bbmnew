@@ -108,6 +108,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printkwitansi/{id}', [\App\Http\Controllers\PrintController::class,'kwitansi'])->name('printkwitansi');
     Route::get('printconcretepump/{id}', [\App\Http\Controllers\PrintController::class,'concretepump'])->name('printconcretepump');
     Route::get('printbuktikas/{id}', [\App\Http\Controllers\PrintController::class,'buktikas'])->name('printbuktikas');
+    Route::get('printbuktikaspenerimaan/{id}', [\App\Http\Controllers\PrintController::class,'buktikaspenerimaan'])->name('printbuktikaspenerimaan');
     Route::get('printbuktikasmanual/{id}', [\App\Http\Controllers\PrintController::class,'buktikasmanual'])->name('printbuktikasmanual');
     Route::get('printbuktikasbiaya/{id}', [\App\Http\Controllers\PrintController::class,'buktikasbiaya'])->name('printbuktikasbiaya');
     Route::get('timesheetso/{so_id}', [\App\Http\Controllers\PrintController::class,'timesheet'])->name('timesheetso');
@@ -180,5 +181,17 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('exportrekappengeluaranbiaya/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekappengeluaranbiaya'])->name('exportrekappengeluaranbiaya');
     Route::get('exportjurnalpengeluaranbiaya/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportjurnalpengeluaranbiaya'])->name('exportjurnalpengeluaranbiaya');
     Route::get('exportsaldorekening/{tgl_awal}/{tgl_akhir}/{rekening_id}', [ExportController::class,'exportsaldorekening'])->name('exportsaldorekening');
-    
+    Route::get('exportrekapsaldokasbank/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekapsaldokasbank'])->name('exportrekapsaldokasbank');
+    Route::get('exportrekappiutang/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekappiutang'])->name('exportrekappiutang');
+    Route::get('exportrekappiutangkaryawan/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekappiutangkaryawan'])->name('exportrekappiutangkaryawan');
+    Route::get('exportrekaphutang/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekaphutang'])->name('exportrekaphutang');
+    Route::get('exportrekapbiaya/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekapbiaya'])->name('exportrekapbiaya');
+    Route::get('exportwarkatmasuk/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportwarkatmasuk'])->name('exportwarkatmasuk');
+    Route::get('exportwarkatkeluar/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportwarkatkeluar'])->name('exportwarkatkeluar');
+
+    Route::get('exportrekapuangmukapajak/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekapuangmukapajak'])->name('exportrekapuangmukapajak');
+    Route::get('exportrekaphutangpajak/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekaphutangpajak'])->name('exportrekaphutangpajak');
+    Route::get('exporttrialbalance/{tahun}/{bulan}', [ExportController::class,'exporttrialbalance'])->name('exporttrialbalance');
+    Route::get('exportneraca/{tanggal}', [ExportController::class,'exportneraca'])->name('exportneraca');
+    Route::get('exportlabarugi/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportlabarugi'])->name('exportlabarugi');
 });

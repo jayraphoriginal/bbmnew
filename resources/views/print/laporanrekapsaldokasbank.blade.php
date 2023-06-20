@@ -1,7 +1,7 @@
 <html>
 
     <head>
-        <title>Laporan Rekap Saldo Kas/Bank</title>
+        <title>Laporan Rekap Saldo Kas Bank</title>
     </head>
 
     <style>

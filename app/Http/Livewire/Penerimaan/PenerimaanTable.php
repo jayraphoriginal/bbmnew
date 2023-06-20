@@ -142,6 +142,13 @@ final class PenerimaanTable extends PowerGridComponent
                 ->makeInputDatePicker()
                 ->sortable(),
 
+            Column::add()
+                ->title('NoBuktiKas')
+                ->field('nobuktikas')
+                ->searchable()
+                ->makeInputText()
+                ->sortable(),
+
             Column::add()   
                 ->title('CUSTOMER')
                 ->field('nama_customer')
@@ -199,6 +206,7 @@ final class PenerimaanTable extends PowerGridComponent
                 ->searchable()
                 ->makeInputRange()
                 ->sortable(),
+           
         ];
     }
 
@@ -216,23 +224,21 @@ final class PenerimaanTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    /*
+    
     public function actions(): array
     {
-       return [
-           Button::add('edit')
-               ->caption('Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('v-penerimaan.edit', ['v-penerimaan' => 'id']),
-
-           Button::add('destroy')
-               ->caption('Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('v-penerimaan.destroy', ['v-penerimaan' => 'id'])
-               ->method('delete')
+        return [
+            Button::add('cetak')
+            ->caption('<span class="material-icons align-middle text-center">print</span>')
+            ->tooltip('Bukti Kas')
+            ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->target('_blank')
+            ->method('get')
+            ->route("printbuktikaspenerimaan",[
+                'id' => 'ID'
+            ]),
         ];
     }
-    */
 
     /*
     |--------------------------------------------------------------------------
