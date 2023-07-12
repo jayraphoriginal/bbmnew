@@ -89,8 +89,8 @@
             @endforeach 
             <tr>
                 <td colspan="11" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalppn,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
             </tr>
         </table>
         @endif

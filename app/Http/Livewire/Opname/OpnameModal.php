@@ -289,9 +289,13 @@ class OpnameModal extends ModalComponent
                     $journal->save();
 
                     $pemakaianmaterial = 0;
-                    DB::commit();
+                    
                 }
+                $tmp = TmpOpname::where('user_id',Auth::user()->id)->delete();
+                DB::commit();
             }
+
+            
         }
         catch(Throwable $e){
             $this->alert('error', $e->getMessage(), [

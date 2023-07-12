@@ -44,6 +44,7 @@
             <tr>
                 <td class="tdhead">No</td>
                 <td class="tdhead">Tanggal</td>
+                <td class="tdhead">No Bukti Kas</td>
                 <td class="tdhead">Keterangan</td>
                 <td class="tdhead">Debet</td>
                 <td class="tdhead">Kredit</td>
@@ -58,13 +59,14 @@
             @foreach($data as $index => $item)
             @if($index == 0)
                 <tr>
-                    <td colspan="5" style="text-align:center;background-color:#bbb;">Saldo Awal</td>
+                    <td colspan="6" style="text-align:center;background-color:#bbb;">Saldo Awal</td>
                     <td class="text-right">{{ number_format($item->saldo-$item->debet+$item->kredit,2,'.',',') }}</td>
                 </tr>
             @endif
             <tr>
                 <td>{{ ++$index }}</td>
                 <td>{{ date_format(date_create($item->tanggal),'d/M/Y') }}</td>
+                <td>{{ $item->nobuktikas }}</td>
                 <td>{{ $item->keterangan }}</td>
                 <td class="text-right">{{ number_format($item->debet,2,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->kredit,2,'.',',') }}</td>
@@ -77,7 +79,7 @@
                 @endphp
             @endforeach
             <tr>
-                <td colspan="3" style="font-weight:bold">Total</td>
+                <td colspan="4" style="font-weight:bold">Total</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldodebet,2,',','.') }}</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldokredit,2,',','.') }}</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($saldo,2,',','.') }}</td>
