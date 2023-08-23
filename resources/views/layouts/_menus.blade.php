@@ -77,6 +77,9 @@
             @can('Penjualan Barang')
             <x-menu-item route="penjualan">Penjualan Barang</x-menu-item>
             @endcan
+            @can('Ticket Produksi')
+            <x-menu-item route="ticketproduksi">Ticket Produksi</x-menu-item>
+            @endcan
             @can('Produksi')
             <x-menu-item route="produksi">Produksi</x-menu-item>
             @endcan

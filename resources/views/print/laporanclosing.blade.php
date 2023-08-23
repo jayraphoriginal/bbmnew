@@ -60,7 +60,7 @@
                 <td>{{ date_format(date_create($item->tanggal),'d/M/Y') }}</td>
                 <td>{{ $item->kode_akun }}</td>
                 <td>{{ $item->nama_akun }}</td>
-                <td>{{ $item->keterangan }}</td>
+                <td>{{ $item->tipe }}</td>
                 <td class="text-right">{{ number_format($item->debet,2,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->kredit,2,'.',',') }}</td>
             </tr>

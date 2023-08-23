@@ -40,6 +40,7 @@ class BarangSelect extends Component
         $this->emitTo('laporan.laporan-pembelian-barang','selectbarang', $id);
         $this->emitTo('opname.opname-detail-modal','selectbarang', $id);
         $this->emitTo('laporan.laporan-pemakaian-barang-beban','selectbarang', $id);
+       // $this->emitTo('produksi.produksi-new-modal','selectbarang', $id);
     }
 
     public function selectDeskripsi($id){

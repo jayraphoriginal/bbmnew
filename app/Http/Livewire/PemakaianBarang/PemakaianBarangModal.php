@@ -83,10 +83,12 @@ class PemakaianBarangModal extends ModalComponent
 
         $total = 0;
         $this->pemakaian->total = $total;
-        $this->pemakaian->save();
+      
 
         DB::beginTransaction();
         try{
+
+            $this->pemakaian->save();
 
             $jumlahstok = DBarang::where('barang_id',$this->pemakaian->barang_id)
                                 ->sum('jumlah');

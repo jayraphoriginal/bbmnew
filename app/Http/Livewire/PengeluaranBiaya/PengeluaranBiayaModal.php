@@ -41,7 +41,7 @@ class PengeluaranBiayaModal extends ModalComponent
         'pengeluaran.persen_pajaklain' => 'required',
         'pengeluaran.ppn' => 'required',
         'pengeluaran.total' => 'required|numeric|min:1',
-        'pengeluaran.ket' => 'nullable|max:50',
+        'pengeluaran.ket' => 'nullable|max:100',
         'pengeluaran.nobuktikas' => 'nullable|max:50'
     ];
 
@@ -118,6 +118,8 @@ class PengeluaranBiayaModal extends ModalComponent
 
             $tmps = TmpPengeluaranBiaya::where('user_id',Auth::user()->id)->get();
 
+            $totalpajaklain = 0;
+
             foreach($tmps as $tmp){
                 $dpp =0;
                 $ppn = 0;
@@ -140,6 +142,8 @@ class PengeluaranBiayaModal extends ModalComponent
                     $this->pengeluaran->persen_pajaklain = 0;
                     $pajaklain = 0;
                 }
+
+                $totalpajaklain = $totalpajaklain + $pajaklain;
 
                 $pengeluaran_detail = new PengeluaranBiayaDetail();
                 $pengeluaran_detail['pengeluaran_biaya_id'] = $this->pengeluaran->id;
@@ -194,7 +198,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                 $journal['coa_id']=$rekening->coa_id;
                 $journal['debet']=0;
-                $journal['kredit']=$this->pengeluaran->total-$pajaklain;
+                $journal['kredit']=$this->pengeluaran->total-$totalpajaklain;
                 $journal->save();
 
             }else{
@@ -207,7 +211,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                 $journal['coa_id']=$supplier->coa_id;
                 $journal['debet']=0;
-                $journal['kredit']=$this->pengeluaran->total-$pajaklain;
+                $journal['kredit']=$this->pengeluaran->total-$totalpajaklain;
                 $journal->save();
             }
 

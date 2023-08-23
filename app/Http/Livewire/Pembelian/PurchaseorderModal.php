@@ -172,6 +172,7 @@ class PurchaseorderModal extends ModalComponent
 
                         $newdbarang = new DBarang();
                         $newdbarang['barang_id'] = $tmp->barang_id;
+                        $newdbarang['tipe'] = 'Pembelian';
                         $newdbarang['d_purchaseorder_id'] = $dpurchaseorder->id;
                         $newdbarang['tgl_masuk'] = $this->Mpo->tgl_masuk;
                         $newdbarang['jumlah_masuk'] = $tmp->jumlah;

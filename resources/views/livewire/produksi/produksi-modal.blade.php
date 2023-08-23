@@ -3,6 +3,7 @@
         Input Produksi
     </x-header-modal>
 
+    
     <x-form-group caption="Barang Jadi">
         <livewire:barang.barang-select :deskripsi="$barang" />
         @error('produksi.barang_id')

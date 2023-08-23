@@ -157,6 +157,32 @@ class LaporanController extends Controller
 
                 }
 
+                $pengisianbbmstoks = PengisianBbmStok::where('beban_id', $kendaraan->id)
+                            ->where(DB::raw('convert(date,tgl_pengisian)'),'>=',$tgl_awal)
+                            ->where(DB::raw('convert(date,tgl_pengisian)'),'<=',$tgl_akhir)
+                            ->get();
+
+                foreach($pengisianbbmstoks as $pengisianbbmstok){
+
+                    $tmp = new TmpGajiDriver();
+                    $tmp['tanggal_awal'] = $tgl_awal;
+                    $tmp['tanggal_akhir'] = $tgl_akhir;
+                    $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                    $tmp['nopol'] = $kendaraan->nopol;
+                    $tmp['nama_driver'] = $driver->nama_driver;
+                    $tmp['tanggal_ticket'] = date_format(date_create($pengisianbbmstok->tgl_pengisian),'Y-m-d');
+                    $tmp['nama_customer'] = 'Isi BBM dari Stok';
+                    $tmp['lokasi'] = 'Isi BBM dari Stok';
+                    $tmp['jarak'] = 0;
+                    $tmp['pemakaian_bbm'] = 0;
+                    $tmp['lembur'] = 0;
+                    $tmp['gaji'] = 0;
+                    $tmp['pengisian_bbm'] = $pengisianbbmstok->jumlah;
+                    $tmp['loading'] = 0;
+                    $tmp->save();
+
+                }
+
                 $tambahanbbms = TambahanBbm::where('kendaraan_id', $kendaraan->id)
                                 ->where(DB::raw('convert(date,tanggal_penambahan)'),'>=',$tgl_awal)
                                 ->where(DB::raw('convert(date,tanggal_penambahan)'),'<=',$tgl_akhir)

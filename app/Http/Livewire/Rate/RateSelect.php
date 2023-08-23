@@ -31,6 +31,7 @@ class RateSelect extends Component
         $this->emitTo('penjualan.salesorder-detail-modal','selectrate', $id);
         $this->emitTo('penjualan.concretepump-modal','selectrate', $id);
         $this->emitTo('penjualan.ticket-modal','selectrate', $id);
+        $this->emitTo('produksi.ticket-produksi-modal','selectrate', $id);
         $this->emitTo('penjualan.ticket-edit-modal','selectrate', $id);
     }
 

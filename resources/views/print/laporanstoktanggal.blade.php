@@ -61,7 +61,7 @@
                 <td class="text-right">{{ number_format($item->masuk,4,',','.') }}</td>
                 <td class="text-right">{{ number_format($item->keluar,4,',','.') }}</td>
                 <td class="text-right">{{ number_format($item->stok_akhir,4,'.',',') }}</td>
-                <td class="text-right">{{ number_format($item->saldo,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->saldo,4,'.',',') }}</td>
             </tr>
                 @php
                     $total=$total+$item->saldo;
@@ -69,7 +69,7 @@
             @endforeach 
             <tr>
                 <td colspan="6" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,4,',','.') }}</td>
             </tr>
         </table>
         @endif

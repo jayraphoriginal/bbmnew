@@ -53,8 +53,7 @@ final class ProduksiTable extends PowerGridComponent
     {
         return MProduksi::join('barangs','m_produksis.barang_id','barangs.id')
         ->join('satuans','m_produksis.satuan_id','satuans.id')
-        ->leftjoin('drivers','m_produksis.driver_id','drivers.id')
-        ->select('m_produksis.*','barangs.nama_barang','drivers.nama_driver','satuans.satuan');
+        ->select('m_produksis.*','barangs.nama_barang','satuans.satuan');
     }
 
     /*
@@ -96,8 +95,6 @@ final class ProduksiTable extends PowerGridComponent
             ->addColumn('biaya', function(MProduksi $model) { 
                 return number_format($model->biaya,2,'.',',');
             })
-            ->addColumn('driver_id')
-            ->addColumn('nama_driver')
             ->addColumn('satuan_id')
             ->addColumn('satuan')
             ->addColumn('keterangan')
@@ -159,12 +156,6 @@ final class ProduksiTable extends PowerGridComponent
                 ->field('biaya')
                 ->headerAttribute('text-right')
                 ->bodyAttribute('text-right')
-                ->sortable()
-                ->searchable(),
-
-            Column::add()
-                ->title('TENAGA KERJA')
-                ->field('nama_driver')
                 ->sortable()
                 ->searchable(),
 

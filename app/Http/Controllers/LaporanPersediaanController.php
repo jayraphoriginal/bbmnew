@@ -41,7 +41,7 @@ class LaporanPersediaanController extends Controller
             return abort(401);
         }
 
-        $data = VStok::all();
+        $data = VStok::orderBy('nama_barang')->get();
 
         $pdf = PDF::loadView('print.laporanstokall', array(
             'data' => $data,
@@ -61,8 +61,9 @@ class LaporanPersediaanController extends Controller
         ->where('tanggal','<=',$tgl_akhir)
         ->where('barang_id',$barang_id)
         ->orderBy('tanggal','asc')
-        ->orderBy('increase','desc')
-        ->orderBy('trans_id','asc')->get();
+        ->orderBy(DB::raw('CASE WHEN increase > 0 THEN 0 ELSE 1 END'),'asc')
+        ->orderBy('trans_id','asc')
+        ->orderBy('id','asc')->get();
 
         $pdf = PDF::loadView('print.laporankartustok', array(
             'data' => $data,

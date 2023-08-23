@@ -1,7 +1,7 @@
 <div class="w-full">
     <x-container title="Produksi">
         <x-button
-            wire:click.prevent="$emit('openModal', 'produksi.produksi-modal')">
+            wire:click.prevent="$emit('openModal', 'produksi.produksi-new-modal')">
             Tambah Produksi
         </x-button>
 

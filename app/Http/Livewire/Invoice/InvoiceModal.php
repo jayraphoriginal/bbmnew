@@ -94,7 +94,7 @@ class InvoiceModal extends ModalComponent
                 ->where('status','Open')->sum(DB::raw('jumlah*harga_intax'));
                 $this->dp = "Reg";
             }else{
-                $this->jumlah_total = VSalesOrder::where('id',$this->so_id)
+                $this->jumlah_total = VSalesOrder::where('so_id',$this->so_id)
                 ->where('status_so','Open')->sum(DB::raw('jumlah*harga_intax'));
 
                 $totalconcretepump = Concretepump::where('m_salesorder_id', $this->so_id)

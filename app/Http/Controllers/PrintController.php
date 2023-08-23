@@ -28,6 +28,7 @@ use App\Models\Timesheet;
 use App\Models\TmpGajiDriver;
 use App\Models\TmpPenjualanBulanan;
 use App\Models\TmpReportTicket;
+use App\Models\TmpReportTicketProduksi;
 use App\Models\VConcretepump;
 use App\Models\VHutang;
 use App\Models\VJurnalManual;
@@ -99,6 +100,24 @@ class PrintController extends Controller
         $customPaper = array(0,0,609.44,396.85);
 
         $pdf = PDF::loadView('print.ticket', array(
+            'data' => $data,
+        ))->setPaper($customPaper);
+        return $pdf->stream();
+    }
+
+    public function ticketproduksi($id){
+        
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Ticket Produksi')){
+            return abort(401);
+        }
+
+        DB::statement("SET NOCOUNT ON; Exec SP_ReportTicketProduksi ".$id);
+        $data = TmpReportTicketProduksi::where('id',$id)->get();
+
+        $customPaper = array(0,0,609.44,396.85);
+
+        $pdf = PDF::loadView('print.ticketproduksi', array(
             'data' => $data,
         ))->setPaper($customPaper);
         return $pdf->stream();

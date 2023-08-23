@@ -78,10 +78,12 @@ class PengisianBbmStokModal extends ModalComponent
 
         $total = 0;
         $this->pengisian->total = $total;
-        $this->pengisian->save();
+        
 
         DB::beginTransaction();
         try{
+
+            $this->pengisian->save();
 
             $jumlahstok = DBarang::where('barang_id',$this->pengisian->barang_id)
                                 ->sum('jumlah');

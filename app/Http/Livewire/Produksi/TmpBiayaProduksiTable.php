@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Produksi;
 
-use App\Models\TmpProduksi;
+use App\Models\TmpBiayaProduksi;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +15,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class TmpProduksiTable extends PowerGridComponent
+final class TmpBiayaProduksiTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -41,17 +41,16 @@ final class TmpProduksiTable extends PowerGridComponent
     | Provides data to your Table using a Model or Collection
     |
     */
-
+    
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\TmpProduksi>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\TmpBiayaProduksi>|null
     */
     public function datasource(): ?Builder
     {
-        return TmpProduksi::join('barangs','tmp_produksis.barang_id','barangs.id')
-        ->join('satuans','tmp_produksis.satuan_id','satuans.id')
-        ->select('tmp_produksis.*','barangs.nama_barang','satuans.satuan')
+        return TmpBiayaProduksi::join('m_biayas','tmp_biaya_produksi.biaya_id','m_biayas.id')
+        ->select('tmp_biaya_produksi.*','m_biayas.nama_biaya')
         ->where('user_id',Auth::user()->id);
     }
 
@@ -85,17 +84,14 @@ final class TmpProduksiTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('barang_id')
-            ->addColumn('nama_barang')
+            ->addColumn('biaya_id')
+            ->addColumn('nama_biaya')
             ->addColumn('jumlah')
-            ->addColumn('satuan_id')
-            ->addColumn('satuan')
-            ->addColumn('created_at_formatted', function(TmpProduksi $model) { 
-                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            ->addColumn('keterangan') 
+            ->addColumn('jumlah_formatted', function(TmpBiayaProduksi $model) { 
+                return number_format($model->jumlah,2,'.',',');
             })
-            ->addColumn('updated_at_formatted', function(TmpProduksi $model) { 
-                return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
-            });
+            ;
     }
 
     /*
@@ -115,24 +111,18 @@ final class TmpProduksiTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-
             Column::add()
-                ->title('KOMPOSISI')
-                ->field('nama_barang')
+                ->title('NAMA BIAYA')
+                ->field('nama_biaya')
                 ->sortable(),
 
-            Column::add()
+                Column::add()
                 ->title('JUMLAH')
-                ->field('jumlah')
-                ->sortable(),
-
-            Column::add()
-                ->title('SATUAN')
-                ->field('satuan')
-                ->sortable(),
-
-        ]
-;
+                ->field('jumlah_formatted', 'jumlah')
+                ->sortable()
+                ->headerAttribute('text-right')
+                ->bodyAttribute('text-right'),
+        ];
     }
 
     /*
@@ -144,7 +134,7 @@ final class TmpProduksiTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid TmpProduksi Action Buttons.
+     * PowerGrid TmpBiayaProduksi Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
@@ -156,7 +146,7 @@ final class TmpProduksiTable extends PowerGridComponent
             Button::add('edit')
                 ->caption(__('Edit'))
                 ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('produksi.produksi-detail-modal',[
+                ->openModal('produksi.produksi-biaya-modal',[
                     'editmode' => 'edit',
                     'tmp_id' => 'id'
                 ]),
@@ -166,12 +156,13 @@ final class TmpProduksiTable extends PowerGridComponent
                 ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
                 ->openModal('delete-modal', [
                     'data_id'                 => 'id',
-                    'TableName'               => 'tmp_produksis',
-                    'confirmationTitle'       => 'Delete Detail Produksi',
-                    'confirmationDescription' => 'apakah yakin ingin hapus detail Produksi?',
+                    'TableName'               => 'tmp_biaya_produksi',
+                    'confirmationTitle'       => 'Delete Biaya Produksi',
+                    'confirmationDescription' => 'apakah yakin ingin hapus biaya Produksi?',
                 ]),
         ];
     }
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -182,7 +173,7 @@ final class TmpProduksiTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid TmpProduksi Action Rules.
+     * PowerGrid TmpBiayaProduksi Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -194,7 +185,7 @@ final class TmpProduksiTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($tmp-produksi) => $tmp-produksi->id === 1)
+                ->when(fn($tmp-biaya-produksi) => $tmp-biaya-produksi->id === 1)
                 ->hide(),
         ];
     }
@@ -210,7 +201,7 @@ final class TmpProduksiTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid TmpProduksi Update.
+     * PowerGrid TmpBiayaProduksi Update.
      *
      * @param array<string,string> $data
      */
@@ -219,7 +210,7 @@ final class TmpProduksiTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = TmpProduksi::query()->findOrFail($data['id'])
+           $updated = TmpBiayaProduksi::query()
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

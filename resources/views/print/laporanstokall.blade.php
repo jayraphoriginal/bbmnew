@@ -61,8 +61,8 @@
                         <td style="color:crimson">{{ $item->merk }}</td>
                         <td style="color:crimson">{{ $item->satuan }}</td>
                         <td class="text-right" style="color:crimson">{{ number_format($item->stok_minimum,2,'.',',') }}</td>
-                        <td class="text-right" style="color:crimson">{{ number_format($item->stok,2,'.',',') }}</td>
-                        <td class="text-right" style="color:crimson">{{ number_format($item->saldo,2,'.',',') }}</td>        
+                        <td class="text-right" style="color:crimson">{{ number_format($item->stok,4,'.',',') }}</td>
+                        <td class="text-right" style="color:crimson">{{ number_format($item->saldo,4,'.',',') }}</td>        
                 @else
                     <tr>
                         <td>{{ ++$index }}</td>
@@ -70,8 +70,8 @@
                         <td>{{ $item->merk }}</td>
                         <td>{{ $item->satuan }}</td>
                         <td class="text-right">{{ number_format($item->stok_minimum,2,'.',',') }}</td>
-                        <td class="text-right">{{ number_format($item->stok,2,'.',',') }}</td>
-                        <td class="text-right">{{ number_format($item->saldo,2,'.',',') }}</td>        
+                        <td class="text-right">{{ number_format($item->stok,4,'.',',') }}</td>
+                        <td class="text-right">{{ number_format($item->saldo,4,'.',',') }}</td>        
                 @endif
                     </tr>
                 @php
@@ -80,7 +80,7 @@
             @endforeach 
             <tr>
                 <td colspan="6" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,4,',','.') }}</td>
             </tr>
         </table>
         @endif

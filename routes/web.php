@@ -21,6 +21,7 @@ use App\Http\Livewire\Laporan\LaporanComponent;
 use App\Http\Livewire\Opname\OpnameComponent;
 use App\Http\Livewire\Pembayaran\PembayaranPembelianComponent;
 use App\Http\Livewire\Penerimaan\PenerimaanComponent;
+use App\Http\Livewire\Produksi\TicketProduksiComponent;
 use App\Http\Livewire\User\PermissionComponent;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
@@ -73,6 +74,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('salesordersewa', \App\Http\Livewire\Sewa\SalesorderSewaComponent::class)->name('salesordersewa');
     Route::get('purchaseorder', \App\Http\Livewire\Pembelian\PurchaseorderComponent::class)->name('purchaseorder');
     Route::get('ticketmaterial', \App\Http\Livewire\Penjualan\TicketComponent::class)->name('ticketmaterial');
+    Route::get('ticketproduksi', TicketProduksiComponent::class)->name('ticketproduksi');
     Route::get('timesheet', \App\Http\Livewire\Sewa\SalesorderSewaTimesheetComponent::class)->name('timesheet');
     Route::get('penjualanretail', \App\Http\Livewire\Penjualan\PenjualanRetailComponent::class)->name('penjualanretail');
     Route::get('invoice', \App\Http\Livewire\Invoice\InvoiceComponent::class)->name('invoice');
@@ -103,6 +105,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printsosewa/{id}', [\App\Http\Controllers\PrintController::class,'sosewa'])->name('printsosewa');
     Route::get('printticketkosong', [\App\Http\Controllers\PrintController::class,'ticketkosong'])->name('printticketkosong');
     Route::get('printticket/{id}', [\App\Http\Controllers\PrintController::class,'ticket'])->name('printticket');
+    Route::get('printticketproduksi/{id}', [\App\Http\Controllers\PrintController::class,'ticketproduksi'])->name('printticketproduksi');
     Route::get('printpo/{id}', [\App\Http\Controllers\PrintController::class,'po'])->name('printpo');
     Route::get('printinvoice/{id}', [\App\Http\Controllers\PrintController::class,'invoice'])->name('printinvoice');
     Route::get('printkwitansi/{id}', [\App\Http\Controllers\PrintController::class,'kwitansi'])->name('printkwitansi');

@@ -28,6 +28,7 @@ class MutubetonSelect extends Component
     {
         $this->deskripsi = Mutubeton::find($id)->deskripsi;
         $this->emitTo('penjualan.salesorder-detail-modal','selectmutubeton', $id);
+        $this->emitTo('produksi.ticket-produksi-modal','selectmutubeton', $id);
     }
 
     public function selectDeskripsi($id){

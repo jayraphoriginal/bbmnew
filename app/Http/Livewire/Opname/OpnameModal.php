@@ -233,24 +233,31 @@ class OpnameModal extends ModalComponent
 
                     $lebihstok = $tmpbarang->jumlah;
 
-                    $barang = DBarang::where('barang_id',$tmpbarang->barang_id)->orderby('tgl_masuk','asc')->first();
-
-                    $stok = DBarang::find($barang->id);
-                    $stok['jumlah']=$stok['jumlah']+$lebihstok;
-                    $stok->save();
-
-                    $jumlahstok = DBarang::where('barang_id',$tmpbarang->barang_id)
-                        ->sum('jumlah');
-
+                    $barang = DBarang::where('barang_id',$tmpbarang->barang_id)->where('jumlah','>',0)->orderby('tgl_masuk','asc')->first();
+                   
                     $dopname = New DOpname();
                     $dopname['m_opname_id']=$this->MOpname->id;
                     $dopname['barang_id']=$tmpbarang->barang_id;
                     $dopname['jumlah']=$lebihstok;
                     $dopname['satuan_id']=$tmpbarang->satuan_id;
-                    $dopname['hpp']=$stok->hpp;
+                    $dopname['hpp']=$barang->hpp;
                     $dopname['status_detail']='Open';
                     $dopname['user_id']=Auth::user()->id;
                     $dopname->save();
+
+                    $dbarang = new DBarang();
+                    $dbarang['barang_id'] = $tmpbarang->barang_id;
+                    $dbarang['tipe'] = 'Stok Opname';
+                    $dbarang['d_purchaseorder_id'] = $dopname->id;
+                    $dbarang['tgl_masuk'] = $this->MOpname->tgl_opname;
+                    $dbarang['jumlah_masuk'] = $this->lebihstok;
+                    $dbarang['jumlah'] = $this->lebihstok;
+                    $dbarang['hpp']=$barang->hpp;
+                    $dbarang->save();
+
+
+                    $jumlahstok = DBarang::where('barang_id',$tmpbarang->barang_id)
+                    ->sum('jumlah');
 
                     $kartustok = new Kartustok();
                     $kartustok['tanggal'] = date_create($this->MOpname->tgl_opname)->format('Y-m-d');
@@ -259,10 +266,10 @@ class OpnameModal extends ModalComponent
                     $kartustok['trans_id']=$this->MOpname->id;
                     $kartustok['increase']=$lebihstok;
                     $kartustok['decrease']=0;
-                    $kartustok['harga_debet']=$stok->hpp;
+                    $kartustok['harga_debet']=$barang->hpp;
                     $kartustok['harga_kredit']=0;
                     $kartustok['qty']=$jumlahstok;
-                    $kartustok['modal']=$stok->hpp;
+                    $kartustok['modal']=$barang->hpp;
                     $kartustok->save();
 
                     $databarang = Barang::find($tmpbarang->barang_id);
@@ -273,7 +280,7 @@ class OpnameModal extends ModalComponent
                     $journal['trans_id']=$this->MOpname->id;
                     $journal['tanggal_transaksi']=date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                     $journal['coa_id']=$kategori->coa_asset_id;
-                    $journal['debet']=round($stok->hpp*$lebihstok,4);
+                    $journal['debet']=round($barang->hpp*$lebihstok,4);
                     $journal['kredit']=0;
                     $journal->save();
 
@@ -285,7 +292,7 @@ class OpnameModal extends ModalComponent
                     $journal['tanggal_transaksi']=date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                     $journal['coa_id']=$coa->id;
                     $journal['debet']=0;
-                    $journal['kredit']=round($stok->hpp*$lebihstok,4);
+                    $journal['kredit']=round($barang->hpp*$lebihstok,4);
                     $journal->save();
 
                     $pemakaianmaterial = 0;

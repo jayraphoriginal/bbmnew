@@ -2,11 +2,10 @@
 
 namespace App\Http\Livewire\Produksi;
 
-use App\Models\TmpProduksi;
+use App\Models\VTicketProduksi;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -15,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class TmpProduksiTable extends PowerGridComponent
+final class TicketProduksiTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -31,7 +30,10 @@ final class TmpProduksiTable extends PowerGridComponent
     */
     public function setUp(): void
     {
-        $this->showPerPage();
+        $this->showCheckBox()
+            ->showPerPage()
+            ->showSearchInput()
+            ->showExportOption('download', ['excel', 'csv']);
     }
 
     /*
@@ -41,18 +43,15 @@ final class TmpProduksiTable extends PowerGridComponent
     | Provides data to your Table using a Model or Collection
     |
     */
-
+    
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\TmpProduksi>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\VTicketProduksi>|null
     */
     public function datasource(): ?Builder
     {
-        return TmpProduksi::join('barangs','tmp_produksis.barang_id','barangs.id')
-        ->join('satuans','tmp_produksis.satuan_id','satuans.id')
-        ->select('tmp_produksis.*','barangs.nama_barang','satuans.satuan')
-        ->where('user_id',Auth::user()->id);
+        return VTicketProduksi::query();
     }
 
     /*
@@ -85,17 +84,28 @@ final class TmpProduksiTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('barang_id')
-            ->addColumn('nama_barang')
-            ->addColumn('jumlah')
-            ->addColumn('satuan_id')
-            ->addColumn('satuan')
-            ->addColumn('created_at_formatted', function(TmpProduksi $model) { 
-                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            ->addColumn('ticket_id')
+            ->addColumn('noticket')
+            ->addColumn('deskripsi')
+            ->addColumn('nopol')
+            ->addColumn('nama_driver')
+            ->addColumn('tujuan')
+            ->addColumn('estimasi_jarak')
+            
+            ->addColumn('jam_ticket')
+            ->addColumn('jam_ticket_formatted', function(VTicketProduksi $model) {
+                return Carbon::parse($model->jam_ticket)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(TmpProduksi $model) { 
-                return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
+            ->addColumn('jumlah')
+            ->addColumn('jumlah_formatted', function(VTicketProduksi $model) {
+                return number_format($model->jumlah,2,',','.');
+            })
+            ->addColumn('satuan')
+            ->addColumn('loading')
+            ->addColumn('loading_formatted', function(VTicketProduksi $model) {
+                return number_format($model->loading,2,',','.');
             });
+            
     }
 
     /*
@@ -117,22 +127,84 @@ final class TmpProduksiTable extends PowerGridComponent
         return [
 
             Column::add()
-                ->title('KOMPOSISI')
-                ->field('nama_barang')
+                ->title('NO TICKET')
+                ->field('noticket')
+                ->searchable()
+                ->makeInputText('noticket')
+                ->sortable(),
+
+            Column::add()
+                ->title('KODE MUTU')
+                ->field('deskripsi')
+                ->searchable()
+                ->makeInputText('deskripsi')
                 ->sortable(),
 
             Column::add()
                 ->title('JUMLAH')
-                ->field('jumlah')
+                ->field('jumlah_formatted','jumlah')
+                ->searchable()
+                ->makeInputRange()
                 ->sortable(),
 
             Column::add()
                 ->title('SATUAN')
                 ->field('satuan')
+                ->searchable()
+                ->makeInputText('satuan')
                 ->sortable(),
 
-        ]
-;
+            Column::add()
+                ->title('NO POLISI')
+                ->field('nopol')
+                ->searchable()
+                ->makeInputText('nopol')
+                ->sortable(),
+
+            Column::add()
+                ->title('NAMA DRIVER')
+                ->field('nama_driver')
+                ->searchable()
+                ->makeInputText('nama_driver')
+                ->sortable(),
+
+            Column::add()
+                ->title('TUJUAN')
+                ->field('tujuan')
+                ->searchable()
+                ->makeInputText('tujuan')
+                ->sortable(),
+
+            Column::add()
+                ->title('JARAK')
+                ->field('estimasi_jarak')
+                ->searchable()
+                ->makeInputText('estimasi_jarak')
+                ->sortable(),
+
+            Column::add()
+                ->title('JAM TICKET')
+                ->field('jam_ticket')
+                ->hidden(),
+
+            Column::add()
+                ->title('JAM TICKET')
+                ->field('jam_ticket_formatted')
+                ->makeInputDatePicker('jam_ticket')
+                ->searchable(),
+
+
+
+            Column::add()
+                ->title('LOADING')
+                ->field('loading_formatted','loading')
+                ->searchable()
+                ->makeInputText('loading')
+                ->sortable(),
+
+           
+        ];
+
     }
 
     /*
@@ -144,7 +216,7 @@ final class TmpProduksiTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid TmpProduksi Action Buttons.
+     * PowerGrid VTicketProduksi Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
@@ -153,25 +225,17 @@ final class TmpProduksiTable extends PowerGridComponent
     public function actions(): array
     {
         return [
-            Button::add('edit')
-                ->caption(__('Edit'))
-                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('produksi.produksi-detail-modal',[
-                    'editmode' => 'edit',
-                    'tmp_id' => 'id'
-                ]),
-
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('bg-red-500 text-white px-3 py-2 m-1 rounded text-sm')
-                ->openModal('delete-modal', [
-                    'data_id'                 => 'id',
-                    'TableName'               => 'tmp_produksis',
-                    'confirmationTitle'       => 'Delete Detail Produksi',
-                    'confirmationDescription' => 'apakah yakin ingin hapus detail Produksi?',
-                ]),
+            Button::add('cetak')
+            ->caption(__('Cetak'))
+            ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->target('_blank')
+            ->method('get')
+            ->route("printticketproduksi",[
+                'id' => 'id'
+            ]),
         ];
     }
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -182,7 +246,7 @@ final class TmpProduksiTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid TmpProduksi Action Rules.
+     * PowerGrid VTicketProduksi Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -194,7 +258,7 @@ final class TmpProduksiTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($tmp-produksi) => $tmp-produksi->id === 1)
+                ->when(fn($v-ticket-produksi) => $v-ticket-produksi->id === 1)
                 ->hide(),
         ];
     }
@@ -210,7 +274,7 @@ final class TmpProduksiTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid TmpProduksi Update.
+     * PowerGrid VTicketProduksi Update.
      *
      * @param array<string,string> $data
      */
@@ -219,7 +283,7 @@ final class TmpProduksiTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = TmpProduksi::query()->findOrFail($data['id'])
+           $updated = VTicketProduksi::query()
                 ->update([
                     $data['field'] => $data['value'],
                 ]);
