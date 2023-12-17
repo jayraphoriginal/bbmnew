@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
+use Throwable;
 
 class ClosingAccount extends ModalComponent
 {
@@ -31,23 +32,32 @@ class ClosingAccount extends ModalComponent
 
         $this->validate();
 
-        DB::beginTransaction();
+        $tutupbuku = DB::table('journals')->where('tipe','laba rugi')->where(DB::raw('month(tanggal_transaksi)',$this->bulan))
+        ->where(DB::raw('year(tanggal_transaksi)',$this->tahun))->get();
 
-        try{
-
-            DB::statement("SET NOCOUNT ON; exec SP_JurnalPenyesuaian ".$this->tahun.", ".
-            $this->bulan."");
-            DB::statement("SET NOCOUNT ON; exec SP_TutupBuku ".$this->tahun.", ".
-                    $this->bulan."");
-            DB::commit();
-            $this->closeModal();
-            $this->alert('success', 'Save Success', [
-                'position' => 'center'
-            ]);
+        if (count($tutupbuku) <= 0)
+        {
+            DB::beginTransaction();
+            try{
+                DB::statement("SET NOCOUNT ON; exec SP_JurnalPenyesuaian ".$this->tahun.", ".
+                $this->bulan."");
+                DB::statement("SET NOCOUNT ON; exec SP_TutupBuku ".$this->tahun.", ".
+                        $this->bulan."");
+                DB::commit();
+                $this->closeModal();
+                $this->alert('success', 'Save Success', [
+                    'position' => 'center'
+                ]);
+            }
+            catch(Throwable $e){
+                DB::rollBack();
+                $this->alert('error', $e->getMessage(), [
+                    'position' => 'center'
+                ]);
+            }
         }
-        catch(Throwable $e){
-            DB::rollBack();
-            $this->alert('error', $e->getMessage(), [
+        else{
+            $this->alert('error', 'Tahun dan bulan ini sudah closing account', [
                 'position' => 'center'
             ]);
         }

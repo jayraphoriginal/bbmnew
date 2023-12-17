@@ -79,8 +79,10 @@
     <x-form-group caption="Tanda Tangan">
         <x-combobox wire:model="tanda_tangan">
             <option value="">-- Isi Tanda Tangan --</option>
+            <option value="Ismail Yusup">Ismail Yusup</option>
+            <option value="Devin Yuwenka">Devin Yuwenka</option>
             <option value="Sony Suherman">Sony Suherman</option>
-            <option value="Tedy Suherman">Tedy Suherman</option>
+            <option value="Tedi Suherman">Tedi Suherman</option>
         </x-combobox>
         @error('tanda_tangan')
         <x-error-form>{{ $message }}</x-error-form>

@@ -80,7 +80,7 @@
                 <td>{{ $item->jenis_pembebanan }}</td>
                 <td>{{ $item->Alken }}</td>
                 <td>{{ $item->nama_supplier }}</td>
-                <td class="text-right">{{ number_format($item->jumlah,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->jumlah,4,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->harga,2,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->harga/(1+ ($item->pajak/100)),2,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->harga - ($item->harga/(1+ ($item->pajak/100))),2,'.',',') }}</td>

@@ -90,6 +90,7 @@ final class SalesorderFullTable extends PowerGridComponent
         ->addColumn('tujuan')
         ->addColumn('mutubeton_id')
         ->addColumn('kode_mutu')
+        ->addColumn('deskripsi')
         ->addColumn('harga_intax', function(VJumlahSo $model) {
             return number_format($model->harga_intax,2,".",",");
         })
@@ -148,7 +149,7 @@ final class SalesorderFullTable extends PowerGridComponent
 
             Column::add()
                 ->title('KODE MUTU')
-                ->field('kode_mutu')
+                ->field('deskripsi')
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),

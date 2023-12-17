@@ -85,7 +85,7 @@
                             <td class="captionleft">{{ $jual->uraian }}</td>
                             <td class="captionright" style="width:15%">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
                             <td class="captionright" style="width:15%">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),0,".",",") }}</td>
-                            <td class="captionright" style="width:15%">{{ number_format($jual->jumlah * $jual->harga_intax/(1+($jual->pajak/100)),0,".",",") }}</td>
+                            <td class="captionright" style="width:15%">{{ number_format($jual->jumlah * ($jual->harga_intax/(1+($jual->pajak/100))),0,".",",") }}</td>
                         </tr>
                         @php 
                             $totalall = $totalall + $jual->jumlah * $jual->harga_intax;

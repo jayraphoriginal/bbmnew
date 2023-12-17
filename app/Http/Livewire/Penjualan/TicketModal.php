@@ -74,7 +74,7 @@ class TicketModal extends ModalComponent
         $this->m_salesorder_id = $m_salesorder_id;
         $this->mutubeton_id = $mutubeton_id;
         $mutubeton = Mutubeton::find($this->mutubeton_id);
-        $this->mutubeton = $mutubeton->kode_mutu;
+        $this->mutubeton = $mutubeton->deskripsi;
         $satuan = Satuan::find($mutubeton->satuan_id);
         $this->sisa_so = DSalesorder::where('m_salesorder_id', $this->m_salesorder_id)->where('mutubeton_id', $this->mutubeton_id)
                         ->sum('sisa');

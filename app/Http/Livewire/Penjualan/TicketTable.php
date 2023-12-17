@@ -99,6 +99,7 @@ final class TicketTable extends PowerGridComponent
             ->addColumn('d_purchaseorder_id')
             ->addColumn('mutubeton_id')
             ->addColumn('kode_mutu')
+            ->addColumn('deskripsi')
             ->addColumn('noticket')
             ->addColumn('kendaraan_id')
             ->addColumn('nopol')
@@ -159,7 +160,7 @@ final class TicketTable extends PowerGridComponent
 
             Column::add()
                 ->title('MUTU BETON')
-                ->field('kode_mutu')
+                ->field('deskripsi')
                 ->sortable()
                 ->searchable()
                 ->makeInputText(),
@@ -230,7 +231,6 @@ final class TicketTable extends PowerGridComponent
             ->caption(__('Cetak'))
             ->class('bg-blue-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
             ->target('_blank')
-            ->method('get')
             ->route("printticket",[
                 'id' => 'id'
             ]),

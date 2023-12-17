@@ -57,8 +57,8 @@ class LaporanPersediaanController extends Controller
             return abort(401);
         }
 
-        $data = VKartuStok::where('tanggal','>=',$tgl_awal)
-        ->where('tanggal','<=',$tgl_akhir)
+        $data = VKartuStok::where('tanggal','>=',date_create($tgl_awal)->format(('d/M/Y')))
+        ->where('tanggal','<=',date_create($tgl_akhir)->format(('d/M/Y')))
         ->where('barang_id',$barang_id)
         ->orderBy('tanggal','asc')
         ->orderBy(DB::raw('CASE WHEN increase > 0 THEN 0 ELSE 1 END'),'asc')

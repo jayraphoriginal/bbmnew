@@ -54,7 +54,10 @@
                     wire:model="MPenjualan.marketing"
                 >
                     <option value="">-- Isi Marketing --</option>
+                    <option value="Ismail Yusup">Ismail Yusup</option>
+                    <option value="Devin Yuwenka">Devin Yuwenka</option>
                     <option value="Sony Suherman">Sony Suherman</option>
+                    <option value="Tedi Suherman">Tedi Suherman</option>
                 </x-combobox>
                 @error('MPenjualan.marketing')
                 <x-error-form>{{ $message }}</x-error-form>

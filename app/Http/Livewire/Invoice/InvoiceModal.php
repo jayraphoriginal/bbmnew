@@ -131,26 +131,35 @@ class InvoiceModal extends ModalComponent
                     $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
                     ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
                     ->where('status','Open')
+                    //->where('lama','>',0)
                     ->count('*');
 
                     if ($jumlahhari > 30){
                         $this->alert('error', 'Jumlah Hari Lebih dari 30, Perbarui SO', [
                             'position' => 'center'
                         ]);
-                    }elseif($jumlahhari==30){
-                        $totalsewa = $totalsewa + ($sewa->harga_intax*$sewa->lama);
-                    }else{
+                    }
+                    else{
                         $jumlahjam = VTimesheetSewa::where('d_so_id',$sewa->id)
                         ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
                         ->where('status','Open')
                         ->sum('lama');
-                        $totaltimesheet = $jumlahjam / ($sewa->lama*60) * $sewa->harga_intax;
+
+                        $jumlahjam = $jumlahjam /60;
+                        $totaljam = $jumlahhari * 200 / 30;
+                        
+                        // if ($totaljam > $jumlahjam){
+                        //     $jumlahjam = round($totaljam,2);
+                        // }
+
+                        $totaltimesheet = $jumlahjam * $sewa->harga_intax;
                         $totalsewa = $totalsewa + $totaltimesheet;
                     }
                 }elseif ($sewa->satuan == 'Hari'){
                     $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
                     ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
                     ->where('status','Open')
+                    ->where('lama','>',0)
                     ->count('*');
 
                     $totalsewa = $totalsewa+($jumlahhari * $sewa->harga_intax);
@@ -158,6 +167,8 @@ class InvoiceModal extends ModalComponent
 
                     $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
                     ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+                    ->where('status','Open')
+                    //->where('lama','>',0)
                     ->count('*');
 
                     $totalsewa = $totalsewa + ($jumlahhari/30 * $sewa->harga_intax);

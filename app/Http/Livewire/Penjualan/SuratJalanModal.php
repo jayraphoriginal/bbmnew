@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Penjualan;
 
-use Livewire\Component;
+use LivewireUI\Modal\ModalComponent;
 
-class SuratJalanModal extends Component
+class SuratJalanModal extends ModalComponent
 {
     public function render()
     {

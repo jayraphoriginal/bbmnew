@@ -250,8 +250,8 @@ class OpnameModal extends ModalComponent
                     $dbarang['tipe'] = 'Stok Opname';
                     $dbarang['d_purchaseorder_id'] = $dopname->id;
                     $dbarang['tgl_masuk'] = $this->MOpname->tgl_opname;
-                    $dbarang['jumlah_masuk'] = $this->lebihstok;
-                    $dbarang['jumlah'] = $this->lebihstok;
+                    $dbarang['jumlah_masuk'] = $lebihstok;
+                    $dbarang['jumlah'] = $lebihstok;
                     $dbarang['hpp']=$barang->hpp;
                     $dbarang->save();
 
