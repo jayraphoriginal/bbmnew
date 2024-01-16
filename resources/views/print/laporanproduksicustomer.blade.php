@@ -49,6 +49,7 @@
                 <td class="tdhead" colspan="5" style="text-align: center;" >Pengeluaran Material</td>
             </tr>
             <tr>
+                <td class="tdhead text-right">Air Beton</td>
                 <td class="tdhead text-right">Batu Pecah 1/1</td>
                 <td class="tdhead text-right">Batu Pecah 1/2</td>
                 <td class="tdhead text-right">Batu Pecah 2/3</td>
@@ -56,6 +57,7 @@
                 <td class="tdhead text-right">Semen</td>
             </tr>
             @php
+                $totalair = 0;
                 $totalbatu11 = 0;
                 $totalbatu12 = 0;
                 $totalbatu23 = 0;
@@ -76,21 +78,25 @@
                         <td style="width:7%">{{ $td }}</td>
                     @elseif($kolom == 4)
                         <td class="text-right">{{ number_format($td,2,',','.') }} M<sup>3</sup></td>
-                    @elseif($kolom >= 6)
+                    @elseif($kolom == 6)
+                        <td class="text-right">{{ number_format($td,2,',','.') }} L</sup></td>
+                    @elseif($kolom >= 7)
                         <td class="text-right">{{ number_format($td,4,',','.') }}</td>
                     @else
                         <td>{{ $td }}</td>
                     @endif
                     @php
-                        if ($kolom == 6){
-                            $totalbatu11 = $totalbatu11 + $td;
+                        if($kolom == 6){
+                            $totalair = $totalair + $td;
                         }elseif ($kolom == 7){
-                            $totalbatu12 = $totalbatu12 + $td;
+                            $totalbatu11 = $totalbatu11 + $td;
                         }elseif ($kolom == 8){
-                            $totalbatu23 = $totalbatu23 + $td;
+                            $totalbatu12 = $totalbatu12 + $td;
                         }elseif ($kolom == 9){
-                            $totalpasir = $totalpasir + $td;
+                            $totalbatu23 = $totalbatu23 + $td;
                         }elseif ($kolom == 10){
+                            $totalpasir = $totalpasir + $td;
+                        }elseif ($kolom == 11){
                             $totalsemen = $totalsemen + $td;
                         }elseif( $kolom == 4){
                             $totalkubik = $totalkubik + $td;
@@ -104,6 +110,7 @@
                 <td colspan="3">Total :</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalkubik,2,',','.') }}</td>
                 <td></td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalair,4,',','.') }} L</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalbatu11,4,',','.') }}</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalbatu12,4,',','.') }}</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalbatu23,4,',','.') }}</td>

@@ -271,6 +271,7 @@ class InvoiceModal extends ModalComponent
                 }else{
                     if (
                         date_create($nomorterakhir->tgl_cetak)->format('Y') == date('Y')
+                        //date_create($nomorterakhir->tgl_cetak)->format('Y') == 2023
                     ) {
                         $noakhir = intval(substr($nomorterakhir->noinvoice, 0, 4)) + 1;
                         $noinvoice = substr('0000' . $noakhir, -4).'/INV/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');

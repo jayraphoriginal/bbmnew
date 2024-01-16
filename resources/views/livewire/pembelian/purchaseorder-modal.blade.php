@@ -134,6 +134,7 @@
         >Tutup</x-secondary-button>
         <x-button
             wire:loading.attr="disabled"
+            wire:target="save"
             wire:click="save">
             Save
         </x-button>
