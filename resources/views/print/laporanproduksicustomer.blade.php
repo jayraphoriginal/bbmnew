@@ -46,7 +46,7 @@
                 <td class="tdhead" rowspan="2">Lokasi</td>
                 <td class="tdhead text-right" rowspan="2">Produksi</td>
                 <td class="tdhead" rowspan="2">Kode Mutu</td>
-                <td class="tdhead" colspan="5" style="text-align: center;" >Pengeluaran Material</td>
+                <td class="tdhead" colspan="6" style="text-align: center;" >Pengeluaran Material</td>
             </tr>
             <tr>
                 <td class="tdhead text-right">Air Beton</td>

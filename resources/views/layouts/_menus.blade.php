@@ -1,10 +1,10 @@
-<div class="py-4 text-gray-500 dark:text-gray-400" x-data={persediaan:false,master:false,penjualan:false,sewa:false,pembelian:false,laporan:false,finance:false,accounting:false,bbm:false,batal:false,usermenu:false}>
+<div class="py-4 text-gray-500 dark:text-gray-400" x-data={persediaan:false,master:false,penjualan:false,sewa:false,pembelian:false,laporan:false,finance:false,accounting:false,bbm:false,batal:false,usermenu:false,rekalkulasi:false}>
     <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="/dashboard">
         {{ config('app.name') }}
     </a>
     <ul class="mt-6">
         <li class="relative px-2 py-3">
-            <a @click="persediaan = !persediaan, master = false, penjualan = false, sewa=false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click="persediaan = !persediaan, master = false, penjualan = false, sewa=false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Persediaan</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -31,7 +31,7 @@
             @endcan
         </div>
         <li class="relative px-2 py-3">
-            <a @click="persediaan = false, master = !master, penjualan = false, sewa=false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click="persediaan = false, master = !master, penjualan = false, sewa=false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Alken</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -55,7 +55,7 @@
             @endcan
         </div>
         <li class="relative px-2 py-3">
-            <a @click=" master = false, penjualan = !penjualan, sewa=false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click=" master = false, penjualan = !penjualan, sewa=false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Penjualan</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -85,7 +85,7 @@
             @endcan
         </div>
         <li class="relative px-2 py-3">
-            <a @click=" master = false, penjualan = false, sewa = !sewa, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click=" master = false, penjualan = false, sewa = !sewa, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Sewa</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -103,7 +103,7 @@
             @endcan
         </div>
         <li class="relative px-2 py-3">
-            <a @click=" master = false, penjualan = false, sewa=false, pembelian = !pembelian, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click=" master = false, penjualan = false, sewa=false, pembelian = !pembelian, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Pembelian</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -118,7 +118,7 @@
             @endcan
         </div>
         <li class="relative px-2 py-3">
-            <a @click=" master = false, penjualan = false, sewa=false, pembelian = false, laporan = false, finance = !finance, accounting = false, bbm = false, batal=false, usermenu=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click=" master = false, penjualan = false, sewa=false, pembelian = false, laporan = false, finance = !finance, accounting = false, bbm = false, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Finance</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -154,7 +154,7 @@
             @endcan
         </div>
         <li class="relative px-2 py-3">
-            <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = !bbm, batal=false, usermenu=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = !bbm, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Bahan Bakar</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -175,7 +175,7 @@
             @endcan
         </div>
         <li class="relative px-2 py-3">
-            <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = !accounting, bbm = false, batal=false, usermenu=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = !accounting, bbm = false, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Accounting</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -225,7 +225,7 @@
         @endcan
         </div>
         <li class="relative px-2 py-3">
-            <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=!usermenu" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=!usermenu, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">User Menu</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -241,7 +241,7 @@
         </div>
         
         <li class="relative px-2 py-3">
-            <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal = !batal" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+            <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal = !batal, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Batal</span>
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
@@ -274,6 +274,19 @@
                     </a>
                 </li>
             @endcan
+            @can('Pembatalan Pemakaian Barang')
+                <li class="relative px-2 py-3">
+                    <a 
+                    onclick="livewire.emit('openModal', 'batal.batal-pemakaian-barang')"
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                        <span class="ml-4">Pembatalan Pemakaian Barang</span>
+                    </a>
+                </li>
+            @endcan
             @can('Pembatalan Invoice')
                 <li class="relative px-2 py-3">
                     <a 
@@ -302,12 +315,46 @@
             @endcan
         </div>
         <li class="relative px-2 py-3">
+            <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal = false, usermenu=false, rekalkulasi=!rekalkulasi" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
+                <span class="ml-4 w-full">Rekalkulasi</span>
+                <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="7 7 12 12 17 7" />  <polyline points="7 13 12 18 17 13" /></svg>
+            </a>
+        </li>
+        @can('Rekalkulasi')
+        <div x-show="rekalkulasi">
+            <li class="relative px-2 py-3">
+                <a 
+                    onclick="livewire.emit('openModal', 'rekalkulasi.rekalkulasiper-barang-modal')"
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                        <span class="ml-4">Rekalkulasi Modal per Barang</span>
+                </a>
+            </li>
+            <li class="relative px-2 py-3">
+                <a 
+                    onclick="livewire.emit('openModal', 'rekalkulasi.rekalkulasi-all-modal')"
+                        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                        <span class="ml-4">Rekalkulasi Modal All</span>
+                </a>
+            </li>
+        </div>
+        @endcan
+        <li class="relative px-2 py-3">
             <a 
                 href="{{route('laporan')}}"
-                @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal = false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal = false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                 <svg class="h-7 w-7"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
                 <span class="ml-4 w-full">Laporan</span>
             </a>
         </li>
+        
     </ul>
 </div>

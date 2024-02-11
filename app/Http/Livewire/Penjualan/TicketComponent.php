@@ -7,6 +7,7 @@ use Livewire\Component;
 
 class TicketComponent extends Component
 {
+    public bool $status;
     
     public function render()
     {
@@ -16,4 +17,5 @@ class TicketComponent extends Component
         }
         return view('livewire.penjualan.ticket-component');
     }
+
 }

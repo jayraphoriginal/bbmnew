@@ -52,6 +52,7 @@ final class SalesorderFullTable extends PowerGridComponent
     {
         return VJumlahSo::select(DB::raw('ROW_NUMBER() OVER(ORDER BY tgl_so ASC) AS id'),'V_JumlahSalesorder.*');
     }
+    
 
     /*
     |--------------------------------------------------------------------------

@@ -72,7 +72,7 @@
             <table class="mytable" style="margin-bottom:4em;width:100%">
                 <tr>
                     <td class="tdhead" style="text-align:center;">No</td>
-                    <td class="tdhead" style="text-align:center;">Tanggal</td>
+                    <td class="tdhead" style="text-align:center;width:75px">Tanggal</td>
                     <td class="tdhead" style="text-align:center;">Customer</td>
                     <td class="tdhead" style="text-align:center;">Lokasi</td>
                     <td class="tdhead" style="text-align:center;">Jarak</td>

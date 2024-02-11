@@ -560,6 +560,12 @@ class LaporanController extends Controller
                     ->orderBy('tanggal','asc')
                     ->orderBy('nama_customer','asc')->get();
 
+        // return view('print.laporanproduksicustomer',[
+        //     'datacustomer' => $datacustomer,
+        //      'tgl_awal' => $tgl_awal,
+        //      'tgl_akhir' => $tgl_akhir
+        // ]);
+
         $pdf = PDF::loadView('print.laporanproduksicustomer', array(
             'datacustomer' => $datacustomer,
             'tgl_awal' => $tgl_awal,
