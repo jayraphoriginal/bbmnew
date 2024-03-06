@@ -17,13 +17,12 @@
     <link rel="stylesheet" href="{{ asset('css/tailwind.output.css') }}" />
     <script src="{{asset('js/init-alpine.js')}}" defer></script>
     <!-- Alpine Plugins -->
-    <script defer src="https://unpkg.com/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://unpkg.com/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.1.1/dist/chart.umd.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>    
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.1.1/dist/chart.umd.min.js"></script>
     @livewireStyles
-    @livewire('livewire-ui-modal')
     @powerGridStyles
+    @livewire('livewire-ui-modal')
 </head>
 
 <body>
@@ -38,17 +37,12 @@
             </main>
         </div>
 
-
-        @stack('modals')
-
-        
-       
-
     </div>
     @livewireScripts
     @powerGridScripts
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <x-livewire-alert::scripts />
+    
 </body>
 
 </html>

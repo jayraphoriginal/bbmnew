@@ -61,7 +61,7 @@
             <tr>
                 <td>{{ ++$index }}</td>
                 <td>{{ date_format(date_create($item->tanggal),'d/m/Y') }}</td>
-                <td>{{ $item->tipe }}</td>
+                <td>{{ $item->keterangan }}</td>
                 <td class="text-right">{{ number_format($item->increase,4,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->decrease,4,'.',',') }}</td>
                 <td class="text-right">{{ number_format($item->qty,4,'.',',') }}</td>

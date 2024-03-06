@@ -1,13 +1,13 @@
-<div x-data="{search : false}">
+<div x-data="{searchs : false}">
     <input
        readonly
-       x-on:click="search = !search; $focus.within($refs.query).first()"
+       x-on:click="searchs = !searchs; $focus.within($refs.query).first()"
        wire:click="resetdata"
        wire:model="deskripsi"
        class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
        placeholder="Input COA">
     <div
-        x-show="search"
+        x-show="searchs"
         class="w-max absolute mt-0 border border-gray-700 z-40 rounded-md bg-white dark:bg-gray-800 dark:text-gray-300 p-1"
         >
         <div class="flex" x-ref="query">
@@ -22,7 +22,8 @@
                 @if(!empty($coa))
                     @foreach ($coa as $item)
                         <div
-                            wire:click.prevent="selectdata({{ $item->id }})" @click="search = false" class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
+                            @click="searchs = false"
+                            wire:click="selectdata({{ $item->id }})"  class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
                             {{ $item->kode_akun.' - '.$item->nama_akun }}
                         </div>
                     @endforeach

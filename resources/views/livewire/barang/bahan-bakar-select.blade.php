@@ -22,7 +22,7 @@
                 @if(!empty($bahanbakar))
                     @foreach ($bahanbakar as $item)
                         <div
-                            wire:click.prevent="selectdata({{ $item->id }})" @click="search = false" class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
+                            wire:click="selectdata({{ $item->id }})" @click="search = false" class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
                             {{ $item->bahan_bakar }}
                         </div>
                     @endforeach

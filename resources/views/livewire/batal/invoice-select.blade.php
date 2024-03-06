@@ -22,7 +22,7 @@
                 @if(!empty($invoice))
                     @foreach ($invoice as $item)
                         <div
-                            wire:click.prevent="selectdata({{ $item->id }})" @click="search = false" 
+                            wire:click="selectdata({{ $item->id }})" @click="search = false" 
                             class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white overflow-y-scroll">
                             {{ $item->noinvoice.' - '.$item->nama_customer }}
                         </div>

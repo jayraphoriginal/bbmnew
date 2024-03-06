@@ -22,7 +22,7 @@
                 @if(!empty($rekening))
                     @foreach ($rekening as $item)
                         <div
-                            wire:click.prevent="selectdata({{ $item->id }})" @click="search = false" class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
+                            wire:click="selectdata({{ $item->id }})" @click="search = false" class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
                             {{  $item->nama_bank.' - '.$item->norek.' - '.$item->atas_nama }}
                         </div>
                     @endforeach
