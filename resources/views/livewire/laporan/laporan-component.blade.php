@@ -134,6 +134,12 @@
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>
+                         <x-datarowtable title="Laporan Pembelian dan Biaya">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-pembelian-biaya-modal')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
                     </tbody>
                 </table>
             </div>

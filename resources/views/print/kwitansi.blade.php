@@ -7,7 +7,7 @@
             }
             table{margin:0rem}
             @page{
-                margin: 0.1in 0.3in 0.1in 0.1in;
+                margin: 0.3in 0.3in 0.1in 0.1in;
             }
             body{
                 margin:0;

@@ -89,6 +89,26 @@ class InventarisModal extends ModalComponent
                 $coapenyusutan['header_akun'] = '151000';
                 $coapenyusutan->save();
 
+
+
+                $nomorterakhir = Coa::where('header_akun','604000')
+                        ->orderBy('kode_akun', 'DESC')->get();
+                if (count($nomorterakhir) == 0){
+                    $kodeakun = '604001';            
+                }else{
+                    $noakhir = intval(substr($nomorterakhir[0]->kode_akun, 3)) + 1;
+                    $kodeakun = '604'.substr('000' . $noakhir, -3);
+                }
+
+                $coabebanpenyusutan = New Coa();
+                $coabebanpenyusutan['kode_akun'] = $kodeakun;
+                $coabebanpenyusutan['nama_akun'] = 'Beban penyusutan '.$this->inventaris->nama_inventaris;
+                $coabebanpenyusutan['level'] = 5;
+                $coabebanpenyusutan['tipe'] = 'Detail';
+                $coabebanpenyusutan['posisi'] = 'Expense';
+                $coabebanpenyusutan['header_akun'] = '604000';
+                $coabebanpenyusutan->save();
+
             }else{
                 $coaaktiva = Coa::find($this->inventaris->coa_asset_id);
                 $coaaktiva['nama_akun'] = 'Aktiva '.$this->inventaris->nama_inventaris;
@@ -97,10 +117,15 @@ class InventarisModal extends ModalComponent
                 $coapenyusutan = Coa::find($this->inventaris->coa_penyusutan_id);
                 $coapenyusutan['nama_akun'] = 'Akumulasi penyusutan '.$this->inventaris->nama_inventaris;
                 $coapenyusutan->save();
+
+                $coabebanpenyusutan = Coa::find($this->inventaris->coa_beban_id);
+                $coabebanpenyusutan['nama_akun'] = 'Beban penyusutan '.$this->inventaris->nama_inventaris;
+                $coabebanpenyusutan->save();
             }
 
             $this->inventaris->coa_asset_id = $coaaktiva->id;
             $this->inventaris->coa_penyusutan_id = $coapenyusutan->id;
+            $this->inventaris->coa_beban_id = $coabebanpenyusutan->id;
     
             $this->inventaris->save();
             DB::commit();

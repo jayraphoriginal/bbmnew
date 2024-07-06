@@ -34,6 +34,8 @@ use App\Models\VSaldoRekening;
 use App\Models\VStok;
 use App\Models\VTicketHeader;
 use App\Models\VTicketHeaderAll;
+use App\Models\VTicketHeaderSum;
+use App\Models\VTicketProduksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -130,6 +132,74 @@ class LaporanController extends Controller
                     $tmp->save();
 
                 }
+
+                $ticketproduksi = VTicketProduksi::select('driver_id', 'jam_ticket',
+            'loading', 'deskripsi',
+            'kendaraan_id','rate_id')
+            ->where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+            ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
+            ->where(
+                function ($query) use ($kendaraan,$driver) {
+                    $query->where('kendaraan_id',$kendaraan->id)
+                        ->orWhere('driver_id',$driver->id);
+                })
+            ->get();
+
+            foreach($ticketproduksi as $ticket){
+                
+                $rate = Rate::find($ticket->rate_id);
+                $pemakaianbbms = PemakaianBbm::where('muatan',$kendaraan->muatan)->first();
+
+                if($ticket->kendaraan_id == $kendaraan->id){
+                    $pemakaianbbm = $pemakaianbbms->pemakaian * $rate->estimasi_jarak;
+                    $loading = $ticket->loading;
+                }
+                else{
+                    $pemakaianbbm = 0;
+                    $loading = 0;
+                }
+
+                // $msalesorder = MSalesorder::find($ticket->so_id);
+                // $customer = Customer::find($msalesorder->customer_id);
+
+                $kendaraanticket = Kendaraan::find($ticket->kendaraan_id);
+                $lembur = 0;
+                if($ticket->driver_id==$driver->id){
+                    $gajis = GajiRate::where('muatan',$kendaraanticket->muatan)
+                                    ->where('batas_bawah_jarak','<=',$rate->estimasi_jarak)
+                                    ->where('batas_atas_jarak','>=',$rate->estimasi_jarak)
+                                    ->first();
+                    //  return $rate->estimasi_jarak;
+                    if (is_null($gajis)){
+                        return $rate->estimasi_jarak;
+                    }
+                    else{
+                        $gaji = $gajis->gaji;
+                    }
+                }
+                else
+                {
+                    $gaji = 0;
+                }
+
+                $tmp = new TmpGajiDriver();
+                $tmp['tanggal_awal'] = $tgl_awal;
+                $tmp['tanggal_akhir'] = $tgl_akhir;
+                $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                $tmp['nopol'] = $kendaraanticket->nopol;
+                $tmp['nama_driver'] = $driver->nama_driver;
+                $tmp['tanggal_ticket'] = date_format(date_create($ticket->jam_ticket),'Y-m-d');
+                $tmp['nama_customer'] = 'Produksi '. $ticket->deskripsi;
+                $tmp['lokasi'] = $rate->tujuan;
+                $tmp['jarak'] = $rate->estimasi_jarak;
+                $tmp['pemakaian_bbm'] = $pemakaianbbm;
+                $tmp['lembur'] = $lembur;
+                $tmp['gaji'] = $gaji;
+                $tmp['pengisian_bbm'] =0;
+                $tmp['loading'] = $loading;
+                $tmp->save();
+
+            }
 
                 $pengisianbbms = PengisianBbm::where('kendaraan_id', $kendaraan->id)
                                 ->where(DB::raw('convert(date,tanggal_pengisian)'),'>=',$tgl_awal)
@@ -305,17 +375,17 @@ class LaporanController extends Controller
             return abort(401);
         }
         
-        $tgl_awals = VTicketHeader::where('so_id',$soid)
-        ->orderBy('V_TicketHeader.noticket','asc')
+        $tgl_awals = VTicketHeaderSum::where('so_id',$soid)
+        ->orderBy('V_TicketHeaderSum.noticket','asc')
         ->get()->first();
 
-        $tgl_akhirs = VTicketHeader::where('so_id',$soid)
-        ->orderBy('V_TicketHeader.jam_ticket','desc')
+        $tgl_akhirs = VTicketHeaderSum::where('so_id',$soid)
+        ->orderBy('V_TicketHeaderSum.jam_ticket','desc')
         ->get()->first();
         
-        $data = VTicketHeader::where('so_id',$soid)
-        ->orderBy('V_TicketHeader.jam_ticket','asc')
-        ->orderBy('V_TicketHeader.noticket')
+        $data = VTicketHeaderSum::where('so_id',$soid)
+        ->orderBy('V_TicketHeaderSum.jam_ticket','asc')
+        ->orderBy('V_TicketHeaderSum.noticket')
         ->get();
 
         $pdf = PDF::loadView('print.rekapticketmaterial', array(
@@ -361,7 +431,7 @@ class LaporanController extends Controller
             return abort(401);
         }
         
-        $data = VTicketHeaderAll::orderBy('V_TicketHeaderAll.noticket')
+        $data = VTicketHeaderSum::orderBy('V_TicketHeaderSum.noticket')
         ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->get();
@@ -383,7 +453,7 @@ class LaporanController extends Controller
             return abort(401);
         }
         
-        $data = VTicketHeader::orderBy('V_TicketHeader.noticket')
+        $data = VTicketHeaderAll::orderBy('V_TicketHeaderAll.noticket')
         ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->where('so_id',$so_id)
@@ -719,6 +789,77 @@ class LaporanController extends Controller
                 $tmp['nama_driver'] = $driver->nama_driver;
                 $tmp['tanggal_ticket'] = date_format(date_create($ticket->jam_ticket),'Y-m-d');
                 $tmp['nama_customer'] = $customer->nama_customer;
+                $tmp['lokasi'] = $rate->tujuan;
+                $tmp['jarak'] = $rate->estimasi_jarak;
+                $tmp['pemakaian_bbm'] = $pemakaianbbm;
+                $tmp['lembur'] = $lembur;
+                $tmp['gaji'] = $gaji;
+                $tmp['pengisian_bbm'] =0;
+                $tmp['loading'] = $loading;
+                $tmp->save();
+
+            }
+
+
+            //ticket produksi
+
+            $ticketproduksi = VTicketProduksi::select('driver_id', 'jam_ticket',
+            'loading', 'deskripsi',
+            'kendaraan_id','rate_id')
+            ->where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+            ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
+            ->where(
+                function ($query) use ($kendaraan,$driver) {
+                    $query->where('kendaraan_id',$kendaraan->id)
+                        ->orWhere('driver_id',$driver->id);
+                })
+            ->get();
+
+            foreach($ticketproduksi as $ticket){
+                
+                $rate = Rate::find($ticket->rate_id);
+                $pemakaianbbms = PemakaianBbm::where('muatan',$kendaraan->muatan)->first();
+
+                if($ticket->kendaraan_id == $kendaraan->id){
+                    $pemakaianbbm = $pemakaianbbms->pemakaian * $rate->estimasi_jarak;
+                    $loading = $ticket->loading;
+                }
+                else{
+                    $pemakaianbbm = 0;
+                    $loading = 0;
+                }
+
+                // $msalesorder = MSalesorder::find($ticket->so_id);
+                // $customer = Customer::find($msalesorder->customer_id);
+
+                $kendaraanticket = Kendaraan::find($ticket->kendaraan_id);
+                $lembur = 0;
+                if($ticket->driver_id==$driver->id){
+                    $gajis = GajiRate::where('muatan',$kendaraanticket->muatan)
+                                    ->where('batas_bawah_jarak','<=',$rate->estimasi_jarak)
+                                    ->where('batas_atas_jarak','>=',$rate->estimasi_jarak)
+                                    ->first();
+                    //  return $rate->estimasi_jarak;
+                    if (is_null($gajis)){
+                        return $rate->estimasi_jarak;
+                    }
+                    else{
+                        $gaji = $gajis->gaji;
+                    }
+                }
+                else
+                {
+                    $gaji = 0;
+                }
+
+                $tmp = new TmpGajiDriver();
+                $tmp['tanggal_awal'] = $tgl_awal;
+                $tmp['tanggal_akhir'] = $tgl_akhir;
+                $tmp['periode'] = date_diff(date_create($tgl_awal),date_create($tgl_akhir))->format("%a");
+                $tmp['nopol'] = $kendaraanticket->nopol;
+                $tmp['nama_driver'] = $driver->nama_driver;
+                $tmp['tanggal_ticket'] = date_format(date_create($ticket->jam_ticket),'Y-m-d');
+                $tmp['nama_customer'] = 'Produksi '. $ticket->deskripsi;
                 $tmp['lokasi'] = $rate->tujuan;
                 $tmp['jarak'] = $rate->estimasi_jarak;
                 $tmp['pemakaian_bbm'] = $pemakaianbbm;

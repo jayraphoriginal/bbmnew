@@ -75,8 +75,8 @@ class PembayaranPembelianModal extends ModalComponent
                         $nopembayaran = '0001/PB/' . date('m') . '/' . date('Y');
                     }
                 }
-
-            DB::update("Exec SP_Pembayaran  '$nopembayaran',        '$this->tgl_bayar', 
+            
+            DB::statement("SET NOCOUNT ON; Exec SP_Pembayaran  '$nopembayaran',        '$this->tgl_bayar', 
                                             '$this->tipe_pembayaran', '$this->nowarkat', 
                                             '$this->jatuh_tempo',     $rekening->bank_id,
                                             $this->rekening_id,     $this->supplier_id,

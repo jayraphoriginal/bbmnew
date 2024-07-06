@@ -12,14 +12,16 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/tailwind.output.css') }}" />
-    <script src="{{asset('js/init-alpine.js')}}" defer></script>
-    <!-- Alpine Plugins -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>    
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.1.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.1.1/dist/chart.umd.min.js"></script>
+    {{-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
+    <!-- Styles -->
+  
+    <script defer src="{{asset('js/init-alpine.js')}}"></script>
+      <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/tailwind.output.css') }}" />
+    <!-- Alpine Plugins -->
     @livewireStyles
     @powerGridStyles
     @livewire('livewire-ui-modal')
@@ -40,8 +42,10 @@
     </div>
     @livewireScripts
     @powerGridScripts
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script defer src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <x-livewire-alert::scripts />
+    
     
 </body>
 

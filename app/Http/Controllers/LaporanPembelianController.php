@@ -54,4 +54,28 @@ class LaporanPembelianController extends Controller
 
         return $pdf->setPaper('A4','landscape')->stream();
     }
+
+    public function laporanpembelianbiaya($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Pembelian Biaya')){
+            return abort(401);
+        }
+
+        DB::statement("SET NOCOUNT ON; Exec SP_Pembelian_Biaya '".$tgl_awal."','".$tgl_akhir."'");
+
+        $data = DB::table('tmp_pembelian_biaya')
+        ->orderBy('tgl_masuk','asc')
+        ->get();
+
+        $pdf = PDF::loadView('print.laporanpembelianbiaya', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','landscape')->stream();
+    }
+
+    
 }

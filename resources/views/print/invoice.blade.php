@@ -15,7 +15,7 @@
                 border-collapse: collapse;
             }
             @page{
-                margin: 0.1in 0.3in 0.2in 0.3in;
+                margin: 0.3in 0.3in 0.2in 0.3in;
             }
             body{
                 margin:0;

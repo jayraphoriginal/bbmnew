@@ -40,6 +40,7 @@
         @enderror
     </x-form-group>
     @endif
+    {{ $totaljam }}
     <x-form-group caption="Nilai Tagihan">
         <x-number-text
             readonly

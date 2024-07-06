@@ -6,6 +6,7 @@ use App\Exports\JurnalExport;
 use App\Exports\JurnalPengeluaranBiaya;
 use App\Exports\JurnalTanggalExport;
 use App\Exports\Neraca;
+use App\Exports\PembelianBiayaExport;
 use App\Exports\PembelianExport;
 use App\Exports\RekapBiaya;
 use App\Exports\RekapHutang;
@@ -184,6 +185,14 @@ class ExportController extends Controller
             return abort(401);
         }
         return Excel::download(new Neraca($tanggal), 'exportneraca.xlsx');
+    }
+
+    public function exportpembelianbiaya($tgl_awal,$tgl_akhir){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Pembelian Biaya')){
+            return abort(401);
+        }
+        return Excel::download(new PembelianBiayaExport($tgl_awal,$tgl_akhir), 'exportpembelianbiaya.xlsx');
     }
 
    

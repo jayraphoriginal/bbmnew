@@ -51,7 +51,9 @@ final class TicketProduksiTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VTicketProduksi::query();
+        return VTicketProduksi::where(
+            'status','<>','cancel'
+        );
     }
 
     /*

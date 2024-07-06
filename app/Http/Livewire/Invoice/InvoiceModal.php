@@ -31,7 +31,7 @@ class InvoiceModal extends ModalComponent
     public Invoice $invoice;    
     public $pembayaran;
     public $tgl_awal, $tgl_akhir, $jumlah_total, $dp, $jumlah_dp, $jumlah_penjualan_retail, $jumlah_concrete;
-    public $rekening, $dp_sebelum, $pajak, $customer_id, $rekening_id, $tgl_cetak, $tanda_tangan, $keterangan;
+    public $rekening, $dp_sebelum, $pajak, $customer_id, $rekening_id, $tgl_cetak, $tanda_tangan, $keterangan, $totaljam;
 
     protected $listeners = ['selectrekening' => 'selectrekening'];
 
@@ -85,8 +85,8 @@ class InvoiceModal extends ModalComponent
             $this->dp = "DP";
         }else{
             if ($this->tipe_so=='Sewa'){
-                $this->jumlah_total = VSalesOrderSewa::where('id',$this->so_id)
-                ->where('status_so','Open')->sum(DB::raw('lama*harga_intax'));
+                $this->jumlah_total = VSalesOrderSewa::where('m_salesorder_sewa_id',$this->so_id)
+                ->where('status_detail','Open')->sum(DB::raw('lama*harga_intax'));
                 $this->dp = "Reg";
             }
             elseif($this->tipe_so =='Penjualan'){
@@ -117,6 +117,7 @@ class InvoiceModal extends ModalComponent
     }
 
     public function selecttgl(){
+       
         if ($this->tipe_so=='Sewa'){
             
             $mobdemob = VSalesOrderSewa::where('tipe','None')->where('m_salesorder_sewa_id', $this->so_id)
@@ -124,55 +125,63 @@ class InvoiceModal extends ModalComponent
 
             $totalsewa = 0;
             $datasewa = VSalesOrderSewa::where('m_salesorder_sewa_id', $this->so_id)->get();
-            foreach ($datasewa as $sewa ){
-                
-                if ($sewa->satuan == 'Jam'){
 
-                    $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
-                    ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
-                    ->where('status','Open')
-                    //->where('lama','>',0)
-                    ->count('*');
+            if($this->pembayaran == 'Dimuka Full'){
+                $totalsewa =  VSalesOrderSewa::where('Tipe','Jam')->where('m_salesorder_sewa_id', $this->so_id)->sum(DB::raw('harga_intax*lama'));
+            }else{
+                foreach ($datasewa as $sewa ){
+                    
+                    if ($sewa->satuan == 'Jam'){
 
-                    if ($jumlahhari > 30){
-                        $this->alert('error', 'Jumlah Hari Lebih dari 30, Perbarui SO', [
-                            'position' => 'center'
-                        ]);
-                    }
-                    else{
-                        $jumlahjam = VTimesheetSewa::where('d_so_id',$sewa->id)
+                        $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
                         ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
                         ->where('status','Open')
-                        ->sum('lama');
+                        //->where('lama','>',0)
+                        ->count('*');
 
-                        $jumlahjam = $jumlahjam /60;
-                        $totaljam = $jumlahhari * 200 / 30;
+                        if ($jumlahhari > 30){
+                            $this->alert('error', 'Jumlah Hari Lebih dari 30, Perbarui SO', [
+                                'position' => 'center'
+                            ]);
+                        }
+                        else{
+                            $jumlahjam = VTimesheetSewa::where('d_so_id',$sewa->id)
+                            ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+                            ->where('status','Open')
+                            ->sum('lama');
+
+                            $jumlahjam = $jumlahjam /60;
+                            $totaljam = $jumlahhari * 200 / 30;
+                            
+                            // if ($totaljam > $jumlahjam){
+                            //     $jumlahjam = round($totaljam,2);
+                            // }
+
+                            $totaltimesheet = $jumlahjam * $sewa->harga_intax;
+                            $totalsewa = $totalsewa + $totaltimesheet;
+                           $this->totaljam = $jumlahjam;
+                        }
+                       
+                    }elseif ($sewa->satuan == 'Hari'){
+                        $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
+                        ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+                        ->where('status','Open')
+                        ->where('lama','>',0)
+                        ->count('*');
+
+                        $totalsewa = $totalsewa+($jumlahhari * $sewa->harga_intax);
+                       
+                    }elseif($sewa->satuan == 'Bln'){
+
+                        $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
+                        ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
+                        ->where('status','Open')
+                        //->where('lama','>',0)
+                        ->count('*');
+
+                        $totalsewa = $totalsewa + ($jumlahhari/30 * $sewa->harga_intax);
                         
-                        // if ($totaljam > $jumlahjam){
-                        //     $jumlahjam = round($totaljam,2);
-                        // }
-
-                        $totaltimesheet = $jumlahjam * $sewa->harga_intax;
-                        $totalsewa = $totalsewa + $totaltimesheet;
                     }
-                }elseif ($sewa->satuan == 'Hari'){
-                    $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
-                    ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
-                    ->where('status','Open')
-                    ->where('lama','>',0)
-                    ->count('*');
-
-                    $totalsewa = $totalsewa+($jumlahhari * $sewa->harga_intax);
-                }elseif($sewa->satuan == 'Bln'){
-
-                    $jumlahhari = VTimesheetSewa::where('d_so_id',$sewa->id)
-                    ->whereBetween('tanggal',array(date_create($this->tgl_awal)->format('Y-m-d'),date_create($this->tgl_akhir)->format('Y-m-d')))
-                    ->where('status','Open')
-                    //->where('lama','>',0)
-                    ->count('*');
-
-                    $totalsewa = $totalsewa + ($jumlahhari/30 * $sewa->harga_intax);
-
                 }
             }
 

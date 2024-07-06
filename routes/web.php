@@ -146,6 +146,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('laporanwarkatkeluar/{tgl_awal}/{tgl_akhir}', [LaporanFinanceController::class,'laporanwarkatkeluar'])->name('laporanwarkatkeluar');
     Route::get('laporanpembelianbarang/{tgl_awal}/{tgl_akhir}/{barang_id}', [LaporanPembelianController::class,'laporanpembelianbarang'])->name('laporanpembelianbarang');
     Route::get('laporanpembelianppn/{tgl_awal}/{tgl_akhir}', [LaporanPembelianController::class,'laporanpembelianppn'])->name('laporanpembelianppn');
+    Route::get('laporanpembelianbiaya/{tgl_awal}/{tgl_akhir}', [LaporanPembelianController::class,'laporanpembelianbiaya'])->name('laporanpembelianbiaya');
     Route::get('exportpembelianbarang/{tgl_awal}/{tgl_akhir}/{barang_id}', [ExportController::class,'exportpembelianbarang'])->name('exportpembelianbarang');
     Route::get('laporanbukubesarhutang/{id_supplier}/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'bukubesarhutang'])->name('laporanbukubesarhutang');
     Route::get('laporanpengisianbbm/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'laporanpengisianbbm'])->name('laporanpengisianbbm');
@@ -197,4 +198,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('exporttrialbalance/{tahun}/{bulan}', [ExportController::class,'exporttrialbalance'])->name('exporttrialbalance');
     Route::get('exportneraca/{tanggal}', [ExportController::class,'exportneraca'])->name('exportneraca');
     Route::get('exportlabarugi/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportlabarugi'])->name('exportlabarugi');
+    Route::get('exportpembelianbiaya/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportpembelianbiaya'])->name('exportpembelianbiaya');
 });

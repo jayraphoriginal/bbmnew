@@ -12,7 +12,7 @@
     </x-form-group>
 
     <x-form-group caption="Jumlah">
-        <x-number-text
+        <x-textbox
             wire:model="produksi.jumlah"/>
         @error('produksi.jumlah')
             <x-error-form>{{ $message }}</x-error-form>
