@@ -36,6 +36,7 @@ use App\Models\VTicketHeader;
 use App\Models\VTicketHeaderAll;
 use App\Models\VTicketHeaderSum;
 use App\Models\VTicketProduksi;
+use App\Models\TmpTicketGabungan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -376,14 +377,17 @@ class LaporanController extends Controller
         }
         
         $tgl_awals = VTicketHeaderSum::where('so_id',$soid)
+        ->where('V_TicketHeaderSum.status','<>','cancel')
         ->orderBy('V_TicketHeaderSum.noticket','asc')
         ->get()->first();
 
         $tgl_akhirs = VTicketHeaderSum::where('so_id',$soid)
+        ->where('V_TicketHeaderSum.status','<>','cancel')
         ->orderBy('V_TicketHeaderSum.jam_ticket','desc')
         ->get()->first();
         
         $data = VTicketHeaderSum::where('so_id',$soid)
+        ->where('V_TicketHeaderSum.status','<>','cancel')
         ->orderBy('V_TicketHeaderSum.jam_ticket','asc')
         ->orderBy('V_TicketHeaderSum.noticket')
         ->get();
@@ -430,10 +434,11 @@ class LaporanController extends Controller
         if (!$user->hasPermissionTo('Laporan Rekap Ticket')){
             return abort(401);
         }
-        
-        $data = VTicketHeaderSum::orderBy('V_TicketHeaderSum.noticket')
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'");
+        $data = TmpTicketGabungan::orderBy('tmp_ticketgabungan.noticket')
         ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->where('status','<>','cancel')
         ->get();
 
         //return $data;
@@ -456,6 +461,7 @@ class LaporanController extends Controller
         $data = VTicketHeaderAll::orderBy('V_TicketHeaderAll.noticket')
         ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->where('status','<>','cancel')
         ->where('so_id',$so_id)
         ->get();
 
@@ -473,8 +479,8 @@ class LaporanController extends Controller
         if (!$user->hasPermissionTo('Laporan Pengiriman Beton')){
             return abort(401);
         }
-        
-        $data = VTicketHeader::orderBy('V_TicketHeader.noticket')
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'");
+        $data = TmpTicketGabungan::orderBy('tmp_ticketgabungan.noticket')
         ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->get();
@@ -494,26 +500,19 @@ class LaporanController extends Controller
             return abort(401);
         }
         
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'");
         $data = DB::table('V_ProduksiHarian')
-        ->where('tanggal','>=',date_create($tgl_awal)->format('Y-m-d'))
-        ->where('tanggal','<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->orderBy('tanggal')
         ->get();
 
         $max = DB::table('V_ProduksiHarian')
-        ->select('tanggal', DB::raw('max(jumlah) as jumlah_max'))
-        ->where('tanggal','>=',date_create($tgl_awal)->format('Y-m-d'))
-        ->where('tanggal','<=',date_create($tgl_akhir)->format('Y-m-d'))
-        ->groupBy('tanggal')
-        ->OrderBy(DB::raw('max(jumlah)'),'desc')
+        ->select('tanggal', DB::raw('jumlah as jumlah_max'))
+        ->OrderBy('jumlah','desc')
         ->first();
 
         $min = DB::table('V_ProduksiHarian')
-        ->select('tanggal', DB::raw('min(jumlah) as jumlah_min'))
-        ->where('tanggal','>=',date_create($tgl_awal)->format('Y-m-d'))
-        ->where('tanggal','<=',date_create($tgl_akhir)->format('Y-m-d'))
-        ->groupBy('tanggal')
-        ->OrderBy(DB::raw('min(jumlah)'),'asc')
+        ->select('tanggal', DB::raw('jumlah as jumlah_min'))
+        ->OrderBy('jumlah','asc')
         ->first();
 
         $pdf = PDF::loadView('print.laporanproduksibetonharian', array(
@@ -533,11 +532,13 @@ class LaporanController extends Controller
             return abort(401);
         }
 
-        $data = VTicketHeaderAll::where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'");
+
+        $data = TmpTicketGabungan::where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->orderBy('noticket')->get();
 
-        $datacustomer = VTicketHeaderAll::select('nama_customer','kode_mutu','tujuan','satuan',DB::raw('sum(jumlah) as total'))
+        $datacustomer = TmpTicketGabungan::select('nama_customer','kode_mutu','tujuan','satuan',DB::raw('sum(jumlah) as total'))
         ->where('status','<>','cancel')
         ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
@@ -570,9 +571,11 @@ class LaporanController extends Controller
             return abort(401);
         }
 
-        $data = VTicketHeaderAll::where(DB::raw('convert(date,jam_ticket)'),date_create($tgl)->format('Y-m-d'))->orderBy('noticket')->get();
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl."','".$tgl."'");
 
-        $datacustomer = VTicketHeaderAll::select('nama_customer','kode_mutu','tujuan','satuan',DB::raw('sum(jumlah) as total'))
+        $data = TmpTicketGabungan::where(DB::raw('convert(date,jam_ticket)'),date_create($tgl)->format('Y-m-d'))->orderBy('noticket')->get();
+
+        $datacustomer = TmpTicketGabungan::select('nama_customer','kode_mutu','tujuan','satuan',DB::raw('sum(jumlah) as total'))
         ->where('status','<>','cancel')
         ->where(DB::raw('convert(date,jam_ticket)'),date_create($tgl)->format('Y-m-d'))
         ->groupBy('nama_customer','kode_mutu','tujuan','satuan')->get();
@@ -602,9 +605,9 @@ class LaporanController extends Controller
             return abort(401);
         }
         
-        DB::statement("SET NOCOUNT ON; Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'");
 
-        $datacustomer = TmpReportTicket::select('nama_customer','kode_mutu',DB::raw('harga_intax / (1+(pajak/100)) as harga'),'tujuan','satuan',DB::raw('sum(jumlah) as total'))
+        $datacustomer = TmpTicketGabungan::select('nama_customer','kode_mutu',DB::raw('harga_intax / (1+(pajak/100)) as harga'),'tujuan','satuan',DB::raw('sum(jumlah) as total'))
         ->groupBy('nama_customer',DB::raw('harga_intax / (1+(pajak/100))'),'kode_mutu','tujuan','satuan')->get();
 
         $pdf = PDF::loadView('print.rekappenjualanbetoncustomer', array(
@@ -622,11 +625,9 @@ class LaporanController extends Controller
             return abort(401);
         }
         
-        DB::statement("SET NOCOUNT ON; Exec SP_PivotKomposisiCustomer");
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'; Exec SP_PivotKomposisiCustomer");
 
         $datacustomer = DB::table('tmpcustomerpivot')
-                    ->where('tanggal','>=',date_create($tgl_awal)->format('Y-m-d'))
-                    ->where('tanggal','<=',date_create($tgl_akhir)->format('Y-m-d'))
                     ->orderBy('tanggal','asc')
                     ->orderBy('nama_customer','asc')->get();
 
@@ -701,8 +702,8 @@ class LaporanController extends Controller
         if (!$user->hasPermissionTo('Laporan Penjualan per Mutubeton')){
             return abort(401);
         }
-        
-        $data = VTicketHeader::where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'");
+        $data = TmpTicketGabungan::where(DB::raw('convert(date,jam_ticket)'),'>=',$tgl_awal)
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',$tgl_akhir)
         ->select('kode_mutu', 'deskripsi' ,DB::raw('sum(jumlah) as jumlah'), DB::raw('sum(jumlah*harga_intax) as total'))
         ->groupBy('kode_mutu', 'deskripsi')
@@ -1273,8 +1274,9 @@ class LaporanController extends Controller
             return abort(401);
         }
         
-        DB::statement("SET NOCOUNT ON; Exec SP_ReportTicketTanggal '".$tgl_awal."','".$tgl_akhir."'");
-        $data = TmpReportTicket::where('kendaraan_id',$kendaraan_id)->orderBy('jam_ticket')->get();
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'");
+
+        $data = TmpTicketGabungan::where('kendaraan_id',$kendaraan_id)->orderBy('jam_ticket')->get();
 
         $pdf = PDF::loadView('print.rekappenjualanbetonpermobil', array(
             'data' => $data,

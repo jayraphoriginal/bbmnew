@@ -65,17 +65,17 @@ class SalesorderDetailModal extends ModalComponent
     public function save(){
 
         
-        if ($this->editmode=='edit') {
+        // if ($this->editmode=='edit') {
         
-            $ticket = VTicket::where('d_salesorder_id', $this->dsalesorder_id)->count();
+        //     $ticket = VTicket::where('d_salesorder_id', $this->dsalesorder_id)->count();
 
-            if ($ticket > 0){
-                $this->alert('error', 'Tidak bisa edit SO, Ticket sudah terbuat', [
-                    'position' => 'center'
-                ]);
-                return;
-            }
-        }
+        //     if ($ticket > 0){
+        //         $this->alert('error', 'Tidak bisa edit SO, Ticket sudah terbuat', [
+        //             'position' => 'center'
+        //         ]);
+        //         return;
+        //     }
+        // }
 
 
         $this->DSalesorder->harga_intax = str_replace(',', '', $this->DSalesorder->harga_intax);

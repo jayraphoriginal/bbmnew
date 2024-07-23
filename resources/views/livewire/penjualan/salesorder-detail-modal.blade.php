@@ -23,13 +23,22 @@
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
-
-    <x-form-group caption="Kode Mutu">
-        <livewire:mutubeton.mutubeton-select :deskripsi="$mutubeton" />
-        @error('DSalesorder.mutubeton_id')
-            <x-error-form>{{ $message }}</x-error-form>
-        @enderror
-    </x-form-group>
+    @if($editmode == 'edit')
+        <x-form-group caption="Kode Mutu">
+            <x-textbox
+                readonly
+                wire:model="mutubeton"
+            />
+            <input type="hidden" wire:model="DSalesorder.mutubeton_id"/>
+        </x-form-group>
+    @else
+        <x-form-group caption="Kode Mutu">
+            <livewire:mutubeton.mutubeton-select :deskripsi="$mutubeton" />
+            @error('DSalesorder.mutubeton_id')
+                <x-error-form>{{ $message }}</x-error-form>
+            @enderror
+        </x-form-group>
+    @endif
 
     <x-form-group caption="Harga Intax">
         <x-number-text
