@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Exports\JurnalExport;
 use App\Exports\JurnalPengeluaranBiaya;
 use App\Exports\JurnalTanggalExport;
+use App\Exports\KartuStokExport;
+use App\Exports\KartuStokExportHarian;
 use App\Exports\Neraca;
 use App\Exports\PembelianBiayaExport;
 use App\Exports\PembelianExport;
@@ -195,5 +197,19 @@ class ExportController extends Controller
         return Excel::download(new PembelianBiayaExport($tgl_awal,$tgl_akhir), 'exportpembelianbiaya.xlsx');
     }
 
-   
+    public function exportkartustokharian($tgl_awal,$tgl_akhir,$barang_id){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Kartu Stok')){
+            return abort(401);
+        }
+        return Excel::download(new KartuStokExportHarian($tgl_awal, $tgl_akhir, $barang_id), 'exportkartustok.xlsx');
+    }
+
+    public function exportkartustok($tgl_awal,$tgl_akhir,$barang_id){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Kartu Stok')){
+            return abort(401);
+        }
+        return Excel::download(new KartuStokExport($tgl_awal, $tgl_akhir, $barang_id), 'exportkartustok.xlsx');
+    }
 }

@@ -41,6 +41,10 @@ class BarangSelect extends Component
         $this->emitTo('opname.opname-detail-modal','selectbarang', $id);
         $this->emitTo('laporan.laporan-pemakaian-barang-beban','selectbarang', $id);
         $this->emitTo('rekalkulasi.rekalkulasiper-barang-modal','selectbarang', $id);
+        $this->emitTo('produk-turunan.produk-turunan-modal','selectbarang', $id);
+        $this->emitTo('produk-turunan.komposisi-produkturunan-modal','selectbarang', $id);
+        $this->emitTo('laporan.laporan-stok-opname','selectbarang', $id);
+        $this->emitTo('laporan.laporan-produksi-produkturunan','selectbarang', $id);
        // $this->emitTo('produksi.produksi-new-modal','selectbarang', $id);
     }
 

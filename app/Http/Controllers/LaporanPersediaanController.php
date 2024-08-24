@@ -7,7 +7,9 @@ use App\Models\Barang;
 use App\Models\Kendaraan;
 use App\Models\TmpKartuStok;
 use App\Models\VKartuStok;
+use App\Models\VOpname;
 use App\Models\VPemakaianBarang;
+use App\Models\VProduksiProdukturunan;
 use App\Models\VStok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +26,7 @@ class LaporanPersediaanController extends Controller
         }
         DB::statement('SET NOCOUNT ON; exec SP_pivotkomposisi');
 
-        $data = DB::table('tmppivot')->orderBy(DB::raw('left(deskripsi,4)'))->orderBy('status')->get();
+        $data = DB::table('tmppivot')->orderBy('status')->orderBy(DB::raw('left(deskripsi,4)'))->get();
 
         //return $data;
 
@@ -32,7 +34,7 @@ class LaporanPersediaanController extends Controller
             'data' => $data,
         ));
 
-        return $pdf->setPaper('A4','potrait')->stream();
+        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function laporanstokall(){
@@ -190,6 +192,48 @@ class LaporanPersediaanController extends Controller
 
     }
 
+    public function laporanstokmaterialtanggal($tgl_awal,$tgl_akhir){
+        
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Stok Tanggal')){
+            return abort(401);
+        }
+
+        DB::statement("SET NOCOUNT ON; Exec SP_KartuStokMaterialTanggal '".$tgl_awal."','".$tgl_akhir."'");
+
+        $data = DB::table('tmp_stok_tanggal')->get();
+      
+        $pdf = PDF::loadView('print.laporanstokmaterialtanggal', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','potrait')->stream();
+
+    }
+
+    public function laporanstokprodukturunantanggal($tgl_awal,$tgl_akhir){
+        
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Stok Tanggal')){
+            return abort(401);
+        }
+
+        DB::statement("SET NOCOUNT ON; Exec SP_KartuStokProdukTurunanTanggal '".$tgl_awal."','".$tgl_akhir."'");
+
+        $data = DB::table('tmp_stok_tanggal')->get();
+      
+        $pdf = PDF::loadView('print.laporanstokprodukturunantanggal', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','potrait')->stream();
+
+    }
+
     public function laporansaldopersediaan($tgl_awal,$tgl_akhir){
         
         $user = Auth::user();
@@ -198,7 +242,12 @@ class LaporanPersediaanController extends Controller
         }
         DB::statement("SET NOCOUNT ON; Exec SP_SaldoPersediaanTanggal '".$tgl_awal."','".$tgl_akhir."'");
 
-        $data = DB::table('tmp_saldo_jurnal')->get();
+        $data = DB::table('tmp_saldo_jurnal')
+        ->orwhere('saldo_awal','<>',0)
+        ->orwhere('debet','<>',0)
+        ->orwhere('kredit','<>',0)
+        ->orwhere('saldo','<>',0)
+        ->get();
       
         $pdf = PDF::loadView('print.laporansaldopersediaan', array(
             'data' => $data,
@@ -217,5 +266,96 @@ class LaporanPersediaanController extends Controller
         ));
 
         return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+
+    public function laporanstokopname($tgl_awal,$tgl_akhir,$barang_id){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Stok Opname')){
+            return abort(401);
+        }
+
+        $data = VOpname::where('tgl_opname','>=',date_create($tgl_awal)->format(('d/M/Y')))
+        ->where('tgl_opname','<=',date_create($tgl_akhir)->format(('d/M/Y')))
+        ->where('barang_id',$barang_id)
+        ->orderBy('tgl_opname','asc')
+        ->get();
+
+        $pdf = PDF::loadView('print.laporanstokopname', array(
+            'barang_id' => $barang_id,
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','potrait')->stream();
+
+    }
+
+    public function laporanstokopnametanggal($tgl_awal,$tgl_akhir){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Stok Opname')){
+            return abort(401);
+        }
+
+        $data = VOpname::where('tgl_opname','>=',date_create($tgl_awal)->format(('d/M/Y')))
+        ->where('tgl_opname','<=',date_create($tgl_akhir)->format(('d/M/Y')))
+        ->orderBy('tgl_opname','asc')
+        ->get();
+
+        $pdf = PDF::loadView('print.laporanstokopname', array(
+            'barang_id' => null,
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','potrait')->stream();
+
+    }
+
+    public function laporanproduksiprodukturunan($tgl_awal,$tgl_akhir,$barang_id){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Produksi Produk Turunan')){
+            return abort(401);
+        }
+
+        $data = VProduksiProdukturunan::where('tanggal','>=',date_create($tgl_awal)->format(('d/M/Y')))
+        ->where('tanggal','<=',date_create($tgl_akhir)->format(('d/M/Y')))
+        ->where('barang_id',$barang_id)
+        ->orderBy('tanggal','asc')
+        ->get();
+        
+        $pdf = PDF::loadView('print.laporanproduksiprodukturunan', array(
+            'barang_id' => $barang_id,
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','potrait')->stream();
+
+    }
+
+    public function laporanproduksiprodukturunantanggal($tgl_awal,$tgl_akhir){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Produksi Produk Turunan')){
+            return abort(401);
+        }
+
+        $data = VProduksiProdukturunan::where('tanggal','>=',date_create($tgl_awal)->format(('d/M/Y')))
+        ->where('tanggal','<=',date_create($tgl_akhir)->format(('d/M/Y')))
+        ->orderBy('tanggal','asc')
+        ->get();
+
+        $pdf = PDF::loadView('print.laporanproduksiprodukturunan', array(
+            'barang_id' => null,
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+
+        return $pdf->setPaper('A4','potrait')->stream();
+
     }
 }

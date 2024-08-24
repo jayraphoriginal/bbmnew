@@ -451,6 +451,29 @@ class LaporanController extends Controller
         return $pdf->setPaper('A4','landscape')->stream();
     }
 
+    public function rekapticketproduksitanggal($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Rekap Ticket Produksi')){
+            return abort(401);
+        }
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketProduksi '".$tgl_awal."','".$tgl_akhir."'");
+        $data = TmpTicketGabungan::orderBy('tmp_ticketgabungan.noticket')
+        ->where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->where('status','<>','cancel')
+        ->get();
+
+        //return $data;
+
+        $pdf = PDF::loadView('print.rekaptickettanggal', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','landscape')->stream();
+    }
+
     public function rekapticketsotanggal($tgl_awal,$tgl_akhir,$so_id){
 
         $user = Auth::user();
@@ -639,6 +662,32 @@ class LaporanController extends Controller
 
         $pdf = PDF::loadView('print.laporanproduksicustomer', array(
             'datacustomer' => $datacustomer,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        return $pdf->setPaper('A4','landscape')->stream();
+    }
+
+    public function laporanproduksimutubeton($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Produksi Mutubeton')){
+            return abort(401);
+        }
+        
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'; Exec SP_PivotKomposisiMutubeton");
+
+        $data = DB::table('tmpmutubetonpivot')
+                    ->orderBy('deskripsi','asc')->get();
+
+        // return view('print.laporanproduksicustomer',[
+        //     'datacustomer' => $datacustomer,
+        //      'tgl_awal' => $tgl_awal,
+        //      'tgl_akhir' => $tgl_akhir
+        // ]);
+
+        $pdf = PDF::loadView('print.laporanproduksimutubeton', array(
+            'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));

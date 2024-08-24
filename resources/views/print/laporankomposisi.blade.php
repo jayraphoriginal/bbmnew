@@ -41,24 +41,40 @@
         @if (count($data) > 0)
         <table class="mytable" style="width: 100%;">
             <tr>
+                <td class="tdhead">No</td>
                 <td class="tdhead">Mutu Beton</td>
                 <td class="tdhead">Status</td>
                 <td class="tdhead">Tgl Berlaku </td>
-                <td class="tdhead">Admiture</td>
-                <td class="tdhead">Air</td>
-                <td class="tdhead">Batu Pecah 1/1</td>
-                <td class="tdhead">Batu Pecah 1/2</td>
-                <td class="tdhead">Batu Pecah 2/3</td>
-                <td class="tdhead">Pasir</td>
-                <td class="tdhead">Semen</td>
+                <td class="tdhead text-right">Admiture</td>
+                <td class="tdhead text-right">Air</td>
+                <td class="tdhead text-right">Batu Pecah 1/1</td>
+                <td class="tdhead text-right">Batu Pecah 1/2</td>
+                <td class="tdhead text-right">Batu Pecah 2/3</td>
+                <td class="tdhead text-right">Pasir</td>
+                <td class="tdhead text-right">Semen</td>
             </tr>
-            @foreach($data as $item)
+            @foreach($data as $index => $item)
             @php
                 $isi = json_decode(json_encode($item), true);
             @endphp
-            <tr>
+            @if ($item->status == 'aktif')
+                <tr>
+            @else
+                <tr style="background-color: #ccc;">
+            @endif
+                <td>{{ ++$index }}</td>
+                @php
+                    $z = 1;
+                @endphp
                 @foreach($isi as $td)
-                    <td>{{ $td }}</td>
+                    @if ($z >=4)
+                        <td class="text-right">{{ $td }}</td>
+                    @else
+                        <td>{{ $td }}</td>
+                    @endif
+                    @php
+                        $z++;
+                    @endphp
                 @endforeach
             </tr>
             @endforeach

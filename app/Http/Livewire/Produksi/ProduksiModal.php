@@ -55,6 +55,7 @@ class ProduksiModal extends ModalComponent
         $this->produksi->driver_id=$id;
     }
 
+
     public function save(){
 
         $this->validate();

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Batal;
 
 use App\Models\PengeluaranBiaya;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class PengeluaranBiayaSelect extends Component
@@ -33,13 +34,23 @@ class PengeluaranBiayaSelect extends Component
 
     public function selectDeskripsi($id){
         $pengeluaranbiaya = PengeluaranBiaya::find($id);
-        $this->deskripsi = $pengeluaranbiaya->ket.' - '.number_format($pengeluaranbiaya->total,0,',','.');
+        $this->deskripsi = $pengeluaranbiaya->id.' - '.$pengeluaranbiaya->ket.' - '.number_format($pengeluaranbiaya->total,0,',','.');
     }
 
     public function updatedSearch()
     {
-        $this->pengeluaranbiaya = PengeluaranBiaya::where('ket', 'like', '%' . $this->search . '%')
-            ->get();
+        $this->pengeluaranbiaya = PengeluaranBiaya::where(
+                function($query) {
+                    return $query
+                           ->where( 'ket', 'LIKE', '%'.$this->search.'%')
+                           ->Where('tgl_biaya','>=',DB::raw("DATEADD(month, -2, GETDATE())"));
+                   })
+                ->orwhere(function($query) {
+                    return $query
+                           ->where( 'id', 'LIKE', '%'.$this->search.'%')
+                           ->Where('tgl_biaya','>=',DB::raw("DATEADD(month, -2, GETDATE())"));
+                   })
+                ->get();
     }
     public function render()
     {

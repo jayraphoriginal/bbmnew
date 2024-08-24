@@ -112,7 +112,7 @@ class PengisianBbmModal extends ModalComponent
         $this->emitTo('bbm.pengisian-bbm-table', 'pg:eventRefresh-default');
 
     }
-
+  
     public function render()
     {
         return view('livewire.bbm.pengisian-bbm-modal');

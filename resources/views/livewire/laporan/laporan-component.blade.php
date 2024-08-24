@@ -26,6 +26,18 @@
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>
+                        <x-datarowtable title="Laporan Stok Material per Tanggal">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-stok-material-tanggal')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                         <x-datarowtable title="Laporan Stok Produk Turunan per Tanggal">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-stok-produkturunan-tanggal')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
                         <x-datarowtable title="Laporan Kartu Stok">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.laporan-kartustok')">
@@ -41,6 +53,18 @@
                         <x-datarowtable title="Laporan Saldo Persediaan">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.laporan-saldo-persediaan')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Stok Opname">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-stok-opname')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Produksi Produk Turunan">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-produksi-produkturunan')">
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>
@@ -206,9 +230,21 @@
                                 Cetak
                         </x-print-button>
                         </x-datarowtable>
+                        <x-datarowtable title="Laporan Produksi Mutu Beton">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-produksi-mutubeton')">
+                                Cetak
+                        </x-print-button>
+                        </x-datarowtable>
                         <x-datarowtable title="Laporan Rekap Ticket">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.rekap-ticket-tanggal')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Rekap Ticket Produksi">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.rekap-ticket-produksi-tanggal')">
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>

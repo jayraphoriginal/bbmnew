@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Jurnal;
 use App\Models\Journal;
 use App\Models\ManualJournal;
 use App\Models\Coa;
+use App\Models\NoBuktikas;
 use App\Models\TmpJurnalManual;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,12 +19,12 @@ class JurnalManualModal extends ModalComponent
     use LivewireAlert;
 
     public ManualJournal $jurnalmanual;
+    public $retail;
 
     protected $rules=[
         'jurnalmanual.tanggal' => 'required',
         'jurnalmanual.keterangan' => 'required',
         'jurnalmanual.bukti_kas' => 'required',
-        'jurnalmanual.nobuktikas' => 'nullable',
     ];
 
     public function mount(){
@@ -48,11 +49,105 @@ class JurnalManualModal extends ModalComponent
             ]);
         }else{
 
+            if ($this->jurnalmanual->bukti_kas == "bukti penerimaan kas"){
+
+                if ($this->retail){
+                    $tipe = "masuk retail";
+                }
+                else{
+                    $tipe = "masuk";
+                }
+
+                $nobuktikas = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->jurnalmanual->tanggal)))
+                ->where('status','open')
+                ->orderby('nomor','asc')
+                ->get();
+
+                if (count($nobuktikas)>0){
+                    $this->jurnalmanual->nobuktikas = $nobuktikas[0]->nomor;
+                }else{
+                    $nomor = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->jurnalmanual->tanggal)))
+                    ->where('status','finish')
+                    ->orderby('nomor','desc')
+                    ->get();
+
+                    if (count($nomor) > 0){
+                        $nomorterakhir = $nomor[0]->nomor;
+                    }else{
+                        $nomorterakhir = 0;
+                    }
+
+                    for($i=$nomorterakhir+1;$i<100;$i++){
+                        $nokas = new NoBuktikas();
+                        $nokas['tipe'] = $tipe;
+                        $nokas['tahun'] = date('Y', strtotime($this->jurnalmanual->tanggal));
+                        $nokas['nomor'] = $i;
+                        $nokas['status'] = 'open';
+                        $nokas->save();
+                    }
+                    $this->jurnalmanual->nobuktikas =  $nomorterakhir + 1;
+                }
+            }elseif($this->jurnalmanual->bukti_kas == "bukti pengeluaran kas"){
+
+                if ($this->retail){
+                    $tipe = "keluar retail";
+                }
+                else{
+                    $tipe = "keluar";
+                }
+
+                $nobuktikas = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->jurnalmanual->tanggal)))
+                ->where('status','open')
+                ->orderby('nomor','asc')
+                ->get();
+
+                if (count($nobuktikas) > 0){
+                    $this->jurnalmanual->nobuktikas = $nobuktikas[0]->nomor;
+                }else{
+                    $nomor = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->jurnalmanual->tanggal)))
+                    ->where('status','finish')
+                    ->orderby('nomor','desc')
+                    ->get();
+
+                    if (count($nomor) > 0){
+                        $nomorterakhir = $nomor[0]->nomor;
+                    }else{
+                        $nomorterakhir = 0;
+                    }
+
+                    for($i=$nomorterakhir+1;$i<100;$i++){
+                        $nokas = new NoBuktikas();
+                        $nokas['tipe'] = $tipe;
+                        $nokas['tahun'] = date('Y', strtotime($this->jurnalmanual->tanggal));
+                        $nokas['nomor'] = $i;
+                        $nokas['status'] = 'open';
+                        $nokas->save();
+                    }
+                    $this->jurnalmanual->nobuktikas =  $nomorterakhir + 1;
+                }
+            }
+
             DB::beginTransaction();
                
             try{
 
                 $this->jurnalmanual->save();
+
+                if ($this->jurnalmanual->bukti_kas == "bukti penerimaan kas"){
+                    DB::table('no_buktikas')->where('tipe',$tipe)
+                    ->where('tahun', date('Y', strtotime($this->jurnalmanual->tanggal)))
+                    ->where('nomor', $this->jurnalmanual->nobuktikas)
+                    ->update([
+                        'status' => 'finish'
+                    ]);
+                }elseif($this->jurnalmanual->bukti_kas == "bukti pengeluaran kas"){
+                    DB::table('no_buktikas')->where('tipe',$tipe)
+                    ->where('tahun', date('Y', strtotime($this->jurnalmanual->tanggal)))
+                    ->where('nomor', $this->jurnalmanual->nobuktikas)
+                    ->update([
+                        'status' => 'finish'
+                    ]);
+                }
 
                 foreach($tmpjurnal as $tmp){
                     $journal = new Journal();

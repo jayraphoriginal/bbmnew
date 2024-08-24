@@ -28,7 +28,7 @@
     <body style="padding:2em">
         <h3 style="text-align:center; font-size:16px">BUKTI KAS</h3>
         <p style="float:right">D/C No. {{ $data->nobuktikas }}</p>
-        <p style="font-style:italic;margin-bottom:5px;">Sudah Diterima Dari :</p>
+        <p style="font-style:italic;margin-bottom:5px;">Sudah Diterima Dari : {{ $data->nama_customer }}</p>
         <hr style="margin-bottom:8px;">
         <div style="display:inline-block;margin-right:8px;">
             <input type="checkbox" {{ $data->tipe=='cash' ? 'checked' : '' }}>

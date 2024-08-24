@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Batal;
 
 use App\Models\VInvoiceHeader;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class InvoiceSelect extends Component
@@ -38,8 +39,17 @@ class InvoiceSelect extends Component
 
     public function updatedSearch()
     {
-        $this->invoice = VInvoiceHeader::where('nama_customer', 'like', '%' . $this->search . '%')
-            ->orwhere('noinvoice','like', '%' . $this->search . '%')
+        $this->invoice = VInvoiceHeader::where(
+            function($query) {
+                return $query
+                       ->where( 'nama_customer', 'LIKE', '%'.$this->search.'%')
+                       ->Where('tgl_cetak','>=',DB::raw("DATEADD(month, -2, GETDATE())"));
+               })
+            ->orwhere(function($query) {
+                return $query
+                       ->where( 'noinvoice', 'LIKE', '%'.$this->search.'%')
+                       ->Where('tgl_cetak','>=',DB::raw("DATEADD(month, -2, GETDATE())"));
+               })
             ->get();
     }
 

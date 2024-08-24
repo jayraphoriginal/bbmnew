@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Mutubeton extends Model
 {
     use HasFactory;
-    protected $fillable = [ 'kode_mutu', 'jumlah', 'satuan_id', 'berat_jenis'];
+    protected $fillable = [ 'kode_mutu','deskripsi', 'jumlah', 'satuan_id', 'berat_jenis'];
 }

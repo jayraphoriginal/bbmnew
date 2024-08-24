@@ -36,7 +36,7 @@ class BatalPengisianBbmStok extends ModalComponent
 
     public function save(){
         $this->validate([
-            'pengeluaran_biaya_id' => 'required'
+            'pengisian_bbm_stok_id' => 'required'
         ]);
 
         DB::beginTransaction();

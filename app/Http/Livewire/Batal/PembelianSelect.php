@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Batal;
 
 use App\Models\VPembelian;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class PembelianSelect extends Component
@@ -39,8 +40,17 @@ class PembelianSelect extends Component
 
     public function updatedSearch()
     {
-        $this->pembelian = VPembelian::where('nama_supplier', 'like', '%' . $this->search . '%')
-            ->orwhere('nopo','like', '%' . $this->search . '%')
+        $this->pembelian = VPembelian::where(
+            function($query) {
+                return $query
+                       ->where( 'nopo', 'LIKE', '%'.$this->search.'%')
+                       ->Where('tgl_masuk','>=',DB::raw("DATEADD(month, -2, GETDATE())"));
+               })
+            ->orwhere(function($query) {
+                return $query
+                       ->where( 'nopo', 'LIKE', '%'.$this->search.'%')
+                       ->Where('tgl_masuk','>=',DB::raw("DATEADD(month, -2, GETDATE())"));
+               })
             ->get();
     }
 

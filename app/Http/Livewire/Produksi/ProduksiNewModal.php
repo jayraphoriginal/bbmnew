@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Produksi;
 
 use App\Models\Barang;
 use App\Models\DBarang;
+use App\Models\Produkturunan;
 use App\Models\Satuan;
 use App\Models\TmpProduksi;
 use Illuminate\Support\Facades\Auth;
@@ -16,11 +17,11 @@ class ProduksiNewModal extends ModalComponent
 {
 
     use LivewireAlert;
-    public $driver, $barang, $satuan, $ticket;
-    public $barang_id, $jumlah, $satuan_id, $ticket_id, $jumlah_ticket, $keterangan, $tanggal;
+    public $driver, $deskripsi, $satuan, $ticket;
+    public $barang_id, $produk_turunan_id, $jumlah, $satuan_id, $ticket_id, $jumlah_ticket, $keterangan, $tanggal;
 
     protected $listeners = [
-        'selectbarang' => 'selectbarang',
+        'selectprodukturunan' => 'selectprodukturunan',
         'selectticket' => 'selectticket',
     ];
 
@@ -41,15 +42,32 @@ class ProduksiNewModal extends ModalComponent
         }
     }
 
-    public function selectbarang($id){
-        $this->barang_id=$id;
-        $barang = Barang::find($id);
+    public function selectprodukturunan($id){
+        $this->produk_turunan_id=$id;
+        $produkturunan = Produkturunan::find($id);
+        $barang = Barang::find($produkturunan->barang_id);
+        $this->barang_id = $produkturunan->barang_id;
         $this->satuan_id=$barang->satuan_id;
         $this->satuan = Satuan::find($this->satuan_id)->satuan;
     }
   
     public function selectticket($id){
         $this->ticket_id=$id;
+    }
+
+    
+    public function insertkomposisi(){
+
+        $this->validate([
+            'barang_id'=> 'required',
+            'jumlah'=> 'required',
+        ]);
+
+        $this->jumlah = str_replace(',', '', $this->jumlah);
+        DB::statement("SET NOCOUNT ON; Exec SP_InsertKomposisiProduksi ".$this->barang_id.",".$this->jumlah.",".Auth::user()->id);
+
+        $this->emitTo('produksi.tmp-produksi-table', 'pg:eventRefresh-default');
+
     }
 
     public function save(){

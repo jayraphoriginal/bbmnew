@@ -75,6 +75,10 @@
         @enderror
     </x-form-group>
 
+    <x-checkbox-group caption="Retail" class="my-2">
+        <x-checkbox wire:model="retail"/>
+    </x-checkbox-group>
+
     <x-form-group caption="Keterangan">
         <x-textbox
             wire:model="keterangan"

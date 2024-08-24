@@ -22,7 +22,7 @@
                 @if(!empty($ticket))
                     @foreach ($ticket as $item)
                         <div
-                            wire:click.prevent="selectdata({{ $item->id }})" @click="search = false" class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
+                            wire:click.prevent="selectdata({{ $item->id }})" @click.away="search = false" class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
                             {{ $item->noticket.' - '.$item->sisa.' '.$item->satuan }}
                         </div>
                     @endforeach

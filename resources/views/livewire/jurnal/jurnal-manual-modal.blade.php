@@ -21,6 +21,10 @@
         @enderror
     </x-form-group>
 
+    <x-checkbox-group caption="Retail" class="my-2">
+        <x-checkbox wire:model="retail"/>
+    </x-checkbox-group>
+
     <x-form-group caption="Bukti Kas">
         <x-combobox
             wire:model="jurnalmanual.bukti_kas">
@@ -30,14 +34,6 @@
             <option value="lain-lain">Lain-Lain</option>
         </x-combobox>
         @error('jurnalmanual.bukti_kas')
-            <x-error-form>{{ $message }}</x-error-form>
-        @enderror
-    </x-form-group>
-
-    <x-form-group caption="No Bukti Kas">
-        <x-textbox
-            wire:model="jurnalmanual.nobuktikas"/>
-        @error('jurnalmanual.nobuktikas')
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>

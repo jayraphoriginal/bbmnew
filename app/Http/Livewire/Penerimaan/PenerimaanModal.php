@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Penerimaan;
 use App\Models\Bank;
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\NoBuktikas;
 use App\Models\Rekening;
 use App\Models\VInvoiceHeader;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class PenerimaanModal extends ModalComponent
     use LivewireAlert;
 
     public $tgl_bayar, $tipe_pembayaran, $jatuh_tempo, $nowarkat, $bank_asal_id, $bankasal,
-    $rekening_id, $rekening, $jumlah, $keterangan, $customer_id, $customer, $nobuktikas;
+    $rekening_id, $rekening, $jumlah, $keterangan, $customer_id, $customer, $nobuktikas, $retail;
 
     protected $rules=[
         'customer_id' => 'required',
@@ -30,7 +31,6 @@ class PenerimaanModal extends ModalComponent
         'rekening_id' => 'required',
         'jumlah' => 'required|min:1',
         'keterangan' => 'nullable',
-        'nobuktikas' => 'nullable'
     ];
 
     protected $listeners = [
@@ -60,6 +60,50 @@ class PenerimaanModal extends ModalComponent
         $this->jumlah = str_replace(',', '', $this->jumlah);
         $this->validate();
 
+        if ($this->retail){
+            $tipe = "masuk retail";
+        }
+        else{
+            $tipe = "masuk";
+        }
+
+        $nobuktikas = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->tgl_bayar)))->get();
+        if (count($nobuktikas) > 0){
+            $this->nobuktikas = $nobuktikas[0]->nomor + 1;
+        }else{
+            $this->nobuktikas = 1;
+        }
+
+        $nobuktikas = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->tgl_bayar)))
+                ->where('status','open')
+                ->orderby('nomor','asc')
+                ->get();
+
+                if (count($nobuktikas)>0){
+                    $this->nobuktikas = $nobuktikas[0]->nomor;
+                }else{
+                    $nomor = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->tgl_bayar)))
+                    ->where('status','finish')
+                    ->orderby('nomor','asc')
+                    ->get();
+
+                    if (count($nomor) > 0){
+                        $nomorterakhir = $nomor[0]->nomor;
+                    }else{
+                        $nomorterakhir = 0;
+                    }
+
+                    for($i=$nomorterakhir+1;$i<100;$i++){
+                        $nokas = new NoBuktikas();
+                        $nokas['tipe'] = $tipe;
+                        $nokas['tahun'] = date('Y', strtotime($this->tgl_bayar));
+                        $nokas['nomor'] = $i;
+                        $nokas['status'] = 'open';
+                        $nokas->save();
+                    }
+                    $this->nobuktikas =  $nomorterakhir + 1;
+                }
+
         DB::beginTransaction();
 
         try{
@@ -87,7 +131,14 @@ class PenerimaanModal extends ModalComponent
                                             $this->rekening_id,     $this->customer_id,
                                             $this->jumlah,          '$this->keterangan',
                                             '$this->nobuktikas'");
-            
+
+            DB::table('no_buktikas')->where('tipe',$tipe)
+                ->where('tahun', date('Y', strtotime($this->tgl_bayar)))
+                ->where('nomor', $this->nobuktikas)
+                ->update([
+                    'status' => 'finish'
+                ]);
+
             DB::commit();
 
             $this->closeModal();

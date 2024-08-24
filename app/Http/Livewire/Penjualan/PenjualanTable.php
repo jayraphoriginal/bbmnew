@@ -182,23 +182,20 @@ final class PenjualanTable extends PowerGridComponent
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    /*
+    
     public function actions(): array
     {
        return [
-           Button::add('edit')
-               ->caption('Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('m-penjualan.edit', ['m-penjualan' => 'id']),
-
-           Button::add('destroy')
-               ->caption('Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('m-penjualan.destroy', ['m-penjualan' => 'id'])
-               ->method('delete')
+            Button::add('Penjualan')
+            ->caption('<svg class="h-5 w-5 text-white"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="19" r="2" />  <circle cx="17" cy="19" r="2" />  <path d="M3 3h2l2 12a3 3 0 0 0 3 2h7a3 3 0 0 0 3 -2l1 -7h-15.2" /></svg>')
+            ->tooltip('penjualan')
+            ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->openModal('penjualan.surat-jalan-component',[
+                'm_penjualan_id' => 'id'
+            ]),
         ];
     }
-    */
+    
 
     /*
     |--------------------------------------------------------------------------

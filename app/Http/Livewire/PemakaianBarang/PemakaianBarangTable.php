@@ -90,11 +90,11 @@ final class PemakaianBarangTable extends PowerGridComponent
             ->addColumn('alken')
             ->addColumn('nama_barang')
             ->addColumn('jumlah', function(VPemakaianBarang $model) { 
-                return number_format($model->jumlah, 2,',','.');
+                return number_format($model->jumlah, 4,',','.');
             })
             ->addColumn('satuan')
             ->addColumn('total', function(VPemakaianBarang $model) { 
-                return number_format($model->total, 2,',','.');
+                return number_format($model->total, 4,',','.');
             })
             ->addColumn('keterangan')
             ->addColumn('tgl_pemakaian_formatted', function(VPemakaianBarang $model) { 

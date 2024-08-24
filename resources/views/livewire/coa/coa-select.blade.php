@@ -22,7 +22,7 @@
                 @if(!empty($coa))
                     @foreach ($coa as $item)
                         <div
-                            @click="searchs = false"
+                            @click.away="search = false"
                             wire:click="selectdata({{ $item->id }})"  class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white">
                             {{ $item->kode_akun.' - '.$item->nama_akun }}
                         </div>

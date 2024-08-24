@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Batal;
 
 use App\Models\PengisianBbmStok;
+use App\Models\VPengisianBbmStok;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class PengisianBbmStokSelect extends Component
@@ -26,20 +28,31 @@ class PengisianBbmStokSelect extends Component
 
     public function selectdata($id)
     {
-        $pengisianbbmstok = PengisianBbmStok::find($id);
-        $this->deskripsi = $pengisianbbmstok->tgl_pengisian.' - '.$pengisianbbmstok->keterangan.' - '.number_format($pengisianbbmstok->total,0,',','.');
+        $pengisianbbmstok = VPengisianBbmStok::find($id);
+        $this->deskripsi = $pengisianbbmstok->alken.' - '.$pengisianbbmstok->tgl_pengisian.' - '.$pengisianbbmstok->keterangan;
         $this->emitTo('batal.batal-pengisian-bbm-stok','selectid', $id);
     }
 
     public function updatedSearch()
     {
-        $this->pengisianbbmstok = PengisianBbmStok::where('keterangan', 'like', '%' . $this->search . '%')
+        $this->pengisianbbmstok = VPengisianBbmStok::
+        where(
+            function($query) {
+                return $query
+                       ->where( 'keterangan', 'LIKE', '%'.$this->search.'%')
+                       ->Where('tgl_pengisian','>=',DB::raw("DATEADD(month, -2, GETDATE())"));
+               })
+            ->orwhere(function($query) {
+                return $query
+                       ->where( 'alken', 'LIKE', '%'.$this->search.'%')
+                       ->Where('tgl_pengisian','>=',DB::raw("DATEADD(month, -2, GETDATE())"));
+               })
             ->get();
     }
 
     public function selectDeskripsi($id){
-        $pengisianbbmstok = PengisianBbmStok::find($id);
-        $this->deskripsi = $pengisianbbmstok->tgl_pengisian.' - '.$pengisianbbmstok->keterangan.' - '.number_format($pengisianbbmstok->total,0,',','.');
+        $pengisianbbmstok = VPengisianBbmStok::find($id);
+        $this->deskripsi = $pengisianbbmstok->alken.' - '.$pengisianbbmstok->tgl_pengisian.' - '.$pengisianbbmstok->keterangan;
     }
 
     public function render()

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Pembayaran;
 
 use App\Models\Bank;
+use App\Models\NoBuktikas;
 use App\Models\Rekening;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class PembayaranPembelianModal extends ModalComponent
     use LivewireAlert;
 
     public $supplier_id, $supplier, $tgl_bayar, $tipe_pembayaran, $jatuh_tempo, $nowarkat, 
-    $rekening_id, $rekening, $jumlah, $keterangan, $nobuktikas;
+    $rekening_id, $rekening, $jumlah, $keterangan, $nobuktikas, $retail;
 
     protected $rules=[
         'supplier_id' => 'required',
@@ -28,7 +29,6 @@ class PembayaranPembelianModal extends ModalComponent
         'rekening_id' => 'required',
         'jumlah' => 'required',
         'keterangan' => 'nullable',
-        'nobuktikas' => 'required'
     ];
 
     protected $listeners = [
@@ -53,6 +53,8 @@ class PembayaranPembelianModal extends ModalComponent
         $this->jumlah = str_replace(',', '', $this->jumlah);
         $this->validate();
 
+        
+
         DB::beginTransaction();
 
         try{
@@ -76,12 +78,57 @@ class PembayaranPembelianModal extends ModalComponent
                     }
                 }
             
+
+                if ($this->retail){
+                    $tipe = "keluar retail";
+                }
+                else{
+                    $tipe = "keluar";
+                }
+
+                $nobuktikas = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->tgl_bayar)))
+                ->where('status','open')
+                ->orderby('nomor','asc')
+                ->get();
+
+                if (count($nobuktikas) > 0){
+                    $this->nobuktikas = $nobuktikas[0]->nomor;
+                }else{
+                    $nomor = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->tgl_bayar)))
+                    ->where('status','finish')
+                    ->orderby('nomor','asc')
+                    ->get();
+
+                    if (count($nomor) > 0){
+                        $nomorterakhir = $nomor[0]->nomor;
+                    }else{
+                        $nomorterakhir = 0;
+                    }
+
+                    for($i=$nomorterakhir+1;$i<100;$i++){
+                        $nokas = new NoBuktikas();
+                        $nokas['tipe'] = $tipe;
+                        $nokas['tahun'] = date('Y', strtotime($this->tgl_bayar));
+                        $nokas['nomor'] = $i;
+                        $nokas['status'] = 'open';
+                        $nokas->save();
+                    }
+                    $this->nobuktikas =  $nomorterakhir + 1;
+                }
+
             DB::statement("SET NOCOUNT ON; Exec SP_Pembayaran  '$nopembayaran',        '$this->tgl_bayar', 
                                             '$this->tipe_pembayaran', '$this->nowarkat', 
                                             '$this->jatuh_tempo',     $rekening->bank_id,
                                             $this->rekening_id,     $this->supplier_id,
                                             $this->jumlah,          '$this->keterangan',
                                             '$this->nobuktikas'");
+
+                DB::table('no_buktikas')->where('tipe',$tipe)
+                    ->where('tahun', date('Y', strtotime($this->tgl_bayar)))
+                    ->where('nomor', $this->nobuktikas)
+                    ->update([
+                        'status' => 'finish'
+                    ]);
             
             DB::commit();
 

@@ -100,142 +100,15 @@ class PenjualanModal extends ModalComponent
             $this->MPenjualan->save();
 
             foreach($tmp as $tmpbarang){
-
-                $pemakaianmaterial = $tmpbarang->jumlah;
-
-                $jumlahstok = DBarang::where('barang_id',$tmpbarang->barang_id)
-                                ->sum('jumlah');
-                
-                if ($jumlahstok < $pemakaianmaterial){
-                    $barang = Barang::find($tmpbarang->barang_id);
-                    DB::Rollback();
-                    $this->alert('error', 'Stok '.$barang->nama_barang.' tidak mencukupi', [
-                        'position' => 'center'
-                    ]);
-                    return;
-                }else{
-                    $detailbarang = DBarang::where('barang_id',$tmpbarang->barang_id)
-                                    ->where('jumlah', '>',0)
-                                    ->orderBy('tgl_masuk','asc')
-                                    ->get();
-
-                    foreach($detailbarang as $barang){
-
-                        if ($pemakaianmaterial > 0){
-                            if($pemakaianmaterial > $barang->jumlah){
-                                
-                                $stok = DBarang::find($barang->id);
-                                $pemakaianmaterial = $pemakaianmaterial - $stok->jumlah;
-                                $pengurangan = $stok->jumlah;
-                                $stok['jumlah']=0;
-                                $stok->save();
-
-                                $jumlahstok = DBarang::where('barang_id',$tmpbarang->barang_id)
-                                    ->sum('jumlah');
-
-                                $dpenjualan = New DPenjualan();
-                                $dpenjualan['m_penjualan_id']=$this->MPenjualan->id;
-                                $dpenjualan['barang_id']=$tmpbarang->barang_id;
-                                $dpenjualan['jumlah']=$pengurangan;
-                                $dpenjualan['sisa']=$pengurangan;
-                                $dpenjualan['satuan_id']=$tmpbarang->satuan_id;
-                                $dpenjualan['harga_intax']=$tmpbarang->harga_intax;
-                                $dpenjualan['status_detail']='Open';
-                                $dpenjualan->save();
-
-                                $kartustok = new Kartustok();
-                                $kartustok['tanggal'] = date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
-                                $kartustok['barang_id']=$tmpbarang->barang_id;
-                                $kartustok['tipe']='Penjualan';
-                                $kartustok['trans_id']=$this->MPenjualan->id;
-                                $kartustok['increase']=0;
-                                $kartustok['decrease']=$pengurangan;
-                                $kartustok['harga_debet']=0;
-                                $kartustok['harga_kredit']=$tmpbarang->harga_intax;
-                                $kartustok['qty']=$jumlahstok;
-                                $kartustok['modal']=$stok->hpp;
-                                $kartustok->save();
-
-                                $databarang = Barang::find($tmpbarang->barang_id);
-                                $kategori = Kategori::find($databarang->kategori_id);
-
-                                $journal = new Journal();
-                                $journal['tipe']='Penjualan';
-                                $journal['trans_id']=$this->MPenjualan->id;
-                                $journal['tanggal_transaksi']=date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
-                                $journal['coa_id']=$kategori->coa_hpp_id;
-                                $journal['debet']=round($stok->hpp*$pengurangan,4);
-                                $journal['kredit']=0;
-                                $journal->save();
-
-                                $journal = new Journal();
-                                $journal['tipe']='Penjualan';
-                                $journal['trans_id']=$this->MPenjualan->id;
-                                $journal['tanggal_transaksi']=date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
-                                $journal['coa_id']=$kategori->coa_asset_id;
-                                $journal['debet']=0;
-                                $journal['kredit']=round($stok->hpp*$pengurangan,4);
-                                $journal->save();
-
-                            }else{
-
-                                $stok = DBarang::find($barang->id);
-                                $stok['jumlah']=$stok['jumlah']-$pemakaianmaterial;
-                                $stok->save();
-
-                                $jumlahstok = DBarang::where('barang_id',$tmpbarang->barang_id)
-                                    ->sum('jumlah');
-
-                                $dpenjualan = New DPenjualan();
-                                $dpenjualan['m_penjualan_id']=$this->MPenjualan->id;
-                                $dpenjualan['barang_id']=$tmpbarang->barang_id;
-                                $dpenjualan['jumlah']=$pemakaianmaterial;
-                                $dpenjualan['sisa']=$pemakaianmaterial;
-                                $dpenjualan['satuan_id']=$tmpbarang->satuan_id;
-                                $dpenjualan['harga_intax']=$tmpbarang->harga_intax;
-                                $dpenjualan['status_detail']='Open';
-                                $dpenjualan->save();
-
-                                $kartustok = new Kartustok();
-                                $kartustok['tanggal'] = date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
-                                $kartustok['barang_id']=$tmpbarang->barang_id;
-                                $kartustok['tipe']='Penjualan';
-                                $kartustok['trans_id']=$this->MPenjualan->id;
-                                $kartustok['increase']=0;
-                                $kartustok['decrease']=$pemakaianmaterial;
-                                $kartustok['harga_debet']=0;
-                                $kartustok['harga_kredit']=$tmpbarang->harga_intax;
-                                $kartustok['qty']=$jumlahstok;
-                                $kartustok['modal']=$stok->hpp;
-                                $kartustok->save();
-
-                                $databarang = Barang::find($tmpbarang->barang_id);
-                                $kategori = Kategori::find($databarang->kategori_id);
-
-                                $journal = new Journal();
-                                $journal['tipe']='Penjualan';
-                                $journal['trans_id']=$this->MPenjualan->id;
-                                $journal['tanggal_transaksi']=date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
-                                $journal['coa_id']=$kategori->coa_hpp_id;
-                                $journal['debet']=round($stok->hpp*$pemakaianmaterial,4);
-                                $journal['kredit']=0;
-                                $journal->save();
-
-                                $journal = new Journal();
-                                $journal['tipe']='Penjualan';
-                                $journal['trans_id']=$this->MPenjualan->id;
-                                $journal['tanggal_transaksi']=date_create($this->MPenjualan->tgl_penjualan)->format('Y-m-d');
-                                $journal['coa_id']=$kategori->coa_asset_id;
-                                $journal['debet']=0;
-                                $journal['kredit']=round($stok->hpp*$pemakaianmaterial,4);
-                                $journal->save();
-
-                                $pemakaianmaterial = 0;
-
-                            }
-                        }
-                    }
-                }  
+                $dpenjualan = New DPenjualan();
+                $dpenjualan['m_penjualan_id']=$this->MPenjualan->id;
+                $dpenjualan['barang_id']=$tmpbarang->barang_id;
+                $dpenjualan['jumlah']=$tmpbarang->jumlah;
+                $dpenjualan['sisa']=$tmpbarang->jumlah;
+                $dpenjualan['satuan_id']=$tmpbarang->satuan_id;
+                $dpenjualan['harga_intax']=$tmpbarang->harga_intax;
+                $dpenjualan['status_detail']='Open';
+                $dpenjualan->save();
             }              
             $tmp = TmpPenjualan::where('user_id',Auth::user()->id)->delete();
             DB::commit();

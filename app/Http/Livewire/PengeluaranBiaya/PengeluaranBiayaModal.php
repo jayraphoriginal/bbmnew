@@ -6,6 +6,7 @@ use App\Models\Coa;
 use App\Models\Journal;
 use App\Models\MBiaya;
 use App\Models\Mpajak;
+use App\Models\NoBuktikas;
 use App\Models\PengeluaranBiaya;
 use App\Models\PengeluaranBiayaDetail;
 use App\Models\Rekening;
@@ -23,7 +24,7 @@ class PengeluaranBiayaModal extends ModalComponent
 
     public PengeluaranBiaya $pengeluaran;
     public $editmode, $pengeluaran_id;
-    public $supplier;
+    public $supplier, $retail;
 
     protected $listeners = [ 
         'selectsupplier' => 'selectsupplier',
@@ -42,7 +43,6 @@ class PengeluaranBiayaModal extends ModalComponent
         'pengeluaran.ppn' => 'required',
         'pengeluaran.total' => 'required|numeric|min:1',
         'pengeluaran.ket' => 'nullable|max:100',
-        'pengeluaran.nobuktikas' => 'nullable|max:50'
     ];
 
     public function selectsupplier($id){
@@ -100,10 +100,49 @@ class PengeluaranBiayaModal extends ModalComponent
             $this->validate([
                 'pengeluaran.rekening_id' => 'required',
             ]);
+
+            if ($this->retail){
+                $tipe = "keluar retail";
+            }
+            else{
+                $tipe = "keluar";
+            }
+
+            $nobuktikas = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->pengeluaran->tgl_biaya)))
+                ->where('status','open')
+                ->orderby('nomor','asc')
+                ->get();
+
+                if (count($nobuktikas) > 0){
+                    $this->pengeluaran->nobuktikas = $nobuktikas[0]->nomor;
+                }else{
+                    $nomor = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->pengeluaran->tgl_biaya)))
+                    ->where('status','finish')
+                    ->orderby('nomor','asc')
+                    ->get();
+
+                    if (count($nomor) > 0){
+                        $nomorterakhir = $nomor[0]->nomor;
+                    }else{
+                        $nomorterakhir = 0;
+                    }
+
+                    for($i=$nomorterakhir+1;$i<100;$i++){
+                        $nokas = new NoBuktikas();
+                        $nokas['tipe'] = $tipe;
+                        $nokas['tahun'] = date('Y', strtotime($this->pengeluaran->tgl_biaya));
+                        $nokas['nomor'] = $i;
+                        $nokas['status'] = 'open';
+                        $nokas->save();
+                    }
+                    $this->pengeluaran->nobuktikas =  $nomorterakhir + 1;
+                }
+
         }else{
             $this->validate([
                 'pengeluaran.supplier_id' => 'required',
             ]);
+            $this->pengeluaran->nobuktikas = 0;
         }
 
         DB::beginTransaction();
@@ -115,6 +154,15 @@ class PengeluaranBiayaModal extends ModalComponent
                 $this->pengeluaran->sisa = $this->pengeluaran->total;
             }
             $this->pengeluaran->save();
+
+            if ($this->pengeluaran->tipe_pembayaran == 'cash' || $this->pengeluaran->tipe_pembayaran == 'transfer'){
+                DB::table('no_buktikas')->where('tipe',$tipe)
+                    ->where('tahun', date('Y', strtotime($this->pengeluaran->tgl_biaya)))
+                    ->where('nomor', $this->pengeluaran->nobuktikas)
+                    ->update([
+                        'status' => 'finish'
+                    ]);
+            }
 
             $tmps = TmpPengeluaranBiaya::where('user_id',Auth::user()->id)->get();
 

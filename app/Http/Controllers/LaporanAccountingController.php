@@ -25,7 +25,10 @@ class LaporanAccountingController extends Controller
         }
         DB::statement("SET NOCOUNT ON; Exec SP_Piutang '".$tgl_awal."','".$tgl_akhir."'");
 
-        $data = TmpSaldoPiutang::orderBy('nama_customer')->get();
+        $data = TmpSaldoPiutang::orderBy('nama_customer')->orwhere('saldo_awal','<>',0)
+        ->orwhere('debet','<>',0)
+        ->orwhere('kredit','<>',0)
+        ->orwhere('saldo','<>',0)->get();
 
         $pdf = PDF::loadView('print.piutangall', array(
             'data' => $data,
@@ -43,7 +46,10 @@ class LaporanAccountingController extends Controller
         }
         DB::statement("SET NOCOUNT ON; Exec SP_PiutangKaryawan '".$tgl_awal."','".$tgl_akhir."'");
 
-        $data = TmpSaldoPiutangKaryawan::get();
+        $data = TmpSaldoPiutangKaryawan::where('saldo_awal','<>',0)
+        ->orwhere('debet','<>',0)
+        ->orwhere('kredit','<>',0)
+        ->orwhere('saldo','<>',0)->get();
 
         $pdf = PDF::loadView('print.piutangkaryawan', array(
             'data' => $data,
@@ -61,7 +67,11 @@ class LaporanAccountingController extends Controller
         }
         DB::statement("SET NOCOUNT ON; Exec SP_Hutang '".$tgl_awal."','".$tgl_akhir."'");
 
-        $data = TmpSaldoHutang::orderBy('nama_supplier')->get();
+        $data = TmpSaldoHutang::orderBy('nama_supplier')
+        ->orwhere('saldo_awal','<>',0)
+        ->orwhere('debet','<>',0)
+        ->orwhere('kredit','<>',0)
+        ->orwhere('saldo','<>',0)->get();
 
         $pdf = PDF::loadView('print.hutangall', array(
             'data' => $data,

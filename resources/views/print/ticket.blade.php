@@ -75,7 +75,7 @@
             <p>Pekerjaan</p>
             <p style="font-weight:bold;">{{ $data[0]->nama_customer}}</p>
         </div>
-        <table class="mytable" style="margin-top:0.5rem; width:100%;border:2px solid"">
+        <table class="mytable" style="margin-top:0.5rem; width:100%;border:2px solid">
             <tr>
                 <td class="kl1">No Urut Ticket</td>
                 <td class="kl2 borderleft">: {{ $data[0]->nourut }}</td>

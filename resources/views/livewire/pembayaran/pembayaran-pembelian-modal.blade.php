@@ -68,20 +68,15 @@
         @enderror
     </x-form-group>
 
+    <x-checkbox-group caption="Retail" class="my-2">
+        <x-checkbox wire:model="retail"/>
+    </x-checkbox-group>
+
     <x-form-group caption="Keterangan">
         <x-textbox
             wire:model="keterangan"
         />
         @error('keterangan')
-        <x-error-form>{{ $message }}</x-error-form>
-        @enderror
-    </x-form-group>
-
-    <x-form-group caption="No Bukti Kas">
-        <x-textbox
-            wire:model="nobuktikas"
-        />
-        @error('nobuktikas')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>

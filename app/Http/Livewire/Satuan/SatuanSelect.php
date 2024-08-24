@@ -31,6 +31,7 @@ class SatuanSelect extends Component
         $this->emitTo('barang.bahanbakar-modal','selectsatuan', $id);
         $this->emitTo('mutubeton.mutubeton-modal','selectsatuan', $id);
         $this->emitTo('sewa.itemsewa-modal','selectsatuan', $id);
+        $this->emitTo('produk-turunan.produk-turunan-modal','selectsatuan', $id);
     }
 
     public function selectDeskripsi($id){

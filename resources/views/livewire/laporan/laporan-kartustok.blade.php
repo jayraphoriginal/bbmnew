@@ -29,5 +29,8 @@
         <x-link-button
             href="/laporankartustok/{{$tgl_awal}}/{{$tgl_akhir}}/{{$barang_id}}" target="__blank"
             >Print</x-link-button>
+        <x-link-button-export
+            href="/exportkartustok/{{$tgl_awal}}/{{$tgl_akhir}}/{{$barang_id}}" target="__blank"
+            >Export</x-link-button-export>
     </x-footer-modal>
 </div>

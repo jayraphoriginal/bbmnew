@@ -131,7 +131,7 @@
                     @endphp
                     <tr>
                         <td class="captioncenter">{{ $i++ }}</td>
-                        <td class="captioncenter">{{ $jual->kode_mutu }}</td>
+                        <td class="captioncenter">{{ $jual->deskripsi }}</td>
                         <td class="captionright">{{ number_format($jual->jumlah,2,".",",") }}</td>
                         <td class="captionright">{{ number_format($jual->harga_intax/((100+$jual->pajak)/100),2,".",",") }}</td>
                         <td class="captionright">{{ number_format($jual->jumlah * $jual->harga_intax/((100+$jual->pajak)/100),2,".",",") }}</td>

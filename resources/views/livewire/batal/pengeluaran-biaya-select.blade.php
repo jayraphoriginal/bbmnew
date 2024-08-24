@@ -24,7 +24,7 @@
                         <div
                             wire:click="selectdata({{ $item->id }})" @click="search = false" 
                             class="flex items-center text-sm justify-between hover:bg-purple-700 p-2 hover:text-white overflow-y-scroll">
-                            {{ $item->ket.' - '.number_format($item->total,0,',','.') }}
+                            {{ $item->id.' - '.$item->ket.' - '.number_format($item->total,0,',','.') }}
                         </div>
                     @endforeach
                 @else

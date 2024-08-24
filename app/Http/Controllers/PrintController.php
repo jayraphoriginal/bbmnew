@@ -20,6 +20,7 @@ use App\Models\ManualJournal;
 use App\Models\PemakaianBbm;
 use App\Models\PengisianBbm;
 use App\Models\PengisianBbmStok;
+use App\Models\VSuratJalan;
 use App\Models\Rate;
 use App\Models\Supplier;
 use App\Models\TambahanBbm;
@@ -50,7 +51,6 @@ use PDF;
 class PrintController extends Controller
 {
     public function so($id){
-
         //return $id;
 
         $user = Auth::user();
@@ -80,6 +80,62 @@ class PrintController extends Controller
                 'data' => $data, 
                 'concretepump' => $concretepump,
                 'biayatambahan' => $biayatambahan,
+            ));
+            return $pdf->stream();
+        }else{
+            return abort(404);
+        }
+       
+    }
+
+    public function sj($id){
+        //return $id;
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Surat Jalan')){
+            return abort(401);
+        }
+
+        $data = VSuratJalan::where('id', $id)
+                ->get();
+        
+        $customPaper = array(0,0,609.44,396.85);
+
+        $pdf = PDF::loadView('print.sj', array(
+            'data' => $data,
+        ))->setPaper($customPaper);
+        return $pdf->stream();
+       
+    }
+
+    public function wo($id, $tglprint){
+        //return $id;
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('PO Customer')){
+            return abort(401);
+        }
+
+        $data = DB::table('m_salesorders')
+                ->select('m_salesorders.*', 'd_salesorders.*', 'customers.nama_customer', 'customers.alamat', 
+                'customers.notelp','customers.nofax','mutubetons.deskripsi', 
+                'rates.tujuan')
+                ->join('customers','m_salesorders.customer_id','customers.id')        
+                ->join('d_salesorders','m_salesorders.id','d_salesorders.m_salesorder_id')
+                ->join('mutubetons', 'd_salesorders.mutubeton_id','mutubetons.id')
+                ->join('rates','d_salesorders.rate_id','rates.id')
+                ->where('m_salesorders.id',$id)
+                ->get();
+        
+        $concretepump = VConcretepump::where('m_salesorder_id',$id)->get();
+
+       // return $concretepump;
+
+        if (count($data) > 0){
+            $pdf = PDF::loadView('print.WO', array(
+                'data' => $data, 
+                'concretepump' => $concretepump,
+                'tglprint' => $tglprint
             ));
             return $pdf->stream();
         }else{
@@ -340,9 +396,9 @@ class PrintController extends Controller
 
         $jurnalmanual = ManualJournal::find($id);
         if ($jurnalmanual->bukti_kas == 'bukti penerimaan kas'){
-            $data = VJurnalManual::where('id',$id)->where('debet','>',0)->select('id','keterangan','tanggal',DB::raw('sum(debet) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti penerimaan kas',id) as tipe"))->groupBy('keterangan','tanggal','id')->first();
+            $data = VJurnalManual::where('id',$id)->where('debet','>',0)->select('id','keterangan','nobuktikas','tanggal',DB::raw('sum(debet) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti penerimaan kas',id) as tipe"))->groupBy('nobuktikas','keterangan','tanggal','id')->first();
         }else if($jurnalmanual->bukti_kas == 'bukti pengeluaran kas'){
-            $data = VJurnalManual::where('id',$id)->where('kredit','>',0)->select('id','keterangan','tanggal',DB::raw('sum(kredit) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti pengeluaran kas',id) as tipe"))->groupBy('keterangan','tanggal','id')->first();
+            $data = VJurnalManual::where('id',$id)->where('kredit','>',0)->select('id','keterangan','nobuktikas','tanggal',DB::raw('sum(kredit) as jumlah'), DB::raw("dbo.F_GetTipeJurnalManual('bukti pengeluaran kas',id) as tipe"))->groupBy('nobuktikas','keterangan','tanggal','id')->first();
         }
         $terbilang = Terbilang::make($data->jumlah);
        

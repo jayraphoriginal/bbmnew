@@ -14,8 +14,8 @@
 
 
     <x-form-group caption="Barang Jadi">
-        <livewire:produksi.barang-select :deskripsi="$barang" />
-        @error('produksi.barang_id')
+        <livewire:produk-turunan.produk-turunan-select :deskripsi="$deskripsi" />
+        @error('barang_id')
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
@@ -80,6 +80,12 @@
         class="mt-2"
         wire:click.prevent="$emit('openModal', 'produksi.produksi-detail-modal')">
         Tambah Detail
+    </x-button>
+    
+    <x-button
+        class="mt-2"
+        wire:click.prevent="insertkomposisi">
+        Komposisi
     </x-button>
 
     <livewire:produksi.tmp-produksi-table/>      

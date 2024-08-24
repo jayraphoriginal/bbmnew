@@ -47,6 +47,9 @@
                 @enderror
             </x-form-group>
             @endcan
+            <x-checkbox-group caption="Retail" class="my-2">
+                <x-checkbox wire:model="retail"/>
+            </x-checkbox-group>
             <x-form-group caption="Keterangan">
                 <x-textbox
                     wire:model="pengeluaran.ket"
@@ -56,14 +59,6 @@
                 @enderror
             </x-form-group>
 
-            <x-form-group caption="No Bukti Kas">
-                <x-textbox
-                    wire:model="pengeluaran.nobuktikas"
-                />
-                @error('pengeluaran.nobuktikas')
-                    <x-error-form>{{ $message }}</x-error-form>
-                @enderror
-            </x-form-group>
         </div>
         <div class="lg:w-1/2">
             <x-form-group caption="PPN">
