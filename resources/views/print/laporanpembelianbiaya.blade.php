@@ -6,13 +6,13 @@
 
     <style>
         .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
-            padding: 5px;
+            padding: 2px;
             vertical-align: middle;
             border:1px solid;
             margin:0;
         }
         *{
-            font-size:11px;
+            font-size:10px;
         }
         @page{
             margin: 0.3in 0.3in 0.2in 0.3in;
@@ -66,6 +66,7 @@
             
             @php
                 $total= 0;
+                $totalsubppn=0;
                 $totalppn=0;
                 $totalpph=0;
             @endphp
@@ -88,15 +89,16 @@
                 <td class="text-right">{{ number_format($item->subtotal,2,'.',',') }}</td>
             </tr>
                 @php
-                    $total=$item->subtotal;
+                    $total=$total+$item->subtotal;
                     $totalppn=$totalppn+$item->subtotal_ppn;
                     $totalpph=$totalpph+$item->pph;
                 @endphp
             @endforeach 
             <tr>
-                <td colspan="11" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalppn,2,',','.') }}</td>
+                <td colspan="12" style="font-weight:bold">Total</td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($totalpph,2,',','.') }}</td>
+ <td class="text-right" style="font-weight:bold">{{ number_format($totalppn,2,',','.') }}</td>
+
                 <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
             </tr>
         </table>

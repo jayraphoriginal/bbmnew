@@ -53,7 +53,7 @@ final class TicketProduksiTable extends PowerGridComponent
     {
         return VTicketProduksi::where(
             'status','<>','cancel'
-        );
+        )->orderBy('jam_ticket','desc')->orderBy('noticket','desc');
     }
 
     /*

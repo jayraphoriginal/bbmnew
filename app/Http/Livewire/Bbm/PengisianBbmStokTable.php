@@ -51,7 +51,7 @@ final class PengisianBbmStokTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VPengisianBbmStok::query();
+        return VPengisianBbmStok::orderBy('tgl_pengisian','desc')->orderBy('created_at','desc');
     }
 
     /*

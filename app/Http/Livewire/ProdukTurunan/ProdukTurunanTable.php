@@ -205,7 +205,7 @@ final class ProdukTurunanTable extends PowerGridComponent
             ->tooltip('delete')
             ->openModal('delete-modal', [
                 'data_id'                 => 'id',
-                'TableName'               => 'produkturunan',
+                'TableName'               => 'produk_turunan',
                 'confirmationTitle'       => 'Delete Produk Turunan',
                 'confirmationDescription' => 'apakah yakin ingin hapus produk turunan ?',
             ]),

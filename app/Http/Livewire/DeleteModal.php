@@ -2,10 +2,13 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DPenjualan;
+use App\Models\MPenjualan;
+use App\Models\VSuratJalan;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
-use DB;
 use Throwable;
 
 class DeleteModal extends ModalComponent
@@ -50,20 +53,37 @@ class DeleteModal extends ModalComponent
     public function confirm()
     {
         
-        if ($this->data_id) {
-            try{
-                DB::table($this->TableName)->where('id',$this->data_id)->delete();
-            }
-            catch(Throwable $e){
-                $this->alert('error', $e->getMessage(), [
+
+        if ($this->TableName == 'm_penjualans'){
+
+            $suratjalan = VSuratJalan::where('m_penjualan_id', $this->data_id)->get();
+            if (count($suratjalan) > 0){
+                $this->alert('warning','Sudah Ada Surat Jalan, Rincian Barang gagal update', [
                     'position' => 'center'
                 ]);
                 return;
             }
-        }
+            
+            DPenjualan::where('m_penjualan_id', $this->data_id)->delete();
+            MPenjualan::where('id',$this->data_id)->delete();
 
-        if ($this->data_ids) {
-            DB::table($this->TableName)->whereIn('id', $this->data_ids)->delete();
+        }else{
+
+            if ($this->data_id) {
+                try{
+                    DB::table($this->TableName)->where('id',$this->data_id)->delete();
+                }
+                catch(Throwable $e){
+                    $this->alert('error', $e->getMessage(), [
+                        'position' => 'center'
+                    ]);
+                    return;
+                }
+            }
+
+            if ($this->data_ids) {
+                DB::table($this->TableName)->whereIn('id', $this->data_ids)->delete();
+            }
         }
 
         $this->alert('warning', 'Delete Success', [

@@ -51,7 +51,7 @@ final class PenerimaanTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VPenerimaan::query();
+        return VPenerimaan::orderBy('tgl_bayar','desc');
     }
 
     /*
@@ -235,7 +235,7 @@ final class PenerimaanTable extends PowerGridComponent
             ->target('_blank')
             ->method('get')
             ->route("printbuktikaspenerimaan",[
-                'id' => 'ID'
+                'id' => 'id'
             ]),
         ];
     }

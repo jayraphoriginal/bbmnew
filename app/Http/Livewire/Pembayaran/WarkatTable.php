@@ -51,7 +51,7 @@ final class WarkatTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VPembayaran::where('tipe','cheque')->orwhere('tipe','giro')->wherenull('tgl_cair');
+        return VPembayaran::where('tipe','cheque')->orwhere('tipe','giro')->wherenull('tgl_cair')->orderBy('jatuh_tempo','asc');
     }
 
     /*

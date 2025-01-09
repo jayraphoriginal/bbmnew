@@ -51,7 +51,7 @@ final class OpnameTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return MOpname::query();
+        return MOpname::orderBy('tgl_opname','desc')->orderBy('noopname','desc');
     }
 
     /*
@@ -115,6 +115,13 @@ final class OpnameTable extends PowerGridComponent
     public function columns(): array
     {
         return [
+
+            Column::add()
+            ->title('NO OPNAME')
+            ->field('noopname')
+            ->searchable()
+            ->sortable()
+            ->makeInputText(),
            
             Column::add()
             ->title('TGL OPNAME')

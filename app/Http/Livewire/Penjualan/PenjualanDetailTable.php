@@ -31,10 +31,7 @@ final class PenjualanDetailTable extends PowerGridComponent
     */
     public function setUp(): void
     {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showSearchInput()
-            ->showExportOption('download', ['excel', 'csv']);
+        $this->showPerPage();
     }
 
     /*

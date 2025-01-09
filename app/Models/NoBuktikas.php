@@ -9,4 +9,5 @@ class NoBuktikas extends Model
 {
     use HasFactory;
     protected $table = 'no_buktikas';
+    public $timestamps = false;
 }

@@ -50,7 +50,8 @@ final class SalesorderOpenTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VJumlahSo::select(DB::raw('ROW_NUMBER() OVER(ORDER BY tgl_so ASC) AS id'),'V_JumlahSalesorder.*')->where('status_detail','Open');
+        return VJumlahSo::select(DB::raw('ROW_NUMBER() OVER(ORDER BY tgl_so ASC) AS id'),'V_JumlahSalesorder.*')->where('status_detail','Open')->orderBy('tgl_so','desc')
+        ->orderBy('noso','desc');
     }
     
 

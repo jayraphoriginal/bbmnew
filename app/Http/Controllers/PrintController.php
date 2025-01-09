@@ -39,7 +39,9 @@ use App\Models\VPenerimaan;
 use App\Models\VPengeluaranBiaya;
 use App\Models\VPengeluaranBiayaDetail;
 use App\Models\VPengisianBbm;
+use App\Models\VPenjualan;
 use App\Models\VPrintInvoice;
+use App\Models\VSuratJalanSum;
 use App\Models\VTicket;
 use App\Models\VTicketHeader;
 use App\Models\VTicketProduksi;
@@ -60,7 +62,7 @@ class PrintController extends Controller
 
         $data = DB::table('m_salesorders')
                 ->select('m_salesorders.*', 'd_salesorders.*', 'customers.nama_customer', 'customers.alamat', 
-                'customers.notelp','customers.nofax','mutubetons.kode_mutu', 
+                'customers.notelp','customers.nofax','mutubetons.kode_mutu', 'mutubetons.deskripsi',
                 'rates.tujuan')
                 ->join('customers','m_salesorders.customer_id','customers.id')        
                 ->join('d_salesorders','m_salesorders.id','d_salesorders.m_salesorder_id')
@@ -96,7 +98,7 @@ class PrintController extends Controller
             return abort(401);
         }
 
-        $data = VSuratJalan::where('id', $id)
+        $data = VSuratJalanSum::where('id', $id)
                 ->get();
         
         $customPaper = array(0,0,609.44,396.85);
@@ -136,6 +138,29 @@ class PrintController extends Controller
                 'data' => $data, 
                 'concretepump' => $concretepump,
                 'tglprint' => $tglprint
+            ));
+            return $pdf->stream();
+        }else{
+            return abort(404);
+        }
+       
+    }
+
+    public function sopenjualan($id){
+        //return $id;
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Penjualan Barang')){
+            return abort(401);
+        }
+
+        $data = VPenjualan::where('m_penjualan_id',$id)
+                ->get();
+        
+     
+        if (count($data) > 0){
+            $pdf = PDF::loadView('print.SOPenjualan', array(
+                'data' => $data, 
             ));
             return $pdf->stream();
         }else{

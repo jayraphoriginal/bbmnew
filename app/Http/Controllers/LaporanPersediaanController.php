@@ -10,6 +10,7 @@ use App\Models\VKartuStok;
 use App\Models\VOpname;
 use App\Models\VPemakaianBarang;
 use App\Models\VProduksiProdukturunan;
+use App\Models\VProduksiProdukturunanDetail;
 use App\Models\VStok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,11 +31,16 @@ class LaporanPersediaanController extends Controller
 
         //return $data;
 
-        $pdf = PDF::loadView('print.laporankomposisi', array(
+        // $pdf = PDF::loadView('print.laporankomposisi', array(
+        //     'data' => $data,
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+       return View('print.laporankomposisi', array(
             'data' => $data,
         ));
 
-        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function laporanstokall(){
@@ -45,11 +51,16 @@ class LaporanPersediaanController extends Controller
 
         $data = VStok::orderBy('nama_barang')->get();
 
-        $pdf = PDF::loadView('print.laporanstokall', array(
+        // $pdf = PDF::loadView('print.laporanstokall', array(
+        //     'data' => $data,
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanstokall', array(
             'data' => $data,
         ));
 
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -67,13 +78,19 @@ class LaporanPersediaanController extends Controller
         ->orderBy('trans_id','asc')
         ->orderBy('id','asc')->get();
 
-        $pdf = PDF::loadView('print.laporankartustok', array(
+        // $pdf = PDF::loadView('print.laporankartustok', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporankartustok', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -86,13 +103,19 @@ class LaporanPersediaanController extends Controller
         $data = VPemakaianBarang::where('tgl_pemakaian','>=',$tgl_awal)
         ->where('tgl_pemakaian','<=',$tgl_akhir)->orderBy('tgl_pemakaian')->orderBy('jenis_pembebanan')->get();
 
-        $pdf = PDF::loadView('print.laporanpemakaianbarang', array(
+        // $pdf = PDF::loadView('print.laporanpemakaianbarang', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporanpemakaianbarang', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','landscape')->stream();
 
     }
 
@@ -112,14 +135,22 @@ class LaporanPersediaanController extends Controller
             $alken = Alat::find($beban_id)->nama_alat;
         }
 
-        $pdf = PDF::loadView('print.laporanpemakaianbeban', array(
+        // $pdf = PDF::loadView('print.laporanpemakaianbeban', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir,
+        //     'alken' => $alken
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporanpemakaianbeban', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir,
             'alken' => $alken
         ));
 
-        return $pdf->setPaper('A4','landscape')->stream();
 
     }
 
@@ -140,15 +171,22 @@ class LaporanPersediaanController extends Controller
             $alken = Alat::find($beban_id)->nama_alat;
         }
 
-        $pdf = PDF::loadView('print.laporanpemakaianbarangbeban', array(
+        // $pdf = PDF::loadView('print.laporanpemakaianbarangbeban', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir,
+        //     'alken' => $alken,
+        //     'barang' => $barang
+        // ));
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporanpemakaianbarangbeban', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir,
             'alken' => $alken,
             'barang' => $barang
         ));
-
-        return $pdf->setPaper('A4','landscape')->stream();
 
     }
 
@@ -161,13 +199,20 @@ class LaporanPersediaanController extends Controller
         DB::statement("SET NOCOUNT ON; Exec SP_KartuStokHarian '".$tgl_awal."','".$tgl_akhir."',".$barang_id."");
         $data = TmpKartuStok::orderBy('tanggal','asc')->get();
 
-        $pdf = PDF::loadView('print.laporankartustokharian', array(
+        // $pdf = PDF::loadView('print.laporankartustokharian', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporankartustokharian', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
 
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -182,13 +227,19 @@ class LaporanPersediaanController extends Controller
 
         $data = DB::table('tmp_stok_tanggal')->get();
       
-        $pdf = PDF::loadView('print.laporanstoktanggal', array(
+        // $pdf = PDF::loadView('print.laporanstoktanggal', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanstoktanggal', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -203,13 +254,19 @@ class LaporanPersediaanController extends Controller
 
         $data = DB::table('tmp_stok_tanggal')->get();
       
-        $pdf = PDF::loadView('print.laporanstokmaterialtanggal', array(
+        // $pdf = PDF::loadView('print.laporanstokmaterialtanggal', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanstokmaterialtanggal', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -224,13 +281,19 @@ class LaporanPersediaanController extends Controller
 
         $data = DB::table('tmp_stok_tanggal')->get();
       
-        $pdf = PDF::loadView('print.laporanstokprodukturunantanggal', array(
+        // $pdf = PDF::loadView('print.laporanstokprodukturunantanggal', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanstokprodukturunantanggal', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -249,23 +312,34 @@ class LaporanPersediaanController extends Controller
         ->orwhere('saldo','<>',0)
         ->get();
       
-        $pdf = PDF::loadView('print.laporansaldopersediaan', array(
+        // $pdf = PDF::loadView('print.laporansaldopersediaan', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporansaldopersediaan', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
 
-        return $pdf->setPaper('A4','potrait')->stream();
-
     }
 
     public function stokmaterial(){
         $data = DB::table('V_StokMaterial')->get();
-        $pdf = PDF::loadView('print.laporanstokall', array(
+        // $pdf = PDF::loadView('print.laporanstokall', array(
+        //     'data' => $data
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanstokall', array(
             'data' => $data
         ));
 
-        return $pdf->setPaper('A4','potrait')->stream();
     }
 
 
@@ -281,14 +355,21 @@ class LaporanPersediaanController extends Controller
         ->orderBy('tgl_opname','asc')
         ->get();
 
-        $pdf = PDF::loadView('print.laporanstokopname', array(
+        // $pdf = PDF::loadView('print.laporanstokopname', array(
+        //     'barang_id' => $barang_id,
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanstokopname', array(
             'barang_id' => $barang_id,
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -303,14 +384,21 @@ class LaporanPersediaanController extends Controller
         ->orderBy('tgl_opname','asc')
         ->get();
 
-        $pdf = PDF::loadView('print.laporanstokopname', array(
+        // $pdf = PDF::loadView('print.laporanstokopname', array(
+        //     'barang_id' => null,
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanstokopname', array(
             'barang_id' => null,
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -326,14 +414,21 @@ class LaporanPersediaanController extends Controller
         ->orderBy('tanggal','asc')
         ->get();
         
-        $pdf = PDF::loadView('print.laporanproduksiprodukturunan', array(
+        // $pdf = PDF::loadView('print.laporanproduksiprodukturunan', array(
+        //     'barang_id' => $barang_id,
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporanproduksiprodukturunan', array(
             'barang_id' => $barang_id,
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -348,14 +443,55 @@ class LaporanPersediaanController extends Controller
         ->orderBy('tanggal','asc')
         ->get();
 
-        $pdf = PDF::loadView('print.laporanproduksiprodukturunan', array(
+        // $pdf = PDF::loadView('print.laporanproduksiprodukturunan', array(
+        //     'barang_id' => null,
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporanproduksiprodukturunan', array(
             'barang_id' => null,
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
 
-        return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function laporanproduksiprodukturunandetail($tgl_awal,$tgl_akhir){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Produksi Produk Turunan')){
+            return abort(401);
+        }
+
+        $data = VProduksiProdukturunan::where('tanggal','>=',date_create($tgl_awal)->format(('d/M/Y')))
+        ->where('tanggal','<=',date_create($tgl_akhir)->format(('d/M/Y')))
+        ->orderBy('tanggal','asc')
+        ->get();
+
+        $details = VProduksiProdukturunanDetail::where('tanggal','>=',date_create($tgl_awal)->format(('d/M/Y')))
+        ->where('tanggal','<=',date_create($tgl_akhir)->format(('d/M/Y')))
+        ->orderBy('tanggal','asc')
+        ->get();
+
+        // $pdf = PDF::loadView('print.laporanproduksiprodukturunandetail', array(
+        //     'data' => $data,
+        //     'details' => $details,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporanproduksiprodukturunandetail', array(
+            'data' => $data,
+            'details' => $details,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
 
     }
 }

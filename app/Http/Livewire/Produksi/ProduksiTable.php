@@ -53,7 +53,7 @@ final class ProduksiTable extends PowerGridComponent
     {
         return MProduksi::join('barangs','m_produksis.barang_id','barangs.id')
         ->join('satuans','m_produksis.satuan_id','satuans.id')
-        ->select('m_produksis.*','barangs.nama_barang','satuans.satuan');
+        ->select('m_produksis.*','barangs.nama_barang','satuans.satuan')->orderBy('tanggal','desc');
     }
 
     /*
@@ -89,6 +89,7 @@ final class ProduksiTable extends PowerGridComponent
             ->addColumn('barang_id')
             ->addColumn('nama_barang')
             ->addColumn('jumlah')
+            ->addColumn('tanggal')
             ->addColumn('hpp', function(MProduksi $model) { 
                 return number_format($model->hpp,2,'.',',');
             })
@@ -98,8 +99,8 @@ final class ProduksiTable extends PowerGridComponent
             ->addColumn('satuan_id')
             ->addColumn('satuan')
             ->addColumn('keterangan')
-            ->addColumn('created_at_formatted', function(MProduksi $model) { 
-                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            ->addColumn('tanggal_formatted', function(MProduksi $model) { 
+                return Carbon::parse($model->tanggal)->format('d/m/Y');
             })
             ->addColumn('updated_at_formatted', function(MProduksi $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
@@ -124,6 +125,11 @@ final class ProduksiTable extends PowerGridComponent
     {
         return [
         
+            Column::add()
+                ->title('TGL PRODUKSI')
+                ->field('tanggal_formatted')
+                ->sortable(),
+
             Column::add()
                 ->title('BARANG')
                 ->field('nama_barang')

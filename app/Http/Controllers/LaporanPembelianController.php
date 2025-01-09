@@ -24,13 +24,19 @@ class LaporanPembelianController extends Controller
         ->orderBy('V_PembelianDetail.tgl_masuk')
         ->get();
 
-        $pdf = PDF::loadView('print.laporanpembelianbarang', array(
+        // $pdf = PDF::loadView('print.laporanpembelianbarang', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporanpembelianbarang', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function laporanpembelianppn($tgl_awal,$tgl_akhir){
@@ -46,13 +52,19 @@ class LaporanPembelianController extends Controller
         ->orderBy('V_PembelianDetail.tgl_masuk')
         ->get();
 
-        $pdf = PDF::loadView('print.laporanpembelian', array(
+        // $pdf = PDF::loadView('print.laporanpembelian', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+       return View('print.laporanpembelian', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function laporanpembelianbiaya($tgl_awal,$tgl_akhir){
@@ -68,13 +80,19 @@ class LaporanPembelianController extends Controller
         ->orderBy('tgl_masuk','asc')
         ->get();
 
-        $pdf = PDF::loadView('print.laporanpembelianbiaya', array(
+        // $pdf = PDF::loadView('print.laporanpembelianbiaya', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporanpembelianbiaya', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     

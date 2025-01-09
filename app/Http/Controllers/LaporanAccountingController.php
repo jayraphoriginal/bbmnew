@@ -30,12 +30,18 @@ class LaporanAccountingController extends Controller
         ->orwhere('kredit','<>',0)
         ->orwhere('saldo','<>',0)->get();
 
-        $pdf = PDF::loadView('print.piutangall', array(
+        // $pdf = PDF::loadView('print.piutangall', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return view('print.piutangall', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function piutangkaryawan($tgl_awal, $tgl_akhir){
@@ -51,12 +57,17 @@ class LaporanAccountingController extends Controller
         ->orwhere('kredit','<>',0)
         ->orwhere('saldo','<>',0)->get();
 
-        $pdf = PDF::loadView('print.piutangkaryawan', array(
-            'data' => $data,
-            'tgl_awal' => $tgl_awal,
-            'tgl_akhir' => $tgl_akhir
-        ));
-        return $pdf->setPaper('A4','potrait')->stream();
+        // $pdf = PDF::loadView('print.piutangkaryawan', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        // return $pdf->setPaper('A4','potrait')->stream();
+        return View('print.piutangkaryawan', array(
+                'data' => $data,
+                'tgl_awal' => $tgl_awal,
+                'tgl_akhir' => $tgl_akhir
+            ));
     }
 
     public function hutang($tgl_awal, $tgl_akhir){
@@ -73,12 +84,18 @@ class LaporanAccountingController extends Controller
         ->orwhere('kredit','<>',0)
         ->orwhere('saldo','<>',0)->get();
 
-        $pdf = PDF::loadView('print.hutangall', array(
+        // $pdf = PDF::loadView('print.hutangall', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.hutangall', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        return $pdf->setPaper('A4','potrait')->stream();
     }
 
     public function trialbalance($tahun,$bulan){
@@ -91,12 +108,19 @@ class LaporanAccountingController extends Controller
 
         $data = TrialBalance::orderby('kode_akun')->get();
 
-        $pdf = PDF::loadView('print.trialbalance', array(
+        // $pdf = PDF::loadView('print.trialbalance', array(
+        //     'data' => $data,
+        //     'tahun' => $tahun,
+        //     'bulan' => $bulan
+        // ));
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+       return View('print.trialbalance', array(
             'data' => $data,
             'tahun' => $tahun,
             'bulan' => $bulan
         ));
-        return $pdf->setPaper('A4','landscape')->stream();
+       
     }
 
     public function neraca($tanggal){
@@ -109,11 +133,16 @@ class LaporanAccountingController extends Controller
 
         $data = Neraca::orderby('level1')->orderBy('level2')->get();
 
-        $pdf = PDF::loadView('print.neraca', array(
+        // $pdf = PDF::loadView('print.neraca', array(
+        //     'data' => $data,
+        //     'tanggal' => $tanggal,
+        // ));
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.neraca', array(
             'data' => $data,
             'tanggal' => $tanggal,
         ));
-        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function labarugi($tgl_awal,$tgl_akhir){
@@ -126,12 +155,18 @@ class LaporanAccountingController extends Controller
 
         $data = LabaRugi::orderby('tipe')->orderBy('tipe2')->get();
 
-        $pdf = PDF::loadView('print.labarugi', array(
+        // $pdf = PDF::loadView('print.labarugi', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir,
+        // ));
+        // return $pdf->setPaper('A4','portrait')->stream();
+
+        return View('print.labarugi', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir,
         ));
-        return $pdf->setPaper('A4','portrait')->stream();
     }
 
     public function laporanjurnaltanggal($tgl_awal,$tgl_akhir){
@@ -140,18 +175,27 @@ class LaporanAccountingController extends Controller
             return abort(401);
         }
 
+        @ini_set('max_execution_time',300);
+        @ini_set('memory_limit',"512M");
+
         DB::statement("SET NOCOUNT ON; Exec SP_JurnalTanggal '".$tgl_awal."','".$tgl_akhir."'");
         $data = VJurnalTanggal::where('tanggal','>=',$tgl_awal)
         ->where('tanggal','<=',$tgl_akhir)
         ->orderBy('tanggal')->get();
 
-        $pdf = PDF::loadView('print.laporanjurnaltanggal', array(
+        // $pdf = PDF::loadView('print.laporanjurnaltanggal', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanjurnaltanggal', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        
-        return $pdf->setPaper('A4','potrait')->stream();
     }
 
 
@@ -165,11 +209,17 @@ class LaporanAccountingController extends Controller
 
         $data = DB::table('tmp_jurnal_tanggal')->get();
 
-        $pdf = PDF::loadView('print.laporanclosing', array(
+        // $pdf = PDF::loadView('print.laporanclosing', array(
+        //     'data' => $data,
+        //     'tahun' => $tahun,
+        //     'bulan' => $bulan
+        // ));
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporanclosing', array(
             'data' => $data,
             'tahun' => $tahun,
             'bulan' => $bulan
         ));
-        return $pdf->setPaper('A4','landscape')->stream();
     }
 }

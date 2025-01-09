@@ -52,7 +52,7 @@ final class PengeluaranBiayaTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VPengeluaranBiaya::query();
+        return VPengeluaranBiaya::orderBy('tgl_biaya','desc')->orderBy('nobuktikas','desc');
     }
 
     /*

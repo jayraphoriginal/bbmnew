@@ -53,7 +53,7 @@ final class JurnalManualTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VJurnalManual::query();
+        return VJurnalManual::orderBy('tanggal','desc')->orderBy('created_at','desc');
     }
 
     /*

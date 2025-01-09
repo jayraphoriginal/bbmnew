@@ -50,7 +50,7 @@ final class PembayaranPembelianTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VPembayaran::query();
+        return VPembayaran::orderBy('tgl_bayar','desc')->orderBy('nobuktikas','desc');
     }
 
     /*

@@ -79,6 +79,7 @@ class SalesorderDetailModal extends ModalComponent
 
 
         $this->DSalesorder->harga_intax = str_replace(',', '', $this->DSalesorder->harga_intax);
+ $this->DSalesorder->jumlah = str_replace(',', '', $this->DSalesorder->jumlah);
 
         $this->DSalesorder->m_salesorder_id = $this->m_salesorder_id;
         $this->DSalesorder->sisa = $this->DSalesorder->jumlah;

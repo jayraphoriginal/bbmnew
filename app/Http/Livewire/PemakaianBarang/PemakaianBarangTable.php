@@ -51,7 +51,7 @@ final class PemakaianBarangTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VPemakaianBarang::query();
+        return VPemakaianBarang::orderBy('tgl_pemakaian', 'desc');
     }
 
     /*

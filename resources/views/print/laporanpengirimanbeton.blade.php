@@ -79,6 +79,45 @@
                 <td colspan="2"></td>
             </tr>
         </table>
+
+        @php
+            $totalmutu = 0;
+        @endphp
+        <table style="width:40%; margin-top:15px; float:left">   
+        @foreach($datacustomer as $customer)
+            <tr>
+                <td>{{ $customer->nama_customer.' - '.$customer->tujuan.' ('.$customer->kode_mutu.')' }}</td>
+                <td class="text-right">{{ number_format($customer->total,1,',','.').' '.$customer->satuan }}</td>
+            </tr>
+            @php
+                $totalmutu = $totalmutu + $customer->total;
+            @endphp
+        @endforeach
+            <tr style="height: 20px;">
+                <td></td>
+                <td class="text-right" style="margin-top: 10px;border-top:3px solid;font-weight:bold;">{{ number_format($totalmutu,2,',','.').' '.$datacustomer[0]->satuan}}</td>
+            </tr>
+        </table>
+
+        @php
+            $totalrate = 0;
+        @endphp
+        <table style="width:40%; margin-top:15px; float:right">
+        @foreach($datarate as $rate)
+            <tr>
+                <td>{{ $rate->nopol.' ('.$rate->nama_driver.')' }}</td>
+                <td class="text-right">{{ $rate->jumlah_rate }} Rate</td>
+            </tr>
+             @php
+                $totalrate = $totalrate + $rate->jumlah_rate;
+            @endphp
+        @endforeach
+         <tr style="height: 20px;">
+                <td></td>
+                <td class="text-right" style="margin-top: 10px;border-top:3px solid;font-weight:bold;">{{ number_format($totalrate,0)}} Rate</td>
+            </tr>
+        </table>
+
         @endif
     </body>
 

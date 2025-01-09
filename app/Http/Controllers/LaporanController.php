@@ -37,6 +37,7 @@ use App\Models\VTicketHeaderAll;
 use App\Models\VTicketHeaderSum;
 use App\Models\VTicketProduksi;
 use App\Models\TmpTicketGabungan;
+use App\Models\VSuratJalanSum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -420,11 +421,60 @@ class LaporanController extends Controller
         ->orderBy('V_TicketHeaderAll.noticket')
         ->get();
 
-        $pdf = PDF::loadView('print.rekapticketmaterial', array(
-            'data' => $data,
-            'tgl_awal' => $tgl_awals->jam_ticket,
-            'tgl_akhir' => $tgl_akhirs->jam_ticket,
-        ));
+        if (is_null($tgl_awals) || is_null($tgl_akhirs)){
+            $pdf = PDF::loadView('print.rekapticketmaterial', array(
+                'data' => $data,
+                'tgl_awal' => date('y-m-d'),
+                'tgl_akhir' => date('y-m-d'),
+            ));
+        }
+        else{
+
+            $pdf = PDF::loadView('print.rekapticketmaterial', array(
+                'data' => $data,
+                'tgl_awal' => $tgl_awals->jam_ticket,
+                'tgl_akhir' => $tgl_akhirs->jam_ticket,
+            ));
+        
+        }
+        return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function rekapsjall($penjualan_id){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Penjualan Barang')){
+            return abort(401);
+        }
+        
+        $tgl_awals = VSuratJalanSum::where('m_penjualan_id',$penjualan_id)
+        ->orderBy('V_SuratJalan_Sum.tgl_pengiriman','asc')
+        ->get()->first();
+
+        $tgl_akhirs = VSuratJalanSum::where('m_penjualan_id',$penjualan_id)
+        ->orderBy('V_SuratJalan_Sum.tgl_pengiriman','desc')
+        ->get()->first();
+
+        $data = VSuratJalanSum::where('m_penjualan_id',$penjualan_id)
+        ->orderBy('V_SuratJalan_Sum.nosuratjalan')
+        ->get();
+
+        if (is_null($tgl_awals) || is_null($tgl_akhirs)){
+            $pdf = PDF::loadView('print.rekapsuratjalan', array(
+                'data' => $data,
+                'tgl_awal' => date('y-m-d'),
+                'tgl_akhir' => date('y-m-d'),
+            ));
+        }
+        else{
+
+            $pdf = PDF::loadView('print.rekapsuratjalan', array(
+                'data' => $data,
+                'tgl_awal' => $tgl_awals->tgl_pengiriman,
+                'tgl_akhir' => $tgl_akhirs->tgl_pengiriman,
+            ));
+        
+        }
         return $pdf->setPaper('A4','potrait')->stream();
     }
 
@@ -464,10 +514,18 @@ class LaporanController extends Controller
         ->where('status','<>','cancel')
         ->get();
 
-        //return $data;
+        $totalmutu = TmpTicketGabungan::where(DB::raw('convert(date,jam_ticket)'),'>=',date_create($tgl_awal)->format('Y-m-d'))
+        ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
+        ->where('status','<>','cancel')
+        ->select('kode_mutu', DB::raw('sum(jumlah) as jumlah'))
+        ->groupBy('kode_mutu')
+        ->get();
 
-        $pdf = PDF::loadView('print.rekaptickettanggal', array(
+       // return $total;
+
+        $pdf = PDF::loadView('print.rekapticketproduksitanggal', array(
             'data' => $data,
+            'totalmutu' => $totalmutu,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
@@ -508,8 +566,17 @@ class LaporanController extends Controller
         ->where(DB::raw('convert(date,jam_ticket)'),'<=',date_create($tgl_akhir)->format('Y-m-d'))
         ->get();
 
+        $datacustomer = TmpTicketGabungan::select('nama_customer','kode_mutu',DB::raw('harga_intax / (1+(pajak/100)) as harga'),'tujuan','satuan',DB::raw('sum(jumlah) as total'))
+        ->groupBy('nama_customer',DB::raw('harga_intax / (1+(pajak/100))'),'kode_mutu','tujuan','satuan')->get();
+
+        $datarate = TmpTicketGabungan::select('nopol','nama_driver',DB::raw('count(noticket) as jumlah_rate'))
+        ->groupBy('nopol','nama_driver')->get();
+
+
         $pdf = PDF::loadView('print.laporanpengirimanbeton', array(
             'data' => $data,
+            'datacustomer' => $datacustomer,
+            'datarate' => $datarate,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));

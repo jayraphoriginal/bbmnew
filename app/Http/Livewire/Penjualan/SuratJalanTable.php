@@ -49,7 +49,8 @@ final class SuratJalanTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VSuratJalanHeader::where('m_penjualan_id', $this->m_penjualan_id);
+        return VSuratJalanHeader::where('m_penjualan_id', $this->m_penjualan_id)->orderBy('tgl_pengiriman','desc')
+        ->orderBy('nosuratjalan','desc');
     }
 
     /*

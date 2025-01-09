@@ -21,7 +21,7 @@ class BatalPemakaianBarang extends ModalComponent
         if (!$user->hasPermissionTo('Pembatalan Pemakaian Barang')){
             return abort(401);
         }
-        $this->pemakaianbarang = PemakaianBarang::select("id")->get();
+        $this->pemakaianbarang = PemakaianBarang::select("id")->Where('tgl_pemakaian','>=',DB::raw("DATEADD(month, -2, GETDATE())"))->get();
     }
 
     public function selectPemakaianBarang(){

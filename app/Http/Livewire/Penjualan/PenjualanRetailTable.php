@@ -55,7 +55,7 @@ final class PenjualanRetailTable extends PowerGridComponent
         return PenjualanRetail::join('barangs','penjualan_retails.barang_id','barangs.id')
         ->join('satuans','penjualan_retails.satuan_id','satuans.id')
         ->where('penjualan_retails.m_salesorder_id', $this->m_salesorder_id)
-        ->select('penjualan_retails.*','barangs.nama_barang','satuans.satuan');
+        ->select('penjualan_retails.*','barangs.nama_barang','satuans.satuan')->OrderBy('');
     }
 
     /*

@@ -93,10 +93,10 @@
             </table>
             <table style="float:right;width:30%;margin-top:2rem;">
                 <tr>
-                    <td style="text-align:left; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
+                    <td style="vertical-align:top;height:5em;text-align:left; width:30%">Palembang, {{ date_format(date_create($data[0]->tgl_cetak), 'd M Y') }}</td>
                 </tr>
                 <tr>
-                    <td style="height:14em;text-align:left; width:30%:" style="width:30%">Karno</td>
+                    <td style="text-align:left; width:30%:" style="width:30%">Karno</td>
                 </tr>
             </table>
         </div>

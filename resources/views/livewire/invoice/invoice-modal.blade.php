@@ -30,7 +30,7 @@
         @enderror
     </x-form-group>
 
-    <x-form-group caption="Sampai Tanggal">
+    <x-form-group caption="Sampai Tanggal {{$jumlahtest}}">
         <x-datepicker
             wire:model="tgl_akhir"
             wire:change="selecttgl"
@@ -40,7 +40,6 @@
         @enderror
     </x-form-group>
     @endif
-    {{ $totaljam }}
     <x-form-group caption="Nilai Tagihan">
         <x-number-text
             readonly

@@ -56,7 +56,7 @@ final class PengisianBbmTable extends PowerGridComponent
         ->join('suppliers','pengisian_bbms.supplier_id', 'suppliers.id')
         ->join('kendaraans','pengisian_bbms.kendaraan_id', 'kendaraans.id')
         ->join('drivers','pengisian_bbms.driver_id', 'drivers.id')
-        ->join('bahan_bakars','pengisian_bbms.bahan_bakar_id', 'bahan_bakars.id');
+        ->join('bahan_bakars','pengisian_bbms.bahan_bakar_id', 'bahan_bakars.id')->orderBy('tanggal_pengisian','desc')->orderBy('created_at','desc');
     }
 
     /*

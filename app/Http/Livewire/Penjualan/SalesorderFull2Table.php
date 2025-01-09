@@ -52,7 +52,7 @@ final class SalesorderFull2Table extends PowerGridComponent
     public function datasource(): ?Builder
     {
         return MSalesorder::join('customers','m_salesorders.customer_id','customers.id')
-        ->select('m_salesorders.*','customers.nama_customer');
+        ->select('m_salesorders.*','customers.nama_customer')->orderBy('tgl_so','desc')->orderBy('noso','desc');
     }
 
     /*

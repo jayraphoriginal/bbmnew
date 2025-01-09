@@ -16,6 +16,7 @@ use App\Models\VSalesOrderSewa;
 use App\Models\VTicketHeader;
 use App\Models\VTimesheetConcretepump;
 use App\Models\VTimesheetSewa;
+use App\Models\VSuratJalan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -32,7 +33,7 @@ class InvoiceModal extends ModalComponent
     public $pembayaran;
     public $tgl_awal, $tgl_akhir, $jumlah_total, $dp, $jumlah_dp, $jumlah_penjualan_retail, $jumlah_concrete;
     public $rekening, $dp_sebelum, $pajak, $customer_id, $rekening_id, $tgl_cetak, $tanda_tangan, $keterangan, $totaljam;
-
+    public $jumlahtest;
     protected $listeners = ['selectrekening' => 'selectrekening'];
 
     protected $rules =[
@@ -168,7 +169,7 @@ class InvoiceModal extends ModalComponent
                         ->where('status','Open')
                         ->where('lama','>',0)
                         ->count('*');
-
+                        $this->jumlahtest = $jumlahhari;
                         $totalsewa = $totalsewa+($jumlahhari * $sewa->harga_intax);
                        
                     }elseif($sewa->satuan == 'Bln'){
@@ -192,7 +193,9 @@ class InvoiceModal extends ModalComponent
             }
         }
         elseif($this->tipe_so=='Penjualan'){
-            $this->jumlah_total = VPenjualan::where('m_penjualan_id',$this->so_id)
+            $this->jumlah_total = VSuratJalan::where('m_penjualan_id',$this->so_id)
+                ->where('tgl_pengiriman','>=',date_create($this->tgl_awal)->format('Y-m-d'))
+                ->where('tgl_pengiriman','<=',date_create($this->tgl_akhir)->format('Y-m-d'))
                 ->where('status','Open')->sum(DB::raw('jumlah*harga_intax'));
         }
         else{
@@ -279,7 +282,7 @@ class InvoiceModal extends ModalComponent
                     $nokwitansi = '0001/KWT/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
                 }else{
                     if (
-                        date_create($nomorterakhir->tgl_cetak)->format('Y') == date('Y')
+                        date_create($nomorterakhir->tgl_cetak)->format('Y') == 2024
                         //date_create($nomorterakhir->tgl_cetak)->format('Y') == 2023
                     ) {
                         $noakhir = intval(substr($nomorterakhir->noinvoice, 0, 4)) + 1;

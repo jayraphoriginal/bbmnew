@@ -55,7 +55,7 @@ final class WarkatMasukTable extends PowerGridComponent
             function ($query){
                 $query->where('tipe','cheque')
                     ->orWhere('tipe','giro');
-            });
+            })->orderBy('jatuh_tempo','asc');
     }
 
     /*
@@ -229,7 +229,7 @@ final class WarkatMasukTable extends PowerGridComponent
             ->tooltip('pencairan warkat')
             ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
             ->openModal('penerimaan.pencairan-warkat-masuk',[
-                'penerimaan_id' => 'ID'
+                'penerimaan_id' => 'id'
             ]),
         ];
     }

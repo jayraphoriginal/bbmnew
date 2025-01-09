@@ -52,7 +52,7 @@ final class PurchaseorderTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VPembelianAll::query();
+        return VPembelianAll::orderBy('tgl_masuk','desc')->orderBy('nopo','desc');;
     }
 
     /*

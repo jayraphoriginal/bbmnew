@@ -35,7 +35,7 @@
 
     <body>
         @if (count($data) > 0)
-        <h4 style="text-align:center">LAPORAN PRODUKSI PRODUK TURUNAN</h4>  
+        <h4 style="text-align:center">LAPORAN REKAP PRODUKSI PRODUK TURUNAN</h4>  
         @if (!is_null($barang_id))
             <p>Barang : {{ $data[0]->nama_barang }}</p>
         @endif
@@ -57,6 +57,7 @@
             @php
                 $total=0;
                 $totalticket=0;
+                $totjumlah=0;
             @endphp
             @foreach($data as $index => $item)
             <tr>
@@ -69,18 +70,22 @@
                 <td>{{ $item->keterangan }}</td>
                 <td>{{ $item->noticket }}</td>
                 <td>{{ $item->deskripsi }}</td>
-                <td class="text-right">{{ number_format($item->jumlah_ticket,4,'.',',') }} </td>
+                <td class="text-right">{{ number_format($item->jumlah_ticket,2,'.',',') }} </td>
             </tr>
                 @php
+                    $totjumlah=$totjumlah+$item->jumlah;
                     $total = $total + $item->hpp*$item->jumlah;
                     $totalticket = $totalticket + $item->jumlah_ticket;
+                    $satuan = $item->satuan;
                 @endphp
             @endforeach 
             <tr>
-                <td colspan="5" style="font-weight:bold">Total</td>
+                <td colspan="3" style="font-weight:bold">Total</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totjumlah,0,',','.').' '.$satuan }}</td>
+                <td></td>
                 <td class="text-right" style="font-weight:bold">{{ number_format($total,4,',','.') }}</td>
                 <td colspan="3"></td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalticket,4,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalticket,2,',','.') }}</td>
             </tr>
         </table>
         @endif

@@ -75,15 +75,23 @@
 
     </div>
 
-    <x-button
+    @if($editmode == 'edit')
+        <x-button
         class="mt-2"
-        wire:click.prevent="$emit('openModal', 'penjualan.penjualan-detail-modal')">
-        >
+        wire:click.prevent="$emit('openModal', 'penjualan.penjualan-detail-edit-modal',{{ json_encode(['m_penjualan_id' => $MPenjualan->id]) }})">
         Tambah Detail
-    </x-button>
+        </x-button>
 
+        <livewire:penjualan.penjualan-detail-edit-table m_penjualan_id="{{ $penjualan_id }}"/>
+    @else
 
-    <livewire:penjualan.penjualan-detail-table/>
+        <x-button
+            class="mt-2"
+            wire:click.prevent="$emit('openModal', 'penjualan.penjualan-detail-modal')">
+            Tambah Detail
+        </x-button>
+        <livewire:penjualan.penjualan-detail-table/>
+    @endif 
 
     <x-footer-modal>
         <x-secondary-button

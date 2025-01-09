@@ -59,7 +59,7 @@ class SuratJalanModal extends ModalComponent
     public function render()
     {
         $user = Auth::user();
-        if (!$user->hasPermissionTo(' Surat Jalan')){
+        if (!$user->hasPermissionTo('Surat Jalan')){
             return abort(401);
         }
        

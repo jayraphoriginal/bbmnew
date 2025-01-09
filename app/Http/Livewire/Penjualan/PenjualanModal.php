@@ -12,6 +12,7 @@ use App\Models\Kategori;
 use App\Models\Mpajak;
 use App\Models\MPenjualan;
 use App\Models\TmpPenjualan;
+use App\Models\VSuratJalan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -69,67 +70,81 @@ class PenjualanModal extends ModalComponent
             return;
         }
 
-        DB::beginTransaction();
+        $suratjalan = VSuratJalan::where('m_penjualan_id', $this->MPenjualan->id)->get();
 
-        if ($this->editmode!='edit') {
-            $nomorterakhir = DB::table('m_penjualans')
-                ->orderBy('id', 'DESC')->get();
-
-            if (count($nomorterakhir) == 0){
-                $nopenjualan = '0001/SS/'.date('m').'/'.date('Y');               
-            }else{
-                if (
-                    substr($nomorterakhir[0]->nopenjualan, 8, 2) == date('m')
-                    &&
-                    substr($nomorterakhir[0]->nopenjualan, 11, 4) == date('Y')
-                ) {
-                    $noakhir = intval(substr($nomorterakhir[0]->nopenjualan, 0, 4)) + 1;
-                    $nopenjualan = substr('0000' . $noakhir, -4) . '/SS/' . date('m') . '/' . date('Y');
-                } else {
-                    $nopenjualan = '0001/SS/' . date('m') . '/' . date('Y');
-                }
+        if (count($suratjalan) > 0){
+        
+            if ($this->editmode=='edit') {
+                $this->MPenjualan->save();
             }
 
-            $pajak = Mpajak::where('jenis_pajak','PPN')->first();
+            $this->alert('warning','Sudah Ada Surat Jalan, Rincian Barang gagal update');
+            return;
+        }else{
 
-            $this->MPenjualan->nopenjualan = $nopenjualan;
-            $this->MPenjualan->status = 'Open';
-            $this->MPenjualan->pajak = $pajak->persen;
-        }
-        try{
-            $this->MPenjualan->save();
 
-            foreach($tmp as $tmpbarang){
-                $dpenjualan = New DPenjualan();
-                $dpenjualan['m_penjualan_id']=$this->MPenjualan->id;
-                $dpenjualan['barang_id']=$tmpbarang->barang_id;
-                $dpenjualan['jumlah']=$tmpbarang->jumlah;
-                $dpenjualan['sisa']=$tmpbarang->jumlah;
-                $dpenjualan['satuan_id']=$tmpbarang->satuan_id;
-                $dpenjualan['harga_intax']=$tmpbarang->harga_intax;
-                $dpenjualan['status_detail']='Open';
-                $dpenjualan->save();
-            }              
-            $tmp = TmpPenjualan::where('user_id',Auth::user()->id)->delete();
-            DB::commit();
-        }
-        catch(Throwable $e){
-            $this->alert('error', $e->getMessage(), [
+
+            DB::beginTransaction();
+
+            if ($this->editmode!='edit') {
+                $nomorterakhir = DB::table('m_penjualans')
+                    ->orderBy('id', 'DESC')->get();
+
+                if (count($nomorterakhir) == 0){
+                    $nopenjualan = '0001/SS/'.date('m').'/'.date('Y');               
+                }else{
+                    if (
+                        substr($nomorterakhir[0]->nopenjualan, 8, 2) == date('m')
+                        &&
+                        substr($nomorterakhir[0]->nopenjualan, 11, 4) == date('Y')
+                    ) {
+                        $noakhir = intval(substr($nomorterakhir[0]->nopenjualan, 0, 4)) + 1;
+                        $nopenjualan = substr('0000' . $noakhir, -4) . '/SS/' . date('m') . '/' . date('Y');
+                    } else {
+                        $nopenjualan = '0001/SS/' . date('m') . '/' . date('Y');
+                    }
+                }
+
+                $pajak = Mpajak::where('jenis_pajak','PPN')->first();
+
+                $this->MPenjualan->nopenjualan = $nopenjualan;
+                $this->MPenjualan->status = 'Open';
+                $this->MPenjualan->pajak = $pajak->persen;
+            }
+            try{
+                $this->MPenjualan->save();
+
+                foreach($tmp as $tmpbarang){
+                    $dpenjualan = New DPenjualan();
+                    $dpenjualan['m_penjualan_id']=$this->MPenjualan->id;
+                    $dpenjualan['barang_id']=$tmpbarang->barang_id;
+                    $dpenjualan['jumlah']=$tmpbarang->jumlah;
+                    $dpenjualan['sisa']=$tmpbarang->jumlah;
+                    $dpenjualan['satuan_id']=$tmpbarang->satuan_id;
+                    $dpenjualan['harga_intax']=$tmpbarang->harga_intax;
+                    $dpenjualan['status_detail']='Open';
+                    $dpenjualan->save();
+                }              
+                $tmp = TmpPenjualan::where('user_id',Auth::user()->id)->delete();
+                DB::commit();
+            }
+            catch(Throwable $e){
+                $this->alert('error', $e->getMessage(), [
+                    'position' => 'center'
+                ]);
+                return;
+            }
+            
+            $this->penjualan_id = $this->MPenjualan->id;
+
+            $this->closeModal();
+
+            $this->alert('success', 'Save Success', [
                 'position' => 'center'
             ]);
-            return;
+
+            $this->emitTo('penjualan.salesorder-table', 'pg:eventRefresh-default');
         }
-        
-        $this->penjualan_id = $this->MPenjualan->id;
-
-        $this->closeModal();
-
-        $this->alert('success', 'Save Success', [
-            'position' => 'center'
-        ]);
-
-        $this->emitTo('penjualan.salesorder-table', 'pg:eventRefresh-default');
-
     }
 
     public static function modalMaxWidth(): string
@@ -139,6 +154,10 @@ class PenjualanModal extends ModalComponent
 
     public function render()
     {
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Penjualan Barang')){
+            return abort(401);
+        }
         return view('livewire.penjualan.penjualan-modal');
     }
 }

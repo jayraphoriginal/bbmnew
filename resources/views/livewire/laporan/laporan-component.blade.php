@@ -68,6 +68,12 @@
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>
+                        <x-datarowtable title="Laporan Produksi Produk Turunan (Detail)">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-produksi-produkturunan-detail')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
                     </tbody>
                 </table>
             </div>
@@ -182,6 +188,18 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        <x-datarowtable title="Laporan Penjualan Barang">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-penjualan-barang')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                        <x-datarowtable title="Laporan Penjualan Barang (Per Customer)">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-rekap-penjualan-customer')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
                         <x-datarowtable title="Laporan Penjualan Beton Harian">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.laporan-penjualan-harian')">

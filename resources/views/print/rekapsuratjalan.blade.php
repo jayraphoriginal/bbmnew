@@ -1,0 +1,94 @@
+<html>
+
+    <head>
+        <title>Rekap Ticket Material</title>
+    </head>
+
+    <style>
+        .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+            padding: 5px;
+            vertical-align: middle;
+            border:1px solid;
+            margin:0;
+        }
+        *{
+            font-size:13px;
+        }
+        @page{
+            margin: 0.3in 0.3in 0.2in 0.3in;
+        }
+        body{
+            margin:0;
+        }
+        table{
+            border-collapse: collapse;
+        }
+        .page_break { 
+            page-break-before: always; 
+        }
+        .tdhead{
+            font-weight: bold;
+        }
+    </style>
+
+    <body>
+        
+        <h4 style="text-align:center;font-size:14px">Rekap Surat Jalan</h4>
+        @if (count($data) > 0)
+        <h5 style="margin-bottom: 3rem;text-align:center">Periode : {{ date_format(date_create($tgl_awal),'d/M/Y').' - '.date_format(date_create($tgl_akhir),'d/M/Y') }}</h5>
+        <table class="mytable" style="width:100%">
+            <tr>
+                <td class="tdhead" style="text-align:center">No</td>
+                <td class="tdhead">No Surat Jalan</td>
+                <td class="tdhead">Tanggal</td>
+                <td class="tdhead">Nopol</td>
+                <td class="tdhead">Nama Barang</td>
+                <td class="tdhead text-right">Jumlah</td>
+                <td class="tdhead">Customer</td>
+                <td class="tdhead">Lokasi</td>
+            </tr>
+            
+            @php
+                $total = 0;
+            @endphp
+            @foreach($data as $index => $item)
+            @if($item->status == 'Cancel')
+            <tr style="background-color:#aaa">
+            @else
+            <tr>
+            @endif
+                <td style="text-align:center">{{ ++$index }}</td>
+                <td style="text-align:center">{{ $item->nosuratjalan }}</td>
+                <td style="width:70px;">{{ date_format(date_create($item->tgl_pengiriman),'d-m-Y') }}</td>
+                <td>{{ $item->nopol }}</td>
+                <td>{{ $item->nama_barang }}</td>
+                @if($item->status == 'Cancel')
+                    <td class="text-right">{{ '0 '.$item->satuan }} </td>
+                    <td>{{ $item->nama_customer }}</td>
+                    <td>{{ $item->tujuan.'(Cancel)'}}</td>
+                @else
+                    <td class="text-right">{{ number_format($item->jumlah,2,',','.').' '.$item->satuan }}</td>
+                    <td>{{ $item->nama_customer }}</td>
+                    <td>{{ $item->tujuan}}</td>
+                @endif
+                
+            </tr>
+                @php
+                    if($item->status == 'Cancel'){
+                        $total = $total + 0;
+                    }
+                    else{
+                        $total = $total + $item->jumlah;
+                    }
+                @endphp
+            @endforeach 
+            <tr>
+                <td colspan="5" style="font-weight:bold">Total</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.').' '.$data[0]->satuan }}</td>
+                <td colspan="2"></td>
+            </tr>
+        </table>
+        @endif
+    </body>
+
+</html>

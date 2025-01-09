@@ -19,12 +19,18 @@ class LaporanPajakController extends Controller
 
         $data = DB::table('tmp_saldo_jurnal')->orderBy('kode_akun')->get();
 
-        $pdf = PDF::loadView('print.laporanrekaphutangpajak', array(
+        // $pdf = PDF::loadView('print.laporanrekaphutangpajak', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanrekaphutangpajak', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        return $pdf->setPaper('A4','potrait')->stream();
     }
 
     public function laporanuangmukapajak($tgl_awal, $tgl_akhir){
@@ -37,11 +43,17 @@ class LaporanPajakController extends Controller
 
         $data = DB::table('tmp_saldo_jurnal')->orderBy('kode_akun')->get();
 
-        $pdf = PDF::loadView('print.laporanrekapuangmukapajak', array(
+        // $pdf = PDF::loadView('print.laporanrekapuangmukapajak', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanrekapuangmukapajak', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        return $pdf->setPaper('A4','potrait')->stream();
     }
 }

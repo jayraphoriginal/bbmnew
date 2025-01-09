@@ -51,7 +51,7 @@ final class SalesordersewaFullTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VSalesOrderSewa::where('tipe','Jam');
+        return VSalesOrderSewa::where('tipe','Jam')->orderBy('tgl_so','desc')->orderBy('noso','desc');
     }
 
     /*

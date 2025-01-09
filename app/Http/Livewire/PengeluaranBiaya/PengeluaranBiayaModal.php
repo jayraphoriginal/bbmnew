@@ -118,7 +118,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 }else{
                     $nomor = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->pengeluaran->tgl_biaya)))
                     ->where('status','finish')
-                    ->orderby('nomor','asc')
+                    ->orderby('nomor','desc')
                     ->get();
 
                     if (count($nomor) > 0){
@@ -127,7 +127,7 @@ class PengeluaranBiayaModal extends ModalComponent
                         $nomorterakhir = 0;
                     }
 
-                    for($i=$nomorterakhir+1;$i<100;$i++){
+                    			    for($i=$nomorterakhir+1;$i<$nomorterakhir+100;$i++){
                         $nokas = new NoBuktikas();
                         $nokas['tipe'] = $tipe;
                         $nokas['tahun'] = date('Y', strtotime($this->pengeluaran->tgl_biaya));
@@ -211,6 +211,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal['coa_id']=$coabiaya->coa_id;
                 $journal['debet']=$dpp;
                 $journal['kredit']=0;
+                $journal['trans_detail_id'] = $pengeluaran_detail->id;
                 $journal->save();
 
                 if ($this->pengeluaran->ppn_id!=0){
@@ -219,8 +220,9 @@ class PengeluaranBiayaModal extends ModalComponent
                     $journal['trans_id']=$this->pengeluaran->id;
                     $journal['tanggal_transaksi']=$this->pengeluaran->tgl_biaya;
                     $journal['coa_id']=$datappn->coa_id_debet;
-                    $journal['debet']=$ppn ;
+                    $journal['debet']=$ppn;
                     $journal['kredit']=0;
+                    $journal['trans_detail_id'] = $pengeluaran_detail->id;
                     $journal->save();
                 }
 
@@ -232,6 +234,7 @@ class PengeluaranBiayaModal extends ModalComponent
                     $journal['coa_id']=$datapajak->coa_id_kredit;
                     $journal['debet']=0;
                     $journal['kredit']=$pajaklain;
+                    $journal['trans_detail_id'] = $pengeluaran_detail->id;
                     $journal->save();
                 }
             }
@@ -247,6 +250,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal['coa_id']=$rekening->coa_id;
                 $journal['debet']=0;
                 $journal['kredit']=$this->pengeluaran->total-$totalpajaklain;
+                $journal['trans_detail_id'] = $pengeluaran_detail->id;
                 $journal->save();
 
             }else{
@@ -260,6 +264,7 @@ class PengeluaranBiayaModal extends ModalComponent
                 $journal['coa_id']=$supplier->coa_id;
                 $journal['debet']=0;
                 $journal['kredit']=$this->pengeluaran->total-$totalpajaklain;
+                $journal['trans_detail_id'] = $pengeluaran_detail->id;
                 $journal->save();
             }
 

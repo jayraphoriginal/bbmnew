@@ -55,7 +55,8 @@ final class PenambahanBbmTable extends PowerGridComponent
         'drivers.nama_driver','bahan_bakars.bahan_bakar')
         ->join('kendaraans','tambahan_bbms.kendaraan_id', 'kendaraans.id')
         ->join('drivers','tambahan_bbms.driver_id', 'drivers.id')
-        ->join('bahan_bakars','tambahan_bbms.bahan_bakar_id', 'bahan_bakars.id');
+        ->join('bahan_bakars','tambahan_bbms.bahan_bakar_id', 'bahan_bakars.id')->OrderBy('tanggal_penambahan','desc')
+        ->orderBy('created_at','desc');
     }
 
     /*

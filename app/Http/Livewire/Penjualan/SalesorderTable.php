@@ -53,7 +53,8 @@ final class SalesorderTable extends PowerGridComponent
     {
         return MSalesorder::join('customers','m_salesorders.customer_id','customers.id')
         ->orderBy('m_salesorders.tgl_so','desc')
-        ->select('m_salesorders.*','customers.nama_customer','customers.sub_company');
+        ->select('m_salesorders.*','customers.nama_customer','customers.sub_company')
+        ->orderBy('noso','desc');
     }
 
     /*

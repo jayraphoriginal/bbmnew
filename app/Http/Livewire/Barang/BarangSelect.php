@@ -33,6 +33,7 @@ class BarangSelect extends Component
         $this->emitTo('produksi.produksi-detail-modal','selectbarang', $id);
         $this->emitTo('produksi.produksi-modal','selectbarang', $id);
         $this->emitTo('penjualan.penjualan-detail-modal','selectbarang', $id);
+        $this->emitTo('penjualan.penjualan-detail-edit-modal','selectbarang', $id);
         $this->emitTo('pemakaian-barang.pemakaian-barang-modal','selectbarang', $id);
         $this->emitTo('bbm.pengisian-bbm-stok-modal','selectbarang', $id);
         $this->emitTo('laporan.laporan-kartustok','selectbarang', $id);
@@ -45,6 +46,7 @@ class BarangSelect extends Component
         $this->emitTo('produk-turunan.komposisi-produkturunan-modal','selectbarang', $id);
         $this->emitTo('laporan.laporan-stok-opname','selectbarang', $id);
         $this->emitTo('laporan.laporan-produksi-produkturunan','selectbarang', $id);
+        $this->emitTo('laporan.laporan-penjualan-barang','selectbarang', $id);
        // $this->emitTo('produksi.produksi-new-modal','selectbarang', $id);
     }
 

@@ -28,6 +28,8 @@ class DashboardComponent extends Component
     {
         return view('livewire.dashboard-component',[
             'totalpenjualan' => VTicketHeader::where(DB::raw('month(jam_ticket)'), date('m'))->where(DB::raw('year(jam_ticket)'), date('Y'))->sum(DB::raw('jumlah*harga_intax')),
+            'totalpengiriman' => VTicketHeader::where(DB::raw('convert(date,getdate())'),DB::raw('convert(date,jam_ticket)'))->sum(DB::raw('jumlah')),
+            'ticketpengiriman' => VTicketHeader::where(DB::raw('convert(date,getdate())'),DB::raw('convert(date,jam_ticket)'))->count(DB::raw('id')),
             'totalkubikasi' => VTicketHeader::where(DB::raw('month(jam_ticket)'), date('m'))->where(DB::raw('year(jam_ticket)'), date('Y'))->sum(DB::raw('jumlah')),
             'totalticket' => VTicketHeader::where(DB::raw('month(jam_ticket)'), date('m'))->where(DB::raw('year(jam_ticket)'), date('Y'))->count('*'),
             'sisaso' => VSalesOrder::where('sisa','>',0)->sum('sisa'),

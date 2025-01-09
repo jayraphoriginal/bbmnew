@@ -6,6 +6,7 @@ use App\Models\VJumlahSo;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -13,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
-use DB;
+
 
 final class SalesorderFullTable extends PowerGridComponent
 {
@@ -50,7 +51,8 @@ final class SalesorderFullTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VJumlahSo::select(DB::raw('ROW_NUMBER() OVER(ORDER BY tgl_so ASC) AS id'),'V_JumlahSalesorder.*');
+        return VJumlahSo::select(DB::raw('ROW_NUMBER() OVER(ORDER BY noso ASC) AS id'),'V_JumlahSalesorder.*')->orderBy('tgl_so','desc')
+        ->orderBy('noso','desc');
     }
     
 

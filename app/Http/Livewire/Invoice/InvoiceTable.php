@@ -52,7 +52,7 @@ final class InvoiceTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VInvoiceHeader::query();
+        return VInvoiceHeader::orderBy('tgl_cetak','desc');
     }
 
     /*

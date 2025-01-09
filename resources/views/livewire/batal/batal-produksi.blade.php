@@ -3,9 +3,9 @@
         Batal Produksi
     </x-header-modal>   
 
-    <x-form-group caption="No Produksi / Keterangan">
+    <x-form-group caption="Tgl Produksi / Keterangan">
         <livewire:batal.produksi-select :deskripsi="$detailproduksi"/>
-        @error('stokopname_id')
+        @error('produksi_id')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>

@@ -17,8 +17,8 @@
     <!-- Styles -->
   
     @vite(['resources/css/app.css','resources/js/app.js'])
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.12.2/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.12.2/dist/cdn.min.js"></script>
     @livewireStyles
     @powerGridStyles
     @livewire('livewire-ui-modal')

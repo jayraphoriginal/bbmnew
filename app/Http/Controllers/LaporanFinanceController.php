@@ -18,13 +18,19 @@ class LaporanFinanceController extends Controller
 
         $data = DB::table('tmp_saldo_jurnal')->orderBy('kode_akun')->get();
       
-        $pdf = PDF::loadView('print.laporanrekapbiaya', array(
+        // $pdf = PDF::loadView('print.laporanrekapbiaya', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+       return View('print.laporanrekapbiaya', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-
-        return $pdf->setPaper('A4','potrait')->stream();
 
     }
 
@@ -38,12 +44,18 @@ class LaporanFinanceController extends Controller
 
         $data = DB::table('tmp_saldo_jurnal')->orderBy('kode_akun')->get();
 
-        $pdf = PDF::loadView('print.laporanrekapsaldokasbank', array(
+        // $pdf = PDF::loadView('print.laporanrekapsaldokasbank', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanrekapsaldokasbank', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        return $pdf->setPaper('A4','potrait')->stream();
     }
 
     public function laporanwarkatmasuk($tgl_awal, $tgl_akhir){
@@ -58,12 +70,18 @@ class LaporanFinanceController extends Controller
                     ->where('tgl_bayar','<=',date_create($tgl_akhir)->format('Y-m-d'))
                     ->whereIn('tipe',['cheque','giro'])->get();
 
-        $pdf = PDF::loadView('print.laporangiromasuk', array(
+        // $pdf = PDF::loadView('print.laporangiromasuk', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporangiromasuk', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        return $pdf->setPaper('A4','landscape')->stream();
     }
 
     public function laporanwarkatkeluar($tgl_awal, $tgl_akhir){
@@ -78,11 +96,17 @@ class LaporanFinanceController extends Controller
                     ->where('tgl_bayar','<=',date_create($tgl_akhir)->format('Y-m-d'))
                     ->whereIn('tipe',['cheque','giro'])->get();
 
-        $pdf = PDF::loadView('print.laporangirokeluar', array(
+        // $pdf = PDF::loadView('print.laporangirokeluar', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+        return View('print.laporangirokeluar', array(
             'data' => $data,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir
         ));
-        return $pdf->setPaper('A4','landscape')->stream();
     }
 }
