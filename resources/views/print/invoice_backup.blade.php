@@ -85,10 +85,10 @@
                             <td class="captionleft">{{ $jual->uraian }}</td>
                             <td class="captionright" style="width:15%">{{ number_format($jual->jumlah,2,".",",").' '.$jual->satuan }}</td>
                             <td class="captionright" style="width:15%">{{ number_format($jual->harga_intax/(1+($jual->pajak/100)),0,".",",") }}</td>
-                            <td class="captionright" style="width:15%">{{ number_format(round($jual->jumlah,2) * ($jual->harga_intax/(1+($jual->pajak/100))),0,".",",") }}</td>
+                            <td class="captionright" style="width:15%">{{ number_format($jual->jumlah * ($jual->harga_intax/(1+($jual->pajak/100))),0,".",",") }}</td>
                         </tr>
                         @php 
-                            $totalall = $totalall + round($jual->jumlah,2) * $jual->harga_intax;
+                            $totalall = $totalall + $jual->jumlah * $jual->harga_intax;
                         @endphp
                 @endforeach
                 @php
@@ -98,15 +98,11 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan=4 class="captionleft">Nilai Sebelum Pajak</td>
+                    <td colspan=4 class="captionleft">DPP</td>
                     <td class="captionright">{{ number_format($dpp,0,".",",") }}</td>
                 </tr>
                 <tr>
-                    <td colspan=4 class="captionleft">DPP</td>
-                    <td class="captionright">{{ number_format(11/12 * $dpp,0,".",",") }}</td>
-                </tr>
-                <tr>
-                    <td colspan=4 class="captionleft">PPN 12%</td>
+                    <td colspan=4 class="captionleft">PPN {{ number_format($data[0]->pajak,0,'.'.',').'%' }}</td>
                     <td class="captionright">{{ number_format($ppn,0,".",",") }}</td>
                 </tr>
                 @if ($dp > 0)

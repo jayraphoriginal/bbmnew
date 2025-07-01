@@ -25,7 +25,6 @@
                 >
                     <option value="">-- Isi Pembayaran --</option>
                     <option value="Dimuka">Dimuka</option>
-                    <option value="Dimuka Full">Dimuka Full</option>
                     <option value="Diakhir">Diakhir</option>
                     <option value="Waktu Tagihan">Waktu Tagihan</option>
                 </x-combobox>

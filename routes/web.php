@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('pengisianbbm',  \App\Http\Livewire\Bbm\PengisianBbmComponent::class)->name('pengisianbbm');
     Route::get('pengisianbbmstok',  \App\Http\Livewire\Bbm\PengisianBbmStokComponent::class)->name('pengisianbbmstok');
     Route::get('tambahanbbm',  \App\Http\Livewire\Bbm\PenambahanBbmComponent::class)->name('tambahanbbm');
+    Route::get('penguranganbbm',  \App\Http\Livewire\Bbm\PenguranganBbmComponent::class)->name('penguranganbbm');
     Route::get('biaya',  \App\Http\Livewire\Biaya\BiayaComponent::class)->name('biaya');
     Route::get('pengeluaranbiaya', \App\Http\Livewire\PengeluaranBiaya\PengeluaranBiayaComponent::class)->name('pengeluaranbiaya');
     Route::get('pemakaianbarang', \App\Http\Livewire\PemakaianBarang\PemakaianBarangComponent::class)->name('pemakaianbarang');
@@ -104,6 +105,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
     //Print
     Route::get('stokmaterial', [LaporanPersediaanController::class,'stokmaterial'])->name('stokmaterial');
+    Route::get('printtimesheet/{id}', [\App\Http\Controllers\PrintController::class,'timesheetsewa'])->name('printtimesheet');
     Route::get('printso/{id}', [\App\Http\Controllers\PrintController::class,'so'])->name('printso');
     Route::get('printwo/{id}/{tglprint}', [\App\Http\Controllers\PrintController::class,'wo'])->name('printwo');
     Route::get('printsj/{id}', [\App\Http\Controllers\PrintController::class,'sj'])->name('printsj');

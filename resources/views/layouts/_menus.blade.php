@@ -176,6 +176,9 @@
             @can('Tambahan BBM')
                 <x-menu-item route="tambahanbbm">Tambahan BBM</x-menu-item>
             @endcan
+            @can('Tambahan BBM')
+                <x-menu-item route="penguranganbbm">Pengurangan BBM</x-menu-item>
+            @endcan
         </div>
         <li class="relative px-2 py-3">
             <a @click=" master = false, penjualan = false, sewa = false, pembelian = false, laporan = false, finance = false, accounting = !accounting, bbm = false, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">

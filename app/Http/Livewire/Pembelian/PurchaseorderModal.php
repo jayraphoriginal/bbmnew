@@ -78,6 +78,13 @@ class PurchaseorderModal extends ModalComponent
 
         $this->validate();
 
+        if (date_diff(date_create($this->Mpo->tgl_masuk),date_create(date("Y-m-d")))->format("%a") > 60){
+            $this->alert('error', 'Tanggal Dibawah 2 bulan', [
+                'position' => 'center'
+            ]);
+            $this->addError('tgl_masuk', 'Tanggal Dibawah 2 bulan');
+        }
+
         if ($this->Mpo->pembebanan == 'Langsung' && $this->jenis_pembebanan != 'Beban Kantor'){
             $this->validate(
                 ['coa_id' => 'required',

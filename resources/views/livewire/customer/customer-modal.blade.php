@@ -23,7 +23,7 @@
 
     <x-form-group caption="NPWP">
         <x-textbox
-            x-mask="99.999.999.9-999.999"
+            x-mask="9999 9999 9999 9999"
             wire:model="customer.npwp"/>
         @error('customer.npwp')
         <x-error-form>{{ $message }}</x-error-form>

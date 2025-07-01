@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Sewa;
 
 use App\Models\Concretepump;
+use App\Models\Driver;
 use App\Models\Timesheet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -44,7 +45,7 @@ class TimesheetModal extends ModalComponent
         if ($this->editmode=='edit') {
             $this->timesheet = Timesheet::find($this->timesheet_id);
             $this->tipe = $this->timesheet->tipe;
-            
+            $this->driver = Driver::find($this->timesheet->driver_id)->nama_driver;
         }else{
             $this->timesheet = new Timesheet();
             $this->timesheet->tipe = $this->tipe;
@@ -68,6 +69,7 @@ class TimesheetModal extends ModalComponent
         $this->timesheet->status = 'Open';
         $this->timesheet->save();
 
+        
         $this->closeModal();
 
         $this->alert('success', 'Save Success', [

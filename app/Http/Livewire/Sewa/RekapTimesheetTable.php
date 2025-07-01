@@ -90,6 +90,8 @@ final class RekapTimesheetTable extends PowerGridComponent
                 return Carbon::parse($model->tanggal)->format('d/m/Y');
             })
             ->addColumn('nama_driver')
+            ->addColumn('tipe')
+            ->addColumn('d_so_id')
             ->addColumn('jam_awal')
             ->addColumn('jam_awal_formatted', function(VTimesheetSewa $model) {
                 return Carbon::parse($model->jam_awal)->format('H:i:s');
@@ -224,6 +226,28 @@ final class RekapTimesheetTable extends PowerGridComponent
     public function actions(): array
     {
        return [
+
+            Button::add('edit')
+            ->caption('<svg class="h-5 w-5 text-white" <svg  width="24"  height="24"  viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>')
+            ->tooltip('update')
+            ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+            ->openModal('sewa.timesheet-modal', [
+            'editmode'                => 'edit',
+            'tipe'                    => 'tipe',
+            'd_so_id'                 => 'd_so_id', 
+            'timesheet_id'            => 'id',
+            ]),
+
+            Button::add('cetak')
+            ->caption('<span class="material-icons align-middle text-center">print</span>')
+            ->tooltip('cetak')
+            ->class('bg-blue-500 cursor-pointer text-white rounded text-sm px-3 py-2')
+            ->target('_blank')
+            ->method('get')
+            ->route("printtimesheet",[
+                'id' => 'id'
+            ]),
+
             Button::add('destroy')
             ->caption('<svg class="h-5 w-5 text-white"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <circle cx="12" cy="12" r="10" />  <line x1="15" y1="9" x2="9" y2="15" />  <line x1="9" y1="9" x2="15" y2="15" /></svg>')
             ->tooltip('update')

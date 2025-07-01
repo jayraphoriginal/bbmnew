@@ -241,6 +241,7 @@ class OpnameModal extends ModalComponent
                     $dopname['jumlah']=$lebihstok;
                     $dopname['satuan_id']=$tmpbarang->satuan_id;
                     $dopname['hpp']=$barang->hpp;
+                 //   $dopname['hpp']=14500;
                     $dopname['status_detail']='Open';
                     $dopname['user_id']=Auth::user()->id;
                     $dopname->save();
@@ -253,6 +254,7 @@ class OpnameModal extends ModalComponent
                     $dbarang['jumlah_masuk'] = $lebihstok;
                     $dbarang['jumlah'] = $lebihstok;
                     $dbarang['hpp']=$barang->hpp;
+                   // $dbarang['hpp']=14500;
                     $dbarang->save();
 
 
@@ -267,9 +269,11 @@ class OpnameModal extends ModalComponent
                     $kartustok['increase']=$lebihstok;
                     $kartustok['decrease']=0;
                     $kartustok['harga_debet']=$barang->hpp;
+                   // $kartustok['harga_debet']=14500;
                     $kartustok['harga_kredit']=0;
                     $kartustok['qty']=$jumlahstok;
                     $kartustok['modal']=$barang->hpp;
+                  //$kartustok['modal']=14500;
                     $kartustok->save();
 
                     $databarang = Barang::find($tmpbarang->barang_id);
@@ -281,6 +285,7 @@ class OpnameModal extends ModalComponent
                     $journal['tanggal_transaksi']=date_create($this->MOpname->tgl_opname)->format('Y-m-d');
                     $journal['coa_id']=$kategori->coa_asset_id;
                     $journal['debet']=round($barang->hpp*$lebihstok,4);
+                    //$journal['debet']=round(14500*$lebihstok,4);
                     $journal['kredit']=0;
                     $journal->save();
 
@@ -293,6 +298,7 @@ class OpnameModal extends ModalComponent
                     $journal['coa_id']=$coa->id;
                     $journal['debet']=0;
                     $journal['kredit']=round($barang->hpp*$lebihstok,4);
+                  //  $journal['kredit']=round(14500*$lebihstok,4);
                     $journal->save();
 
                     $pemakaianmaterial = 0;

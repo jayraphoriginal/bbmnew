@@ -87,7 +87,7 @@ class InvoiceModal extends ModalComponent
         }else{
             if ($this->tipe_so=='Sewa'){
                 $this->jumlah_total = VSalesOrderSewa::where('m_salesorder_sewa_id',$this->so_id)
-                ->where('status_detail','Open')->sum(DB::raw('lama*harga_intax'));
+                ->where('status_detail','Open')->sum(DB::raw('round(lama,2)*harga_intax'));
                 $this->dp = "Reg";
             }
             elseif($this->tipe_so =='Penjualan'){
@@ -158,7 +158,7 @@ class InvoiceModal extends ModalComponent
                             //     $jumlahjam = round($totaljam,2);
                             // }
 
-                            $totaltimesheet = $jumlahjam * $sewa->harga_intax;
+                            $totaltimesheet = round($jumlahjam,2) * $sewa->harga_intax;
                             $totalsewa = $totalsewa + $totaltimesheet;
                            $this->totaljam = $jumlahjam;
                         }
@@ -180,7 +180,7 @@ class InvoiceModal extends ModalComponent
                         //->where('lama','>',0)
                         ->count('*');
 
-                        $totalsewa = $totalsewa + ($jumlahhari/30 * $sewa->harga_intax);
+                        $totalsewa = $totalsewa + (round($jumlahhari/30,2) * $sewa->harga_intax);
                         
                     }
                 }
@@ -282,7 +282,7 @@ class InvoiceModal extends ModalComponent
                     $nokwitansi = '0001/KWT/BBM/'.$bulan[intval(date_create($this->tgl_cetak)->format('m'))].'/'.date_create($this->tgl_cetak)->format('Y');
                 }else{
                     if (
-                        date_create($nomorterakhir->tgl_cetak)->format('Y') == 2024
+                        date_create($nomorterakhir->tgl_cetak)->format('Y') == Date('Y')
                         //date_create($nomorterakhir->tgl_cetak)->format('Y') == 2023
                     ) {
                         $noakhir = intval(substr($nomorterakhir->noinvoice, 0, 4)) + 1;

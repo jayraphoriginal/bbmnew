@@ -92,6 +92,13 @@ class TicketProduksiModal extends ModalComponent
 
     public function save(){
 
+        if (date_diff(date_create($this->jam_ticket),date_create(date("Y-m-d")))->format("%a") > 60){
+            $this->alert('error', 'Tanggal Dibawah 2 bulan', [
+                'position' => 'center'
+            ]);
+            $this->addError('jam_ticket', 'Tanggal Dibawah 2 bulan');
+        }
+
         $this->jumlah = str_replace(',', '', $this->jumlah);
         $this->jam_ticket = date_create($this->jam_ticket)->format('Y-m-d H:i:s');
         $this->loading = str_replace(',', '', $this->loading);

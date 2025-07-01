@@ -93,7 +93,7 @@ class PenerimaanModal extends ModalComponent
                         $nomorterakhir = 0;
                     }
 
-                    for($i=$nomorterakhir+1;$i<100;$i++){
+                    for($i=$nomorterakhir+1;$i<1000;$i++){
                         $nokas = new NoBuktikas();
                         $nokas['tipe'] = $tipe;
                         $nokas['tahun'] = date('Y', strtotime($this->tgl_bayar));

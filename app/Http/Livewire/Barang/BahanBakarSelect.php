@@ -29,6 +29,7 @@ class BahanBakarSelect extends Component
         $this->deskripsi = BahanBakar::find($id)->bahan_bakar;
         $this->emitTo('bbm.pengisian-bbm-modal','selectbahanbakar', $id);
         $this->emitTo('bbm.penambahan-bbm-modal','selectbahanbakar', $id);
+        $this->emitTo('bbm.pengurangan-bbm-modal','selectbahanbakar', $id);
     }
 
     public function selectDeskripsi($id){

@@ -70,16 +70,19 @@
 
     <body>
         <div style="border: 2px solid; margin:auto; padding-left:1rem; margin-top:0;padding:top-0.5rem;padding-bottom:0.5rem">
-            <h3 style="text-align:center;">SURAT JALAN</h3>
+            <h3 style="font-size:16px;text-align:center;">SURAT JALAN</h3>
             <p style="text-align:center">No SJ : {{ $data[0]->nosuratjalan }}</p>
-            <p class="tglkanan">Tgl SJ : {{ date_format(date_create($data[0]->tgl_pengiriman),'d M Y') }}</p>
-            <p>Pekerjaan</p>
+            <p>Kepada Yth.</p>
             <p style="font-weight:bold;">{{ $data[0]->nama_customer}}</p>
         </div>
         <table class="mytable" style="margin-top:0.5rem; width:100%;border:2px solid">
             <tr>
                 <td class="kl1">No Polisi</td>
                 <td class="kl2 borderleft">: {{ $data[0]->nopol }}</td>
+            </tr>
+            <tr>
+                <td class="kl1">Tgl Pengiriman</td>
+                <td class="kl2 borderleft">: {{ date_format(date_create($data[0]->tgl_pengiriman),"d-m-Y") }}</td>
             </tr>
             <tr>
                 <td class="kl1">Driver</td>
@@ -115,7 +118,7 @@
 
             <tr>
                 <td class="bordertop" style="width:33%"></td>
-                <td class="borderleft bordertop" style="width:33%;text-align:center">{{$data[0]->nama_driver}}</td>
+                <td class="borderleft bordertop" style="width:33%;text-align:center">{{$data[0]->driver}}</td>
                 <td class="borderleft bordertop"></td>
             </tr>
         </table>

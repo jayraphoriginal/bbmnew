@@ -58,6 +58,8 @@ class ProduksiModal extends ModalComponent
 
     public function save(){
 
+        
+
         $this->validate();
 
         $this->produksi->biaya = str_replace(',', '', $this->produksi->biaya);

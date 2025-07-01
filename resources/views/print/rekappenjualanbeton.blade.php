@@ -35,7 +35,7 @@
         <h2 style="text-align:center; font-size:18px;">Laporan Penjualan Beton</h2>
         <p style="text-align:center;">Rekap Pengiriman Beton Per Hari</p>
         @if (count($data) > 0)
-        <p style="margin-bottom: 3rem;text-align:center; font-size:13px;">Periode : {{ date_format(date_create($tgl_awal),'l,d/M/Y') }}</p>
+        <p style="margin-bottom: 3rem;text-align:center; font-size:13px;">Periode : {{ date_format(date_create($tgl_awal),'d/M/Y') }}</p>
         <table class="mytable" style="width:100%">
             <tr>
                 <td class="tdhead">No</td>

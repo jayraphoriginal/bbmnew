@@ -23,7 +23,7 @@ class PemakaianBarangModal extends ModalComponent
 
     public PemakaianBarang $pemakaian;
     public $editmode, $pemakaian_id;
-    public $barang,$alat,$kendaraan;
+    public $barang,$alat,$kendaraan, $barang_id;
 
     protected $rules=[
         'pemakaian.tgl_pemakaian' => 'required',
@@ -70,6 +70,13 @@ class PemakaianBarangModal extends ModalComponent
     }
 
     public function save(){
+
+        if (date_diff(date_create($this->pemakaian->tgl_pemakaian),date_create(date("Y-m-d")))->format("%a") > 60){
+            $this->alert('error', 'Tanggal Dibawah 2 bulan', [
+                'position' => 'center'
+            ]);
+            $this->addError('tgl_pemakaian', 'Tanggal Dibawah 2 bulan');
+        }
 
         $this->pemakaian->jumlah = str_replace(',', '', $this->pemakaian->jumlah);
 

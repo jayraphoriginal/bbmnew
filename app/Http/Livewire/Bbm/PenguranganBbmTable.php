@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Bbm;
 
-use App\Models\TambahanBbm;
+use App\Models\PenguranganBbm;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-final class PenambahanBbmTable extends PowerGridComponent
+final class PenguranganBbmTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -47,15 +47,15 @@ final class PenambahanBbmTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\TambahanBbm>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\PenguranganBbm>|null
     */
     public function datasource(): ?Builder
     {
-        return TambahanBbm::select('tambahan_bbms.*','kendaraans.nopol',
+         return PenguranganBbm::select('pengurangan_bbms.*','kendaraans.nopol',
         'drivers.nama_driver','bahan_bakars.bahan_bakar')
-        ->join('kendaraans','tambahan_bbms.kendaraan_id', 'kendaraans.id')
-        ->join('drivers','tambahan_bbms.driver_id', 'drivers.id')
-        ->join('bahan_bakars','tambahan_bbms.bahan_bakar_id', 'bahan_bakars.id')->OrderBy('tanggal_penambahan','desc')
+        ->join('kendaraans','pengurangan_bbms.kendaraan_id', 'kendaraans.id')
+        ->join('drivers','pengurangan_bbms.driver_id', 'drivers.id')
+        ->join('bahan_bakars','pengurangan_bbms.bahan_bakar_id', 'bahan_bakars.id')->OrderBy('tanggal_pengurangan','desc')
         ->orderBy('created_at','desc');
     }
 
@@ -89,22 +89,22 @@ final class PenambahanBbmTable extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('tanggal_penambahan')
-            ->addColumn('tanggal_penambahan_formatted', function(TambahanBbm $model) { 
-                return Carbon::parse($model->tanggal_penambahan)->format('d/m/Y');
+            ->addColumn('tanggal_pengurangan')
+            ->addColumn('tanggal_pengurangan_formatted', function(PenguranganBbm $model) { 
+                return Carbon::parse($model->tanggal_pengurangan)->format('d/m/Y');
             })
             ->addColumn('nopol')
             ->addColumn('nama_driver')
             ->addColumn('bahan_bakar')
             ->addColumn('jumlah')
-            ->addColumn('jumlah_formatted', function(TambahanBbm $model) { 
+            ->addColumn('jumlah_formatted', function(PenguranganBbm $model) { 
                 return number_format($model->jumlah,2,'.',',');
             })
             ->addColumn('keterangan')
-            ->addColumn('created_at_formatted', function(TambahanBbm $model) { 
+            ->addColumn('created_at_formatted', function(PenguranganBbm $model) { 
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
-            ->addColumn('updated_at_formatted', function(TambahanBbm $model) { 
+            ->addColumn('updated_at_formatted', function(PenguranganBbm $model) { 
                 return Carbon::parse($model->updated_at)->format('d/m/Y H:i:s');
             });
     }
@@ -128,10 +128,10 @@ final class PenambahanBbmTable extends PowerGridComponent
         return [
             Column::add()
             ->title('TANGGAL')
-            ->field('tanggal_penambahan_formatted', 'tanggal_penambahan')
+            ->field('tanggal_pengurangan_formatted', 'tanggal_pengurangan')
             ->searchable()
             ->sortable()
-            ->makeInputDatePicker('tanggal_penambahan'),
+            ->makeInputDatePicker('tanggal_pengurangan'),
 
             Column::add()
                 ->title('KENDARAAN')
@@ -158,8 +158,7 @@ final class PenambahanBbmTable extends PowerGridComponent
                 ->searchable()
                 ->sortable()
                 ->makeInputText(),
-        ]
-;
+        ];
     }
 
     /*
@@ -171,12 +170,12 @@ final class PenambahanBbmTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid TambahanBbm Action Buttons.
+     * PowerGrid PenguranganBbm Action Buttons.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
      */
 
-    
+
     public function actions(): array
     {
        return [
@@ -186,13 +185,13 @@ final class PenambahanBbmTable extends PowerGridComponent
             ->tooltip('delete')
             ->openModal('delete-modal', [
                 'data_id'                 => 'id',
-                'TableName'               => 'tambahan_bbms',
-                'confirmationTitle'       => 'Delete Penambahan BBM',
-                'confirmationDescription' => 'apakah yakin ingin hapus penambahan bbm?',
+                'TableName'               => 'pengurangan_bbms',
+                'confirmationTitle'       => 'Delete Pengurangan BBM',
+                'confirmationDescription' => 'apakah yakin ingin hapus pengurangan bbm?',
             ]),
         ];
     }
-    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -203,7 +202,7 @@ final class PenambahanBbmTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid TambahanBbm Action Rules.
+     * PowerGrid PenguranganBbm Action Rules.
      *
      * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
@@ -215,7 +214,7 @@ final class PenambahanBbmTable extends PowerGridComponent
            
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($tambahan-bbm) => $tambahan-bbm->id === 1)
+                ->when(fn($pengurangan-bbm) => $pengurangan-bbm->id === 1)
                 ->hide(),
         ];
     }
@@ -231,7 +230,7 @@ final class PenambahanBbmTable extends PowerGridComponent
     */
 
      /**
-     * PowerGrid TambahanBbm Update.
+     * PowerGrid PenguranganBbm Update.
      *
      * @param array<string,string> $data
      */
@@ -240,7 +239,7 @@ final class PenambahanBbmTable extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = TambahanBbm::query()->findOrFail($data['id'])
+           $updated = PenguranganBbm::query()->findOrFail($data['id'])
                 ->update([
                     $data['field'] => $data['value'],
                 ]);

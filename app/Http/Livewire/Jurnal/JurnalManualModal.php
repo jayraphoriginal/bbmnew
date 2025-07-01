@@ -68,7 +68,7 @@ class JurnalManualModal extends ModalComponent
                 }else{
                     $nomor = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->jurnalmanual->tanggal)))
                     ->where('status','finish')
-                    ->orderby('nomor','desc')
+                    ->orderby('nomor','asc')
                     ->get();
 
                     if (count($nomor) > 0){
@@ -77,7 +77,7 @@ class JurnalManualModal extends ModalComponent
                         $nomorterakhir = 0;
                     }
 
-                    for($i=$nomorterakhir+1;$i<100;$i++){
+                    for($i=$nomorterakhir+1;$i<($nomorterakhir+1000);$i++){
                         $nokas = new NoBuktikas();
                         $nokas['tipe'] = $tipe;
                         $nokas['tahun'] = date('Y', strtotime($this->jurnalmanual->tanggal));
@@ -106,7 +106,7 @@ class JurnalManualModal extends ModalComponent
                 }else{
                     $nomor = NoBuktikas::where('tipe',$tipe)->where('tahun', date('Y', strtotime($this->jurnalmanual->tanggal)))
                     ->where('status','finish')
-                    ->orderby('nomor','desc')
+                    ->orderby('nomor','asc')
                     ->get();
 
                     if (count($nomor) > 0){
@@ -115,7 +115,7 @@ class JurnalManualModal extends ModalComponent
                         $nomorterakhir = 0;
                     }
 
-                    for($i=$nomorterakhir+1;$i<100;$i++){
+                    for($i=$nomorterakhir+1;$i<($nomorterakhir+1000);$i++){
                         $nokas = new NoBuktikas();
                         $nokas['tipe'] = $tipe;
                         $nokas['tahun'] = date('Y', strtotime($this->jurnalmanual->tanggal));

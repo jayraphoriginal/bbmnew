@@ -67,6 +67,13 @@ class PengisianBbmStokModal extends ModalComponent
 
     public function save(){
 
+        if (date_diff(date_create($this->pengisian->tgl_pengisian),date_create(date("Y-m-d")))->format("%a") > 60){
+            $this->alert('error', 'Tanggal Dibawah 2 bulan', [
+                'position' => 'center'
+            ]);
+            $this->addError('tgl_pengisian', 'Tanggal Dibawah 2 bulan');
+        }
+
         $this->pengisian->jumlah = str_replace(',', '', $this->pengisian->jumlah);
 
 
