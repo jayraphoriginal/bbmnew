@@ -29,8 +29,8 @@
             </li>
             <!-- Notifications menu -->
             <!-- Profile menu -->
-            <li class="relative">
-                <button class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none" @click="togglePagesMenu" aria-label="Account" aria-haspopup="true">
+            <li class="relative" x-data="{ togglePagesMenu:false }">
+                <button class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none" x-on:click="togglePagesMenu = !togglePagesMenu" aria-label="Account" aria-haspopup="true">
                     <img class="object-cover w-8 h-8 rounded-full" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" aria-hidden="true" />
                 </button>
                 <template x-if="togglePagesMenu">

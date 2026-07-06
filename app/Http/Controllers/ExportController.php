@@ -25,6 +25,8 @@ use App\Exports\TimesheetExport;
 use App\Exports\TrialBalance;
 use App\Exports\WarkatKeluar;
 use App\Exports\WarkatMasuk;
+use App\Exports\RekapAktiva;
+
 use App\Http\Livewire\Laporan\RekapInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -211,5 +213,13 @@ class ExportController extends Controller
             return abort(401);
         }
         return Excel::download(new KartuStokExport($tgl_awal, $tgl_akhir, $barang_id), 'exportkartustok.xlsx');
+    }
+
+     public function exportrekapaktiva($tgl_awal,$tgl_akhir){
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Rekap Aktiva')){
+            return abort(401);
+        }
+        return Excel::download(new RekapAktiva($tgl_awal, $tgl_akhir), 'exportrekapaktiva.xlsx');
     }
 }

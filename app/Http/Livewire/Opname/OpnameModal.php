@@ -233,7 +233,9 @@ class OpnameModal extends ModalComponent
 
                     $lebihstok = $tmpbarang->jumlah;
 
-                    $barang = DBarang::where('barang_id',$tmpbarang->barang_id)->where('jumlah','>',0)->orderby('tgl_masuk','asc')->first();
+                    $barang = DBarang::where('barang_id',$tmpbarang->barang_id)
+                    ->where('jumlah','>',0)
+                    ->orderby('tgl_masuk','DESC')->first();
                    
                     $dopname = New DOpname();
                     $dopname['m_opname_id']=$this->MOpname->id;

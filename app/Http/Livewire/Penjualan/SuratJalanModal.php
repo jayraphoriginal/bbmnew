@@ -74,6 +74,7 @@ class SuratJalanModal extends ModalComponent
 
         $this->suratjalan->customer_id = $mpenjualan->customer_id;
         $this->suratjalan->m_penjualan_id=$this->m_penjualan_id;
+        $this->suratjalan->status = 'Open';
 
         $nomorterakhir = DB::table('surat_jalans')
                 ->orderBy('id', 'DESC')->get();

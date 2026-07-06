@@ -31,7 +31,9 @@ class JurnalExport implements FromView
         $data = VJurnalUmum::where('tanggal','>=',$this->tgl_awal)
         ->where('tanggal','<=',$this->tgl_akhir)
         ->where('tipe','<>','Saldo Awal')
-        ->orderBy('tanggal')->get();
+        ->orderBy('tanggal')
+        //->orderBy('trans_id')
+        ->get();
         
         return view('print.laporanjurnalumum', [
             'data' => $data,

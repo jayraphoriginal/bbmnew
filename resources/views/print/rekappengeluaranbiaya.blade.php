@@ -65,7 +65,7 @@
                 <td>{{ $item->nama_biaya }}</td>
                 <td>{{ $item->jenis_pembebanan }}</td>
                 <td>{{ $item->alken }}</td>
-                <td class="text-right">{{ number_format($item->jumlah,2,',','.') }}</td>
+                <td class="text-right">{{ number_format($item->jumlah,2,'.',',') }}</td>
                 <td>{{ $item->keterangan }}</td>
             </tr>
                 @php
@@ -74,7 +74,7 @@
             @endforeach 
             <tr>
                 <td colspan="8" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,'.',',') }}</td>
                 <td></td>
             </tr>
         </table>

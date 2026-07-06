@@ -1,4 +1,3 @@
 <input
     type="time"
-    {{ $attributes }}
-    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"/>
+    {{ $attributes->merge(['class' => 'block w-full mt-1 border border-gray-300 p-2 rounded-md focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input']) }}/>

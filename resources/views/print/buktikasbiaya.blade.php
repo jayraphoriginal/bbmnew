@@ -60,9 +60,9 @@
                     <td>
                         @foreach($data as $key => $value)
                             @if($key == 0)
-                                {{ ' '.$value->keterangan }}
+                                {{ $value->keterangan }}
                             @else
-                                {{ ' ,'.$value->keterangan }}
+                                {{ ', '.$value->keterangan }}
                             @endif
                         @endforeach
                     </td>

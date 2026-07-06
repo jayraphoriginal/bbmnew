@@ -5,52 +5,52 @@
 
     <x-form-group caption="Tanggal">
         <x-datepicker
-            wire:model="pemakaian.tgl_pemakaian"
+            wire:model="tgl_pemakaian"
         />
-        @error('pemakaian.tgl_pemakaian')
+        @error('tgl_pemakaian')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
 
     <x-form-group caption="Biaya">
         <x-combobox
-            wire:model="pemakaian.m_biaya_id"
+            wire:model="m_biaya_id"
         >
             <option value="">-- Isi Biaya --</option>
             @foreach ($biaya as $item)
                 <option value="{{ $item->id }}">{{ $item->nama_biaya }}</option>
             @endforeach
         </x-combobox>
-        @error('pemakaian.m_biaya_id')
+        @error('m_biaya_id')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
 
     <x-form-group caption="Jenis Pembebanan">
         <x-combobox 
-            wire:model="pemakaian.jenis_pembebanan"
+            wire:model="jenis_pembebanan"
             >
             <option value=""> -- Isi Jenis Pembebanan --</option>
             <option value="Beban Alat">Beban Alat</option>
             <option value="Beban Kendaraan">Beban Kendaraan</option>
             <option value="-">Non Beban</option>
-            @error('pemakaian.jenis_pembebanan')
+            @error('jenis_pembebanan')
             <x-error-form>{{ $message }}</x-error-form>
             @enderror
         </x-combobox>
     </x-form-group>
     
-    @if($pemakaian->jenis_pembebanan =='Beban Kendaraan')
+    @if($jenis_pembebanan =='Beban Kendaraan')
         <x-form-group caption="Kendaraan">
             <livewire:kendaraan.kendaraan-select :deskripsi="$kendaraan"/>
-            @error('pemakaian.beban_id')
+            @error('beban_id')
             <x-error-form>{{ $message }}</x-error-form>
             @enderror
         </x-form-group>
-    @elseif($pemakaian->jenis_pembebanan =='Beban Alat')
+    @elseif($jenis_pembebanan =='Beban Alat')
         <x-form-group caption="Alat">
                 <livewire:alat.alat-select :deskripsi="$alat"/>
-                @error('pemakaian.beban_id')
+                @error('beban_id')
                 <x-error-form>{{ $message }}</x-error-form>
                 @enderror
         </x-form-group>
@@ -58,25 +58,25 @@
 
     <x-form-group caption="Barang">
         <livewire:barang.barang-select :deskripsi="$barang" />
-        @error('pemakaian.barang_id')
+        @error('barang_id')
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
 
     <x-form-group caption="Jumlah">
         <x-textbox
-            wire:model="pemakaian.jumlah"
+            wire:model="jumlah"
         />
-        @error('pemakaian.jumlah')
+        @error('jumlah')
             <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>
 
     <x-form-group caption="Keterangan">
         <x-textbox
-            wire:model="pemakaian.keterangan"
+            wire:model="keterangan"
         />
-        @error('pemakaian.keterangan')
+        @error('keterangan')
         <x-error-form>{{ $message }}</x-error-form>
         @enderror
     </x-form-group>

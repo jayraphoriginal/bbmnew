@@ -69,7 +69,8 @@ class TimesheetModal extends ModalComponent
         $this->timesheet->status = 'Open';
         $this->timesheet->save();
 
-        
+        $this->emitTo('sewa.rekap-timesheet-table', 'pg:eventRefresh-default');
+
         $this->closeModal();
 
         $this->alert('success', 'Save Success', [

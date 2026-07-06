@@ -59,10 +59,10 @@
             <tr>
                 <td style="text-align:center">{{ ++$index }}</td>
                 <td>{{ $item->nama_supplier }}</td>
-                <td class="text-right">{{ number_format($item->saldo_awal,2,',','.') }}</td>
-                <td class="text-right">{{ number_format($item->debet,2,',','.') }}</td>
-                <td class="text-right">{{ number_format($item->kredit,2,',','.') }}</td>
-                <td class="text-right">{{ number_format($item->saldo,2,',','.') }}</td>
+                <td class="text-right">{{ number_format($item->saldo_awal,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->debet,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->kredit,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->saldo,2,'.',',') }}</td>
             </tr>
                 @php
                     $totalsaldoawal = $totalsaldoawal + $item->saldo_awal;
@@ -73,10 +73,10 @@
             @endforeach 
             <tr>
                 <td colspan="2" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldoawal,2,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totaldebet,2,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalkredit,2,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldoawal,2,'.',',') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totaldebet,2,'.',',') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalkredit,2,'.',',') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,'.',',') }}</td>
             </tr>
         </table>
         @endif

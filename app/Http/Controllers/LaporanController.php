@@ -37,7 +37,9 @@ use App\Models\VTicketHeader;
 use App\Models\VTicketHeaderAll;
 use App\Models\VTicketHeaderSum;
 use App\Models\VTicketProduksi;
+use App\Models\VLaporanHppFinal;
 use App\Models\TmpTicketGabungan;
+use App\Models\VLaporanHppMutubeton;
 use App\Models\VSuratJalanSum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -732,6 +734,26 @@ class LaporanController extends Controller
             'tgl_akhir' => $tgl_akhir
         ));
         return $pdf->setPaper('A4','potrait')->stream();
+    }
+
+    public function penjualanbetoncustomerpl($tgl_awal,$tgl_akhir){
+
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Penjualan Beton Per Customer')){
+            return abort(401);
+        }
+        
+        DB::statement("SET NOCOUNT ON; Exec SP_TicketGabungan '".$tgl_awal."','".$tgl_akhir."'");
+
+        $datacustomer = TmpTicketGabungan::select('nama_customer','kode_mutu',DB::raw('harga_intax / (1+(pajak/100)) as harga'),'tujuan','satuan',DB::raw('sum(jumlah) as total'))
+        ->groupBy('nama_customer',DB::raw('harga_intax / (1+(pajak/100))'),'kode_mutu','tujuan','satuan')->get();
+
+        return view('print.rekappenjualanbetoncustomer', array(
+            'datacustomer' => $datacustomer,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+        //return $pdf->setPaper('A4','potrait')->stream();
     }
 
     public function laporanproduksicustomer($tgl_awal,$tgl_akhir){
@@ -1527,7 +1549,9 @@ class LaporanController extends Controller
         $data = VJurnalUmum::where('tanggal','>=',$tgl_awal)
         ->where('tanggal','<=',$tgl_akhir)
         ->where('tipe','<>','Saldo Awal')
-        ->orderBy('tanggal')->get();
+        ->orderBy('tanggal')
+        //->orderBy('trans_id')
+        ->get();
 
         $pdf = PDF::loadView('print.laporanjurnalumum', array(
             'data' => $data,
@@ -1556,6 +1580,63 @@ class LaporanController extends Controller
         ));
 
         return $pdf->setPaper('A4','potrait')->stream();
+
+    }
+
+    public function laporanhppmutubeton($tgl_berlaku){
+
+       $data = VLaporanHppMutubeton::where('tanggal_berlaku',$tgl_berlaku)->get();
+
+        if(count($data)==0){
+            DB::statement("SET NOCOUNT ON; Exec SP_CreateHpp '".$tgl_berlaku."'");
+            $data = VLaporanHppMutubeton::where('tanggal_berlaku',$tgl_berlaku)->get();
+        }
+
+        //return $data->groupBy('mutubeton_id');
+
+        return view('print.laporanhppmutubeton', array(
+            'data' => $data,
+            'tgl_berlaku' => $tgl_berlaku
+        ));
+
+        // $pdf = PDF::loadView('print.laporanhppmutubeton', array(
+        //     'data' => $data,
+        //     'tgl_berlaku' => $tgl_berlaku
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
+
+    }
+
+    public function laporanhpppenjualanbeton($tgl_berlaku){
+
+
+        $data = VLaporanHppFinal::where('tgl_berlaku',$tgl_berlaku)->get();
+
+        if(count($data)==0){
+
+            DB::statement("SET NOCOUNT ON; Exec SP_CreateHpp '".$tgl_berlaku."'");
+            DB::statement("SET NOCOUNT ON; Exec SP_CreateHpp_Kendaraan '".$tgl_berlaku."'");
+
+            $data = VLaporanHppFinal::where('tgl_berlaku',$tgl_berlaku)->get();
+
+        }
+
+        $dataharga = VLaporanHppMutubeton::where('tanggal_berlaku',$tgl_berlaku)->where('komponen','material')->get();
+        //return $data->groupBy('mutubeton_id');
+
+        return view('print.laporanhpppenjualanbeton', array(
+            'data' => $data,
+            'dataharga' => $dataharga,
+            'tgl_berlaku' => $tgl_berlaku
+        ));
+
+        // $pdf = PDF::loadView('print.laporanhppmutubeton', array(
+        //     'data' => $data,
+        //     'tgl_berlaku' => $tgl_berlaku
+        // ));
+
+        // return $pdf->setPaper('A4','landscape')->stream();
 
     }
 }

@@ -74,6 +74,18 @@
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>
+                        <x-datarowtable title="HPP Mutu Beton">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-hpp-mutubeton-modal')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                        <x-datarowtable title="HPP Penjualan Beton">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-hpp-penjualan-beton')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
                     </tbody>
                 </table>
             </div>
@@ -422,7 +434,7 @@
                                     Cetak
                                 </x-print-button>
                             </x-datarowtable>
-                        <x-datarowtable title="Laporan Jurnal Umum">
+                        <x-datarowtable title="Laporan Saldo COA">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.jurnal-umum')">
                                 Cetak
@@ -455,6 +467,12 @@
                         <x-datarowtable title="Laporan Jurnal Closing">
                             <x-print-button
                                 wire:click.prevent="$emit('openModal', 'laporan.laporan-closing-account')">
+                                Cetak
+                            </x-print-button>
+                        </x-datarowtable>
+                         <x-datarowtable title="Laporan Rekap Aktiva & Penyusutan">
+                            <x-print-button
+                                wire:click.prevent="$emit('openModal', 'laporan.laporan-rekap-aktiva')">
                                 Cetak
                             </x-print-button>
                         </x-datarowtable>

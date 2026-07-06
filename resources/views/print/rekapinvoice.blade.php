@@ -64,9 +64,9 @@
                 @else
                     <td>{{ $item->nama_customer }}</td>
                 @endif
-                <td class="text-right">{{ number_format($item->dpp,2,',','.') }}</td>
-                <td class="text-right">{{ number_format($item->ppn,2,',','.') }}</td>
-                <td class="text-right">{{ number_format($item->total,2,',','.') }}</td>
+                <td class="text-right">{{ number_format($item->dpp,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->ppn,2,'.',',') }}</td>
+                <td class="text-right">{{ number_format($item->total,2,'.',',') }}</td>
             </tr>
                 @php
                     $total = $total + $item->total;
@@ -76,9 +76,9 @@
             @endforeach 
             <tr>
                 <td colspan="5" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totaldpp,2,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalppn,2,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totaldpp,2,'.',',') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalppn,2,'.',',') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($total,2,'.',',') }}</td>
             </tr>
         </table>
         @endif

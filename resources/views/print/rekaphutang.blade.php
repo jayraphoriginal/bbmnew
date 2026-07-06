@@ -66,10 +66,10 @@
             @endforeach 
             <tr>
                 <td colspan="2" style="font-weight:bold">Total</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldoawal,2,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldodebet,2,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldokredit,2,',','.') }}</td>
-                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldo,2,',','.') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldoawal,2,'.',',') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldodebet,2,'.',',') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldokredit,2,'.',',') }}</td>
+                <td class="text-right" style="font-weight:bold">{{ number_format($totalsaldo,2,'.',',') }}</td>
             </tr>
         </table>
         @endif

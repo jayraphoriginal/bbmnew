@@ -37,6 +37,7 @@ use App\Models\VJurnalManual;
 use App\Models\VPembayaran;
 use App\Models\VPembelianDetail;
 use App\Models\VPenerimaan;
+use App\Models\VPenerimaanpph23;
 use App\Models\VPengeluaranBiaya;
 use App\Models\VPengeluaranBiayaDetail;
 use App\Models\VPengisianBbm;
@@ -323,7 +324,7 @@ class PrintController extends Controller
         $data = VPrintInvoice::where('id', $id)->get();
         $dp = Invoicedp::join('invoices','invoicedps.invoicedp_id','invoices.id')->where('invoice_id',$id)->sum('total');
 
-        $terbilang = Terbilang::make($data[0]->total);
+        $terbilang = Terbilang::make(round($data[0]->total));
         $retail = '';
         if (substr($data[0]->noinvoice,6,3) == 'IVR'){
             $retail = 'retail';
@@ -428,6 +429,26 @@ class PrintController extends Controller
         $customPaper = array(0,0,391.1811,277.795);
 
         $pdf = PDF::loadView('print.buktikaspenerimaan', array(
+            'data' => $data,
+            'terbilang' => $terbilang
+        ))->setPaper($customPaper);
+        return $pdf->stream();
+    }
+
+    public function printbuktikaspph23($id){
+        
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Penerimaan Pembayaran')){
+            return abort(401);
+        }
+
+        $data = VPenerimaanpph23::find($id);
+
+        $terbilang = Terbilang::make($data->jumlah);
+       
+        $customPaper = array(0,0,391.1811,277.795);
+
+        $pdf = PDF::loadView('print.buktikaspenerimaanpph23', array(
             'data' => $data,
             'terbilang' => $terbilang
         ))->setPaper($customPaper);

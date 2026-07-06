@@ -24,7 +24,7 @@
     @livewire('livewire-ui-modal')
 </head>
 
-<body x-data="{ toggleSideMenu:false, togglePagesMenu:false }">
+<body x-data="{ toggleSideMenu:false }">
     <div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="toggleSideMenu ? 'overflow-hidden' : ''">
 
         @include('layouts.mobile-menu')

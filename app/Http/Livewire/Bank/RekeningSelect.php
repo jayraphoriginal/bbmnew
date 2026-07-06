@@ -34,6 +34,7 @@ class RekeningSelect extends Component
         $this->emitTo('invoice.invoice-modal','selectrekening', $id);
         $this->emitTo('pembayaran.pembayaran-pembelian-modal','selectrekening', $id);
         $this->emitTo('penerimaan.penerimaan-modal','selectrekening', $id);
+        $this->emitTo('penerimaan.penerimaan-invoice-modal','selectrekening', $id);
         $this->emitTo('laporan.laporan-saldo-rekening','selectrekening', $id);
     }
 

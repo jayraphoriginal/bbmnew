@@ -18,6 +18,10 @@ use PowerComponents\LivewirePowerGrid\Rules\Rule;
 final class InvoiceTable extends PowerGridComponent
 {
     use ActionButton;
+    public int $tahun;
+
+    public string $sortField = 'tgl_cetak';
+    public string $sortDirection = 'desc';
 
     //Messages informing success/error data is updated.
     public bool $showUpdateMessages = true;
@@ -52,7 +56,7 @@ final class InvoiceTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VInvoiceHeader::orderBy('tgl_cetak','desc');
+        return VInvoiceHeader::whereYear('tgl_cetak', $this->tahun);
     }
 
     /*

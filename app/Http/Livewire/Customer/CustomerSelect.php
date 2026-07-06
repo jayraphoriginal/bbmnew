@@ -33,6 +33,8 @@ class CustomerSelect extends Component
         $this->emitTo('sewa.salesorder-sewa-modal','selectcustomer', $id);
         $this->emitTo('penjualan.penjualan-modal','selectcustomer', $id);
         $this->emitTo('penerimaan.penerimaan-modal','selectcustomer', $id);
+        $this->emitTo('penerimaan.penerimaan-invoice-modal','selectcustomer', $id);
+        $this->emitTo('penerimaan.penerimaan-pph23-modal','selectcustomer', $id);
     }
 
     public function selectDeskripsi($id){

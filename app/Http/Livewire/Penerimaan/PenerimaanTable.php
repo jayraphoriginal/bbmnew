@@ -16,10 +16,13 @@ use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
 final class PenerimaanTable extends PowerGridComponent
 {
+    public $tahun;
     use ActionButton;
 
     //Messages informing success/error data is updated.
     public bool $showUpdateMessages = true;
+    public string $sortDirection = 'desc';
+    public string $sortField = 'nobuktikas';
 
     /*
     |--------------------------------------------------------------------------
@@ -51,7 +54,10 @@ final class PenerimaanTable extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-        return VPenerimaan::orderBy('tgl_bayar','desc');
+        if (!$this->tahun) {
+            $this->tahun = Carbon::now()->year;
+        }
+        return VPenerimaan::whereYear('tgl_bayar', $this->tahun);
     }
 
     /*
@@ -146,7 +152,7 @@ final class PenerimaanTable extends PowerGridComponent
                 ->title('NoBuktiKas')
                 ->field('nobuktikas')
                 ->searchable()
-                ->makeInputText()
+                ->makeInputRange()
                 ->sortable(),
 
             Column::add()   

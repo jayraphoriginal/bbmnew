@@ -74,7 +74,7 @@
             </tr>
             <tr>
                 <td class="kl1">TANGGAL</td>
-                <td class="kl2">: {{ date_format(date_create($data->created_date),'d M Y') }}</td>
+                <td class="kl2">: {{ date_format(date_create($data->tanggal),'d M Y') }}</td>
             </tr>
             <tr>
                 <td class="kl1">CUSTOMER</td>
@@ -87,7 +87,7 @@
                 <tr>
                     <td colspan="2" style="text-align: center; border: solid 1px #000">Waktu Operasi</td>
                     <td rowspan="2" style="text-align: center; border: solid 1px #000">Jumlah Waktu Beroperasi</td>
-                    <td rowspan="2" style="text-align: center; border: solid 1px #000">Keterangan (Volume M<sup>3</sup>)</td>
+                    <td rowspan="2" style="text-align: center; border: solid 1px #000">Keterangan</td>
                 </tr>
                 <tr>
                     <td style="text-align: center; border: solid 1px #000">Awal</td>
@@ -100,7 +100,7 @@
                         <td style="height:6rem; text-align:center; border: solid 1px #000"></td>
                         <td style="height:6rem; text-align:center;border: solid 1px #000"></td>
                         <td style="height:6rem; text-align:center;border: solid 1px #000"></td>
-                        <td style="height:6rem; text-align:center;border: solid 1px #000">{{ $data->keterangan }} M<sup>3</sup></td>
+                        <td style="height:6rem; text-align:center;border: solid 1px #000">{{ $data->keterangan }}</td>
                     </tr>
                 @else
                 <tr>
@@ -116,7 +116,7 @@
         <table style="width:100%;">
             <tr>
                 <td style="text-align:center; width:20%;">Pengawas Pihak</td>
-                <td style="text-align:center;width:60%;"></td>
+                <td style="text-align:center;width:60%;">Diketahui</td>
                 <td style="text-align:center;width:30%">Operator / Supir</td>
             </tr>
 
@@ -128,7 +128,7 @@
 
             <tr>
                 <td style="text-align:center;width:20%;">(_______________)</td>
-                <td style="text-align:center;width:60%;"></td>
+                <td style="text-align:center;width:60%;">(_______________)</td>
                 <td style="text-align:center;width:30%">{{ '('.$data->nama_driver.')' }}</td>
             </tr>
         </table>

@@ -126,14 +126,14 @@
                         @foreach($data as $index => $item)
                             @if($item->level1=='PASSIVA')
                                 @if($item->level2=='B. Ekuitas')
-                                <tr>
-                                    <td>{{ $item->nama_akun }}</td>
-                                    <td class="text-right">{{ number_format($item->saldo,0,',','.') }}</td>
-                                </tr>
-                                @php
-                                    $totalmodal = $totalmodal + $item->saldo;
-                                    $totalpassiva = $totalpassiva + $item->saldo;
-                                @endphp
+                                    <tr>
+                                        <td>{{ $item->nama_akun }}</td>
+                                        <td class="text-right">{{ number_format($item->saldo,0,',','.') }}</td>
+                                    </tr>
+                                    @php
+                                        $totalmodal = $totalmodal + $item->saldo;
+                                        $totalpassiva = $totalpassiva + $item->saldo;
+                                    @endphp
                                 @endif
                             @endif
                         @endforeach 

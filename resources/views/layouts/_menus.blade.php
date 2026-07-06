@@ -32,6 +32,12 @@
             @can('Opname')
             <x-menu-item route="opname">Opname Stok</x-menu-item>
             @endcan
+            @can('perhitungan HPP')
+            <x-menu-item route="perhitungan-hpp">Perhitungan HPP</x-menu-item>
+            @endcan
+            @can('perhitungan HPP')
+            <x-menu-item route="perhitungan-hpp-kendaraan">Perhitungan HPP Kendaraan</x-menu-item>
+            @endcan
         </div>
         <li class="relative px-2 py-3">
             <a @click="persediaan = false, master = !master, penjualan = false, sewa=false, pembelian = false, laporan = false, finance = false, accounting = false, bbm = false, batal=false, usermenu=false, rekalkulasi=false" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
@@ -151,6 +157,9 @@
             @endcan
             @can('Penerimaan Pembayaran')
                 <x-menu-item route="penerimaanpembayaran">Penerimaan Pembayaran</x-menu-item>
+            @endcan
+            @can('Penerimaan Pembayaran')
+                <x-menu-item route="penerimaanpph23">Penerimaan Pph 23</x-menu-item>
             @endcan
             @can('Pencairan Warkat Masuk')
                 <x-menu-item route="pencairanwarkatmasuk">Pencairan Warkat Masuk</x-menu-item>

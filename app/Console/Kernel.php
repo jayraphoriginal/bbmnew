@@ -29,6 +29,10 @@ class Kernel extends ConsoleKernel
         // $schedule->call(function () {
         //     DB::statement('exec SP_BackupDatabase');
         // })->everyMinute();
+
+       $schedule->command('procedure:daily')
+         ->dailyAt('23:00')
+         ->withoutOverlapping();
     }
 
     /**

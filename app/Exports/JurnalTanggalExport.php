@@ -31,7 +31,9 @@ class JurnalTanggalExport implements FromView
         DB::statement("SET NOCOUNT ON; Exec SP_JurnalTanggal '".$this->tgl_awal."','".$this->tgl_akhir."'");
         $data = VJurnalTanggal::where('tanggal','>=',$this->tgl_awal)
         ->where('tanggal','<=',$this->tgl_akhir)
-        ->orderBy('tanggal')->get();
+        ->orderBy('tanggal')
+        //->orderBy('trans_id')
+        ->get();
 
         return view('print.laporanjurnaltanggal', array(
             'data' => $data,

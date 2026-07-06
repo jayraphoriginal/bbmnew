@@ -30,7 +30,10 @@ class KartuStokExportHarian implements FromView
         }
 
         DB::statement("SET NOCOUNT ON; Exec SP_KartuStokHarian '".$this->tgl_awal."','".$this->tgl_akhir."',".$this->barang_id."");
-        $data = TmpKartuStok::orderBy('tanggal','asc')->get();
+        $data = TmpKartuStok::orderBy('tanggal','asc')
+        ->orderBy(DB::raw('CASE WHEN increase > 0 THEN 0 ELSE 1 END'),'asc')
+        ->orderBy('trans_id','asc')
+        ->orderBy('id','asc')->get();
 
         return view('print.laporankartustokharian', array(
             'data' => $data,

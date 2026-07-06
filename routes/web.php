@@ -20,9 +20,12 @@ use App\Http\Livewire\Jurnal\JurnalManualComponent;
 use App\Http\Livewire\Laporan\BukuBesarHutang;
 use App\Http\Livewire\Laporan\LaporanComponent;
 use App\Http\Livewire\Laporan\LaporanPenjualanBarang;
+use App\Http\Livewire\Mutubeton\PerhitunganHppComponent;
+use App\Http\Livewire\Mutubeton\PerhitunganHppKendaraanComponent;
 use App\Http\Livewire\Opname\OpnameComponent;
 use App\Http\Livewire\Pembayaran\PembayaranPembelianComponent;
 use App\Http\Livewire\Penerimaan\PenerimaanComponent;
+use App\Http\Livewire\Penerimaan\Penerimaanpph23Component;
 use App\Http\Livewire\Produksi\TicketProduksiComponent;
 use App\Http\Livewire\User\PermissionComponent;
 use Illuminate\Support\Facades\Auth;
@@ -96,12 +99,18 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('pencairanwarkatmasuk', \App\Http\Livewire\Penerimaan\PencairanWarkatMasukComponent::class)->name('pencairanwarkatmasuk');
     Route::get('golongan', \App\Http\Livewire\Inventaris\GolonganComponent::class)->name('golongan');
     Route::get('inventaris', \App\Http\Livewire\Inventaris\InventarisComponent::class)->name('inventaris');
+
     //Route::get('migrasicoa', [CreateCoaCustomerSupplier::class,'index'])->name('migrasicoa');
     Route::get('jurnalmanual', JurnalManualComponent::class)->name('jurnalmanual');
     Route::get('pembayaranpembelian', PembayaranPembelianComponent::class)->name('pembayaranpembelian');
     Route::get('penerimaanpembayaran', PenerimaanComponent::class)->name('penerimaanpembayaran');
+    Route::get('penerimaanpph23', Penerimaanpph23Component::class)->name('penerimaanpph23');
     Route::get('permission', PermissionComponent::class)->name('permission');
     Route::get('opname', OpnameComponent::class)->name('opname');
+
+    //Perhitungan HPP
+    Route::get('perhitungan-hpp-kendaraan', PerhitunganHppKendaraanComponent::class)->name('perhitungan-hpp-kendaraan');
+    Route::get('perhitungan-hpp', PerhitunganHppComponent::class)->name('perhitungan-hpp');
 
     //Print
     Route::get('stokmaterial', [LaporanPersediaanController::class,'stokmaterial'])->name('stokmaterial');
@@ -120,11 +129,14 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('printconcretepump/{id}', [\App\Http\Controllers\PrintController::class,'concretepump'])->name('printconcretepump');
     Route::get('printbuktikas/{id}', [\App\Http\Controllers\PrintController::class,'buktikas'])->name('printbuktikas');
     Route::get('printbuktikaspenerimaan/{id}', [\App\Http\Controllers\PrintController::class,'buktikaspenerimaan'])->name('printbuktikaspenerimaan');
+    Route::get('printbuktikaspph23/{id}', [\App\Http\Controllers\PrintController::class,'printbuktikaspph23'])->name('printbuktikaspph23');
+    
     Route::get('printbuktikasmanual/{id}', [\App\Http\Controllers\PrintController::class,'buktikasmanual'])->name('printbuktikasmanual');
     Route::get('printbuktikasbiaya/{id}', [\App\Http\Controllers\PrintController::class,'buktikasbiaya'])->name('printbuktikasbiaya');
     Route::get('timesheetso/{so_id}', [\App\Http\Controllers\PrintController::class,'timesheet'])->name('timesheetso');
     Route::get('exporttimesheetso/{so_id}', [\App\Http\Controllers\ExportController::class,'ExportTimesheet'])->name('exporttimesheetso');
     Route::get('ttdriver/{tgl_awal}/{tgl_akhir}/{driver_id}', [PrintController::class,'ttdriver'])->name('ttdriver');
+
     Route::get('laporan', LaporanComponent::class)->name('laporan');
     Route::get('laporanrekapgaji/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'gaji'])->name('rekapgaji');
     Route::get('laporanrekapgajidriver/{tgl_awal}/{tgl_akhir}/{driver_id}', [LaporanController::class,'gajidriver'])->name('rekapgajidriver');
@@ -145,6 +157,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('laporanproduksimutubeton/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'laporanproduksimutubeton'])->name('laporanproduksimutubeton');
     Route::get('laporanpenjualanbetonmobil/{tgl_awal}/{tgl_akhir}/{kendaraan_id}', [LaporanController::class,'laporanpenjualanpermobil'])->name('laporanpenjualanbetonmobil');
     Route::get('laporanpenjualanbetoncustomer/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'penjualanbetoncustomer'])->name('laporanpenjualanbetoncustomer');
+    Route::get('laporanpenjualanbetoncustomerpl/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'penjualanbetoncustomerpl'])->name('laporanpenjualanbetoncustomerpl');
     Route::get('penjualanmutubeton/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'penjualanmutubeton'])->name('penjualanmutubeton');
     Route::get('laporanrekapconcretepump/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'laporanrekapconcretepump'])->name('laporanrekapconcretepump');
     Route::get('laporanpajakmasukan/{tgl_awal}/{tgl_akhir}', [LaporanController::class,'pajakmasukan'])->name('pajakmasukan');
@@ -171,6 +184,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
     Route::get('exportkartustok/{tgl_awal}/{tgl_akhir}/{id_barang}', [ExportController::class,'exportkartustok'])->name('exportkartustok');
     Route::get('exportkartustokharian/{tgl_awal}/{tgl_akhir}/{id_barang}', [ExportController::class,'exportkartustokharian'])->name('exportkartustokharian');
+
+    Route::get('laporanhppmutubeton/{tgl_berlaku}', [LaporanController::class,'laporanhppmutubeton'])->name('laporanhppmutubeton');
+    Route::get('laporanhpppenjualanbeton/{tgl_berlaku}', [LaporanController::class,'laporanhpppenjualanbeton'])->name('laporanhpppenjualanbeton');
 
     Route::get('laporansaldorekening/{tgl_awal}/{tgl_akhir}/{rekening_id}', [LaporanController::class,'laporansaldorekening'])->name('laporansaldorekening');
     Route::get('laporanrekapsaldokasbank/{tgl_awal}/{tgl_akhir}', [LaporanFinanceController::class,'laporanrekapsaldokasbank'])->name('laporanrekapsaldokasbank');
@@ -203,7 +219,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('laporanpenjualanbarang/{tgl_awal}/{tgl_akhir}/{barang_id}', [LaporanPenjualanController::class,'laporanpenjualanbarang'])->name('laporanpenjualanbarang');
     Route::get('laporanpenjualanbarang/{tgl_awal}/{tgl_akhir}', [LaporanPenjualanController::class,'laporanpenjualanbarangtanggal'])->name('laporanpenjualanbarangtanggal');
     Route::get('laporanpenjualanbarangcustomer/{tgl_awal}/{tgl_akhir}', [LaporanPenjualanController::class,'penjualanbarangcustomer'])->name('laporanpenjualanbarangcustomer');
-    
+    // Route::get('laporanrekapsaldokasbank/{tgl_awal}/{tgl_akhir}', [LaporanFinanceController::class,'laporanrekapsaldokasbank'])->name('laporanrekapsaldokasbank');
+    Route::get('laporanrekapaktiva/{tgl_awal}/{tgl_akhir}', [LaporanAccountingController::class,'laporanrekapaktiva'])->name('laporanrekapaktiva');
+
     //Export
     Route::get('exportjurnaltanggal/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportjurnaltanggal'])->name('exportjurnaltanggal');
     Route::get('exportrekappengeluaranbiaya/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekappengeluaranbiaya'])->name('exportrekappengeluaranbiaya');
@@ -223,4 +241,6 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('exportneraca/{tanggal}', [ExportController::class,'exportneraca'])->name('exportneraca');
     Route::get('exportlabarugi/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportlabarugi'])->name('exportlabarugi');
     Route::get('exportpembelianbiaya/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportpembelianbiaya'])->name('exportpembelianbiaya');
+
+    Route::get('exportrekapaktiva/{tgl_awal}/{tgl_akhir}', [ExportController::class,'exportrekapaktiva'])->name('exportrekapaktiva');
 });

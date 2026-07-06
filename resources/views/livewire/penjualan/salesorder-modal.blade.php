@@ -27,6 +27,7 @@
                     <option value="Dimuka">Dimuka</option>
                     <option value="Diakhir">Diakhir</option>
                     <option value="Waktu Tagihan">Waktu Tagihan</option>
+                    <option value="Dimuka Full">Dimuka Full</option>
                 </x-combobox>
                 @error('MSalesorder.pembayaran')
                 <x-error-form>{{ $message }}</x-error-form>

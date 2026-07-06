@@ -64,7 +64,7 @@ class TicketModal extends ModalComponent
         $this->lembur = '';
     }
 
-    public function mount($m_salesorder_id,$mutubeton_id){
+    public function mount($m_salesorder_id,$mutubeton_id, $rate_id){
 
         $user = Auth::user();
         if (!$user->hasPermissionTo('Ticket')){
@@ -78,12 +78,10 @@ class TicketModal extends ModalComponent
         $satuan = Satuan::find($mutubeton->satuan_id);
         $this->sisa_so = DSalesorder::where('m_salesorder_id', $this->m_salesorder_id)->where('mutubeton_id', $this->mutubeton_id)
                         ->sum('sisa');
-
-        $rate = DSalesorder::where('m_salesorder_id', $this->m_salesorder_id)->where('mutubeton_id', $this->mutubeton_id)->first();
-               
+       
         $this->jam_ticket=Date('Y-m-d\TH:i:s');
         $this->satuan_id = $satuan->id;
-        $this->rate_id = $rate->rate_id;
+        $this->rate_id = $rate_id;
         $this->tambahan_biaya = 0;
         $this->lembur = 0;
       

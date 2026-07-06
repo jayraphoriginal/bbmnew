@@ -4,7 +4,7 @@
     </x-header-modal>
 
     <x-button
-        wire:click.prevent="$emit('openModal', 'penjualan.ticket-modal',{{ json_encode(['m_salesorder_id' => $m_salesorder_id, 'mutubeton_id' => $mutubeton_id]) }})">
+        wire:click.prevent="$emit('openModal', 'penjualan.ticket-modal',{{ json_encode(['m_salesorder_id' => $m_salesorder_id, 'mutubeton_id' => $mutubeton_id, 'rate_id' => $rate_id]) }})">
         Tambah Ticket
     </x-button>
 

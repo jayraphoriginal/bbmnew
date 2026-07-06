@@ -222,4 +222,30 @@ class LaporanAccountingController extends Controller
             'bulan' => $bulan
         ));
     }
+
+    public function laporanrekapaktiva($tgl_awal, $tgl_akhir){
+    
+        $user = Auth::user();
+        if (!$user->hasPermissionTo('Laporan Rekap Aktiva')){
+            return abort(401);
+        }
+        DB::statement("SET NOCOUNT ON; Exec SP_RekapAktiva '".$tgl_awal."','".$tgl_akhir."'");
+
+        $data = DB::table('tmp_saldo_jurnal')->orderBy('kode_akun')->get();
+
+        // $pdf = PDF::loadView('print.laporanrekapsaldokasbank', array(
+        //     'data' => $data,
+        //     'tgl_awal' => $tgl_awal,
+        //     'tgl_akhir' => $tgl_akhir
+        // ));
+        // return $pdf->setPaper('A4','potrait')->stream();
+
+        return View('print.laporanrekapaktiva', array(
+            'data' => $data,
+            'tgl_awal' => $tgl_awal,
+            'tgl_akhir' => $tgl_akhir
+        ));
+    }
+
+
 }
